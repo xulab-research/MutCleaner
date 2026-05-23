@@ -1,29 +1,32 @@
 from __future__ import annotations
 
-import io
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
-
-import pandas as pd
 
 from .base_config import BaseCleanerConfig
 from .basic_cleaners import (
     apply_mutations_to_sequences,
     convert_to_mutation_dataset_format,
 )
+from .Chitosanase_custom_cleaners import parse_chitosanase_raw_file
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, Optional, Tuple, Union
+    from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Union
 
 __all__ = [
     "ChitosanaseCleanerConfig",
     "create_chitosanase_cleaner",
     "clean_chitosanase_dataset",
 ]
+
+
+def __dir__() -> List[str]:
+    return __all__
+
 
 # Create module logger
 logger = logging.getLogger(__name__)
@@ -33,6 +36,21 @@ logger = logging.getLogger(__name__)
 class ChitosanaseCleanerConfig(BaseCleanerConfig):
     """
     Configuration class for Chitosanase dataset cleaner.
+
+    This configuration holds dataset-specific settings used by the
+    Chitosanase cleaning pipeline. The pipeline expects raw Chitosanase
+    files where a small CSV is followed by a wild-type sequence
+    separated by the token defined in ``wt_separator``.
+
+    Attributes
+    ----------
+    infer_mut_workers : int
+        Number of workers to use when inferring/applying mutations (default 16).
+    pipeline_name : str
+        Human-readable name for the pipeline used in logging and artifacts.
+    wt_separator : str
+        Substring token separating the CSV and wild-type sequence
+        inside each Chitosanase raw file.
     """
 
     infer_mut_workers: int = 16
@@ -43,46 +61,36 @@ class ChitosanaseCleanerConfig(BaseCleanerConfig):
         super().validate()
 
 
-def parse_chitosanase_raw_file(file_path: Union[str, Path], wt_separator: str = '">wt') -> pd.DataFrame:
-    """
-    Extract WT sequence and generate intermediate DataFrame.
-    """
-    with open(file_path, "r") as f:
-        content = f.read()
-
-    if wt_separator in content:
-        parts = content.split(wt_separator)
-        csv_text = parts[0].strip()
-        wt_seq = parts[1].replace('"', "").replace(",", "").strip()
-        wt_seq = "".join(wt_seq.split())
-    else:
-        raise ValueError(f"Cannot find WT sequence separator '{wt_separator}' in the expected format.")
-
-    df = pd.read_csv(io.StringIO(csv_text))
-    df["aa_mut"] = df["aa_mut"].astype(str).str.replace('"', "").str.strip()
-    df = df.dropna(subset=["Tm"])
-
-    wt_mask = df["aa_mut"] == "WT"
-    if wt_mask.any():
-        wt_tm = float(df[wt_mask]["Tm"].iloc[0])
-        df["dTm"] = df["Tm"].astype(float) - wt_tm
-        df = df[~wt_mask].copy()
-    else:
-        df["dTm"] = df["Tm"].astype(float)
-
-    df["name"] = "Chitosanase"
-    df["mut_info"] = df["aa_mut"]
-    df["wt_seq"] = wt_seq
-    df["sequence"] = wt_seq
-
-    return df
-
-
 def create_chitosanase_cleaner(
-    dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
+    dataset_or_path: Optional[Union[str, Path]] = None,
     config: Optional[Union[ChitosanaseCleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
-    """Create Chitosanase dataset cleaning pipeline"""
+    """
+    Create Chitosanase dataset cleaning pipeline
+
+    Parameters
+    ----------
+    dataset_or_path : Optional[Union[pd.DataFrame, str, Path]]
+        Path to a raw Chitosanase input file (or a DataFrame in other callers).
+        The raw file must contain a CSV followed by the WT sequence.
+    config : Optional[Union[ChitosanaseCleanerConfig, Dict[str, Any], str, Path]]
+        Pipeline configuration. May be an instance of
+        `ChitosanaseCleanerConfig`, a dict to merge with defaults, or a
+        path to a JSON config file.
+
+    Returns
+    -------
+    Pipeline
+        Configured pipeline instance which can be executed with
+        :meth:`Pipeline.execute()` to perform cleaning.
+
+    Raises
+    ------
+    TypeError
+        If `config` has an unsupported type.
+    RuntimeError
+        If pipeline creation fails for any reason.
+    """
     # Handle config
     if config is None:
         final_config = ChitosanaseCleanerConfig()
@@ -95,33 +103,32 @@ def create_chitosanase_cleaner(
     else:
         raise TypeError(f"config has invalid type: {type(config)}")
 
-    # Parse and read data
-    if isinstance(dataset_or_path, (str, Path)):
-        df_clean = parse_chitosanase_raw_file(dataset_or_path, wt_separator=final_config.wt_separator)
-    elif isinstance(dataset_or_path, pd.DataFrame):
-        df_clean = dataset_or_path
-    else:
-        raise TypeError("dataset_or_path must be pd.DataFrame or str/Path")
+    if dataset_or_path is None:
+        raise TypeError("dataset_or_path must be a Chitosanase file path")
 
     try:
-        pipeline = create_pipeline(df_clean, final_config.pipeline_name)
+        pipeline = create_pipeline(dataset_or_path, final_config.pipeline_name)
 
         # Add cleaning steps
-        pipeline = pipeline.delayed_then(
-            apply_mutations_to_sequences,
-            sequence_column="sequence",
-            mutation_column="mut_info",
-            sequence_type="protein",
-            is_zero_based=False,
-            num_workers=final_config.infer_mut_workers,
-        ).delayed_then(
-            convert_to_mutation_dataset_format,
-            name_column="name",
-            mutation_column="mut_info",
-            sequence_column="sequence",
-            mutated_sequence_column="mut_seq",
-            label_column="dTm",
-            is_zero_based=False,
+        pipeline = (
+            pipeline.delayed_then(parse_chitosanase_raw_file, wt_separator=final_config.wt_separator)
+            .delayed_then(
+                apply_mutations_to_sequences,
+                sequence_column="sequence",
+                mutation_column="mut_info",
+                sequence_type="protein",
+                is_zero_based=False,
+                num_workers=final_config.infer_mut_workers,
+            )
+            .delayed_then(
+                convert_to_mutation_dataset_format,
+                name_column="name",
+                mutation_column="mut_info",
+                sequence_column="sequence",
+                mutated_sequence_column="mut_seq",
+                label_column="dTm",
+                is_zero_based=False,
+            )
         )
         return pipeline
     except Exception as e:
@@ -132,7 +139,30 @@ def create_chitosanase_cleaner(
 def clean_chitosanase_dataset(
     pipeline: Pipeline,
 ) -> Tuple[Pipeline, MutationDataset]:
-    """Clean Chitosanase dataset using configurable pipeline"""
+    """
+    Execute the cleaning pipeline and return the formatted dataset.
+
+    This helper runs the provided :class:`Pipeline`, converts the resulting
+    formatted DataFrame into a :class:`MutationDataset` and returns both the
+    executed pipeline and the dataset object. Artifacts and diagnostic logs
+    are produced by the pipeline and can be saved with
+    ``pipeline.save_artifacts(path)``.
+
+    Parameters
+    ----------
+    pipeline : Pipeline
+        The configured cleaning pipeline to execute.
+
+    Returns
+    -------
+    Tuple[Pipeline, MutationDataset]
+        The executed pipeline and the resulting :class:`MutationDataset`.
+
+    Raises
+    ------
+    RuntimeError
+        When pipeline execution fails.
+    """
     try:
         pipeline.execute()
 
