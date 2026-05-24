@@ -755,26 +755,81 @@ if __name__ == "__main__":
 See {py:class}`mutcleaner.cleaners.CTXMCleanerConfig` for details.
 
 
-## RBD-ACE2 Dataset
+## ACE2-RBD Binding Scores Dataset
 
 ### Basic Usage
 
-You can download the source file directly by running (see {py:func}`mutcleaner.utils.download_rbd_ace2_source_file` for details):
+The following example shows the complete workflow for downloading, cleaning,
+saving the cleaned ACE2-RBD binding scores dataset, and exporting the
+cleaning artifacts from a standalone script in this repository layout:
 ```python
-from mutcleaner import download_rbd_ace2_source_file
+import pickle
+import sys
+from pathlib import Path
 
-download_rbd_ace2_source_file("path/to/target/folder")
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+OTHER_SOFTWARE_ROOT = REPO_ROOT / "other_software"
+if str(OTHER_SOFTWARE_ROOT) not in sys.path:
+    sys.path.insert(0, str(OTHER_SOFTWARE_ROOT))
+
+from mutcleaner import download_rbd_ace2_source_file
+from mutcleaner.cleaners import (
+    create_ace2_binding_scores_cleaner,
+    clean_ace2_binding_scores_dataset,
+)
+
+
+def main():
+    # Prepare data
+    raw_data_dir = Path("raw_dataset/RBD_ACE2_Dataset")
+    download_rbd_ace2_source_file(str(raw_data_dir))
+
+    # File settings
+    dataset_file_path = (
+        raw_data_dir
+        / "SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv"
+    )
+    artifact_path = Path("logs/RBD_ACE2_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/RBD_ACE2_Dataset")
+
+    artifact_csv_dir.mkdir(parents=True, exist_ok=True)
+
+    # Clean data
+    ace2_cleaning_pipeline = create_ace2_binding_scores_cleaner(
+        dataset_file_path
+    )
+    ace2_cleaning_pipeline, ace2_dataset = (
+        clean_ace2_binding_scores_dataset(ace2_cleaning_pipeline)
+    )
+
+    # Save data
+    ace2_dataset.save("cleaned_dataset/cleaned_RBD_ACE2_Dataset")
+    ace2_cleaning_pipeline.save_artifacts(artifact_path)
+
+    # Read artifacts from the pickle file and read the object
+    with open(artifact_path, "rb") as file:
+        artifacts = pickle.load(file)
+
+    for artifact_name, artifact_df in artifacts.items():
+        artifact_df.to_csv(
+            f"{artifact_csv_dir}/{artifact_name}.csv", index=False
+        )
+
+
+if __name__ == "__main__":
+    import multiprocessing
+
+    multiprocessing.freeze_support()
+    main()
 ```
 
-You can also download and process a specific sub-dataset:
+You can also download all source files at once:
 
 ```python
 from mutcleaner import download_rbd_ace2_source_file
 
-download_rbd_ace2_source_file(
-    "path/to/target/folder",
-    sub_dataset="Omicron_EG5_FLip_BA286",
-)
+file_paths = download_rbd_ace2_source_file("path/to/target/folder")
 ```
 
 Supported sub-datasets:
@@ -784,14 +839,14 @@ Supported sub-datasets:
 - `DMS_variants`
 - `Delta`
 
-Alternatively, you can download it from [Hugging Face](https://huggingface.co/datasets/Zoey13891350636/RBD_ACE2).
+Alternatively, you can download it from [Hugging Face](https://huggingface.co/datasets/xulab-research/RBD_ACE2).
 
 
 ### Advanced Settings
 
-See {py:class}`mutcleaner.cleaners.RBDACE2CleanerConfig` for details.
+See {py:class}`mutcleaner.cleaners.ACE2BindingScoresCleanerConfig` for details.
 
-x`## RBD-Antibody Dataset
+## RBD-Antibody Dataset
 
 ### Basic Usage
 
