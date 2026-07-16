@@ -17,7 +17,6 @@ from .basic_cleaners import (
     average_labels_by_name,
     convert_to_mutation_dataset_format,
     replace_in_column,
-    subtract_labels_by_wt,
 )
 from .cdna_proteolysis_custom_cleaners import (
     validate_wt_sequence,
@@ -84,18 +83,10 @@ class CDNAProteolysisCleanerConfig(BaseCleanerConfig):
     )
 
     # Data filtering configuration
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {
-            "label_cDNAProteolysis": lambda s: pd.to_numeric(
-                s, errors="coerce"
-            ).notna()
-        }
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"label_cDNAProteolysis": lambda s: pd.to_numeric(s, errors="coerce").notna()})
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"label_cDNAProteolysis": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label_cDNAProteolysis": "float"})
 
     # Mutation validation parameters
     validate_mut_workers: int = 16
@@ -126,9 +117,7 @@ class CDNAProteolysisCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"WT_name", "aa_seq", "mut_type"}
@@ -139,9 +128,7 @@ class CDNAProteolysisCleanerConfig(BaseCleanerConfig):
 
 def create_cdna_proteolysis_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]],
-    config: Optional[
-        Union[CDNAProteolysisCleanerConfig, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[CDNAProteolysisCleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create cDNAProteolysis dataset cleaning pipeline
 
@@ -181,14 +168,10 @@ def create_cdna_proteolysis_cleaner(
         # Load from file
         final_config = CDNAProteolysisCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be CDNAProteolysisCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be CDNAProteolysisCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"cDNAProteolysis dataset will clean with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"cDNAProteolysis dataset will clean with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -202,9 +185,7 @@ def create_cdna_proteolysis_cleaner(
                 column_mapping=final_config.column_mapping,
             )
             .delayed_then(filter_and_clean_data, filters=final_config.filters)
-            .delayed_then(
-                convert_data_types, type_conversions=final_config.type_conversions
-            )
+            .delayed_then(convert_data_types, type_conversions=final_config.type_conversions)
             .delayed_then(
                 validate_mutations,
                 mutation_column=final_config.column_mapping.get("mut_type", "mut_type"),
@@ -230,13 +211,6 @@ def create_cdna_proteolysis_cleaner(
                 num_workers=final_config.validate_wt_workers,
             )
             .delayed_then(
-                subtract_labels_by_wt,
-                name_column=final_config.column_mapping.get("WT_name", "WT_name"),
-                label_columns=final_config.label_columns,
-                mutation_column=final_config.column_mapping.get("mut_type", "mut_type"),
-                in_place=True,
-            )
-            .delayed_then(
                 replace_in_column,
                 name_column=final_config.column_mapping.get("WT_name", "WT_name"),
                 old=".pdb",
@@ -245,9 +219,7 @@ def create_cdna_proteolysis_cleaner(
                 convert_to_mutation_dataset_format,
                 name_column=final_config.column_mapping.get("WT_name", "WT_name"),
                 mutation_column=final_config.column_mapping.get("mut_type", "mut_type"),
-                mutated_sequence_column=final_config.column_mapping.get(
-                    "aa_seq", "aa_seq"
-                ),
+                mutated_sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -257,17 +229,13 @@ def create_cdna_proteolysis_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0)
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
     except Exception as e:
         logger.error(f"Error in creating cDNAProteolysis cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in creating cDNAProteolysis cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in creating cDNAProteolysis cleaning pipeline: {str(e)}")
 
 
 def clean_cdna_proteolysis_dataset(
@@ -309,19 +277,11 @@ def clean_cdna_proteolysis_dataset(
 
         # Extract results
         cdna_proteolysis_dataset_df, cdna_proteolysis_ref_seq = pipeline.data
-        cdna_proteolysis_dataset = MutationDataset.from_dataframe(
-            cdna_proteolysis_dataset_df, cdna_proteolysis_ref_seq
-        )
+        cdna_proteolysis_dataset = MutationDataset.from_dataframe(cdna_proteolysis_dataset_df, cdna_proteolysis_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned cDNAProteolysis dataset:{len(cdna_proteolysis_dataset_df)} mutations from {len(cdna_proteolysis_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned cDNAProteolysis dataset:{len(cdna_proteolysis_dataset_df)} mutations from {len(cdna_proteolysis_ref_seq)} proteins")
 
         return pipeline, cdna_proteolysis_dataset
     except Exception as e:
-        logger.error(
-            f"Error in running cDNAProteolysis dataset cleaning pipeline: {str(e)}"
-        )
-        raise RuntimeError(
-            f"Error in running cDNAProteolysis dataset cleaning pipeline: {str(e)}"
-        )
+        logger.error(f"Error in running cDNAProteolysis dataset cleaning pipeline: {str(e)}")
+        raise RuntimeError(f"Error in running cDNAProteolysis dataset cleaning pipeline: {str(e)}")

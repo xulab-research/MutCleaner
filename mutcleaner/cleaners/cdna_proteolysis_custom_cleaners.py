@@ -36,18 +36,19 @@ def validate_wt_sequence(
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Validate wild-type (WT) sequences per protein/name group by checking
-    consistency between the *explicit* WT row and the WT sequence *inferred*
-    from each mutant row.
+    consistency between the *explicit* WT row (if present) and the WT sequence
+    *inferred* from each mutant row. If the explicit WT row is missing, a new
+    one is synthesized using the inferred sequence.
 
     This step groups the dataset by ``name_column`` and, for each group:
-      1) Ensures a WT row is present (i.e., ``mutation_column == wt_identifier``).
-      2) Treats each row's sequence as the mutated sequence and parses the
-         mutation string using ``MutationSet.from_string(sep="_", is_zero_based=True)``.
-      3) Inverts the mutation set (``invert_mutation_set``) and applies it to the
-         per-row sequence to infer that row's WT sequence.
+      1) Reconstructs the WT sequence by inverting mutation sets from all mutant rows.
+      2) If an explicit WT row is present (i.e., ``mutation_column == wt_identifier``),
+         ensures its sequence matches the consensus inferred WT sequence.
+      3) If the explicit WT row is missing, synthesizes a new WT row with the
+         inferred sequence and null experimental values.
       4) Fails the group if (a) multiple distinct inferred WT sequences are found,
-         or (b) the single inferred WT sequence does not match the explicit WT
-         sequence from the WT row. Otherwise the group is marked as success.
+         or (b) the inferred WT sequence does not match the explicit WT sequence.
+         Otherwise, the group is marked as success.
 
     Parallel execution is performed with ``joblib.Parallel(backend="loky")`` and
     a progress bar via ``tqdm``. If parallel execution fails, a sequential
@@ -61,8 +62,7 @@ def validate_wt_sequence(
         Column that identifies a protein/name group for validation.
     mutation_column : str
         Column containing mutation annotations. Its format must be parsable by
-        ``MutationSet.from_string(sep="_", is_zero_based=True)`` (the project’s
-        standard mutation string convention).
+        ``MutationSet.from_string(sep=",", is_zero_based=True)``.
     sequence_column : str
         Column containing the amino-acid sequence for that row (treated as the
         mutated sequence for mutants and the WT sequence for the WT row).
@@ -75,23 +75,22 @@ def validate_wt_sequence(
     -------
     Tuple[pd.DataFrame, pd.DataFrame]
         - successful_df:
-            Concatenation of **original rows** for groups that passed validation.
-            No new rows are synthesized; both mutant and WT rows from successful
-            groups are returned as-is. May be empty if no group passes.
+            Concatenation of original and synthesized rows for validated groups.
+            Both mutant rows and the explicit (or synthesized) WT rows from successful
+            groups are returned. May be empty if no group passes.
         - failed_df:
             Rows summarizing groups that failed validation. Each failed group is
-            represented by at least one row (derived from the group's first row)
-            with an additional column ``"error_message"`` describing the reason,
-            e.g., missing WT row, multiple inferred WT sequences, or mismatch
+            represented by at least one row with an additional column ``"error_message"``
+            describing the reason, e.g., multiple inferred WT sequences, or mismatch
             between inferred and explicit WT sequences. May be empty.
 
     Examples
     --------
-    >>> # Minimal schema example (mutation format must match your project's parser):
+    >>> # Minimal schema example showing both explicit and synthesized WT cases:
     >>> df = pd.DataFrame({
     ...     "protein": ["P1", "P1", "P1", "P2", "P2"],
-    ...     "mut":     ["wt", "A0G", "L4F", "wt", "K3R"],
-    ...     "seq":     ["ACDELG", "GCDELG", "ACDEFG", "MNPKQ", "MNPRQ"],
+    ...     "mut":     ["wt", "A0G", "L4F", "K3R", "M0A"],
+    ...     "seq":     ["ACDELG", "GCDELG", "ACDEFG", "MNPRQ", "ANPKQ"],
     ... })
     >>> successful, failed = validate_wt_sequence(
     ...     df, name_column="protein", mutation_column="mut", sequence_column="seq",
@@ -102,8 +101,9 @@ def validate_wt_sequence(
     0      P1  A0G  GCDELG
     1      P1  L4F  ACDEFG
     2      P1   wt  ACDELG
-    3      P2  K3R   MNPRQ
-    4      P2   wt   MNPKQ
+    3      P2  K3R  MNPRQ
+    4      P2  M0A  ANPKQ
+    5      P2   wt  MNPKQ
 
     See Also
     --------
@@ -122,7 +122,7 @@ def validate_wt_sequence(
 
     try:
         results = Parallel(n_jobs=num_workers, backend="loky")(
-            delayed(_process_protein_group)(group_data)
+            delayed(_process_protein_group)(group_data) 
             for group_data in tqdm(grouped, desc="Processing proteins")
         )
     except Exception as e:
@@ -206,28 +206,36 @@ def validate_wt_sequence_grouped(
     """
     Validate one protein/name group by comparing the explicit WT row with
     the WT sequence inferred from each mutant row.
+    If explicit WT row is missing, synthesize it using the inferred sequence.
     """
     protein_name, original_group = group_data
 
     try:
         # Check WT sequence is valid
         wt_rows = original_group[original_group[mutation_column] == wt_identifier]
-        if wt_rows.empty:
-            error_row = original_group.iloc[0].to_dict()
-            error_row["error_message"] = "WT row not found"
-            return [error_row], "failed"
+
+        # Fail immediately if multiple explicit WT rows exist
         if len(wt_rows) > 1:
             error_row = wt_rows.iloc[0].to_dict()
             error_row["error_message"] = "Multiple explicit WT rows"
             return [error_row], "failed"
-        # Extract original WT sequence
-        explicit_wt_seq = str(wt_rows.iloc[0][sequence_column]).strip()
-        wt_row_dict = wt_rows.iloc[0].to_dict()
 
+        has_wt = not wt_rows.empty
+
+        # Extract original WT sequence
+        explicit_wt_seq = (
+            str(wt_rows.iloc[0][sequence_column]).strip() if has_wt else None
+        )
+        wt_row_dict = wt_rows.iloc[0].to_dict() if has_wt else None
+
+        # Extract mutant rows
         mutants = original_group[original_group[mutation_column] != wt_identifier]
-        if mutants.empty:
-            # Return success if no mutants
+
+        # Handle edge case where no mutants exist
+        if mutants.empty and has_wt:
             return [wt_row_dict], "success"
+        elif mutants.empty and not has_wt:
+            return [], "failed"
 
         # Infer wild-type sequences
         inferred_wt_seqs = set()
@@ -243,9 +251,7 @@ def validate_wt_sequence_grouped(
             mut_seq = row[sequence_column]
 
             # Parse mutation and create sequence
-            mutation_set = MutationSet.from_string(
-                mut_info, sep=",", is_zero_based=True
-            )
+            mutation_set = MutationSet.from_string(mut_info, sep=",", is_zero_based=True)
             sequence = ProteinSequence(str(mut_seq).strip())
 
             # Infer wild-type sequence by applying inverted mutations
@@ -253,31 +259,46 @@ def validate_wt_sequence_grouped(
             wt_seq = sequence.apply_mutation(inverted_mutation_set)
             inferred_wt_seqs.add(str(wt_seq))
 
+        # Check consistency among inferred WT sequences
         if len(inferred_wt_seqs) > 1:
-            # Add error information to the first row
             error_row = mutants.iloc[0].to_dict()
             error_row["error_message"] = (
-                f"Multiple wildtype sequences inferred for {protein_name}: {len(inferred_wt_seqs)}"
+                f"Multiple wildtype sequences inferred for {protein_name}: "
+                f"{len(inferred_wt_seqs)}"
             )
             return [error_row], "failed"
 
-        # Compare inferred WT sequences with original WT sequences
-        if explicit_wt_seq != inferred_wt_seqs.pop():
-            error_row = mutants.iloc[0].to_dict()
-            error_row["error_message"] = (
-                f"Inferred WT sequence differs from original WT sequence: {wt_seq} vs. {inferred_wt_seqs.pop()}"
-            )
-            return [error_row], "failed"
+        inferred_wt = inferred_wt_seqs.pop()
+
+        # Perform validation checks
+        if has_wt:
+            # Compare inferred and explicit WT sequences
+            if explicit_wt_seq != inferred_wt:
+                error_row = mutants.iloc[0].to_dict()
+                error_row["error_message"] = (
+                    "Inferred WT sequence differs from original WT sequence: "
+                    f"{explicit_wt_seq} vs. {inferred_wt}"
+                    )
+                return [error_row], "failed"
+            else:
+                result_rows.append(wt_row_dict)
+                return result_rows, "success"
         else:
-            result_rows.append(wt_row_dict)
+            # Synthesize WT row if missing
+            synthetic_wt_row = mutants.iloc[0].to_dict()
+            synthetic_wt_row[mutation_column] = wt_identifier
+            synthetic_wt_row[sequence_column] = inferred_wt
+
+            # Clear experimental values for synthetic row
+            for col in synthetic_wt_row.keys():
+                if col not in [name_column, mutation_column, sequence_column]:
+                    synthetic_wt_row[col] = None
+
+            result_rows.append(synthetic_wt_row)
             return result_rows, "success"
 
     except Exception as e:
         # Save error information in first row
-        error_row = (
-            mutants.iloc[0].to_dict()
-            if len(mutants) > 0
-            else {name_column: str(protein_name)}
-        )
+        error_row = mutants.iloc[0].to_dict() if "mutants" in locals() and len(mutants) > 0 else {name_column: str(protein_name)}
         error_row["error_message"] = f"{type(e).__name__}: {str(e)}"
         return [error_row], "failed"
