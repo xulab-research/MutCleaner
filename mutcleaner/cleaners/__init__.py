@@ -15,13 +15,11 @@ from .human_domainome_sup2_cleaner import (
     clean_human_domainome_sup2_dataset,
     create_human_domainome_sup2_cleaner,
 )
-
 from .human_domainome_sup4_cleaner import (
     HumanDomainomeSup4CleanerConfig,
     clean_human_domainome_sup4_dataset,
     create_human_domainome_sup4_cleaner,
 )
-
 from .ddg_dtm_cleaners import (
     DdgDtmCleanerConfig,
     clean_ddg_dtm_dataset,
@@ -73,11 +71,15 @@ from .chitosanase_dtm_cleaner import (
     create_chitosanase_dtm_cleaner,
     clean_chitosanase_dtm_dataset,
 )
-
 from .mgnify_ddg_cleaner import (
     MGnifyddGCleanerConfig,
     create_mgnify_ddg_cleaner,
     clean_mgnify_ddg_dataset,
+)
+from .codon_cdna_proteolysis_cleaner import (
+    CodoncDNAProteolysisCleanerConfig,
+    create_codon_cdna_proteolysis_cleaner,
+    clean_codon_cdna_proteolysis_dataset,
 )
 
 __all__ = [
@@ -126,4 +128,7 @@ __all__ = [
     "MGnifyddGCleanerConfig",
     "create_mgnify_ddg_cleaner",
     "clean_mgnify_ddg_dataset",
+    "CodoncDNAProteolysisCleanerConfig",
+    "create_codon_cdna_proteolysis_cleaner",
+    "clean_codon_cdna_proteolysis_dataset",
 ]

@@ -15,11 +15,11 @@ from .basic_cleaners import (
     filter_and_clean_data,
     convert_data_types,
     apply_mutations_to_sequences,
+    add_sequences_to_dataset,
     convert_to_mutation_dataset_format,
 )
 from .human_domainome_custom_cleaners import (
     process_domain_positions,
-    add_sequences_to_dataset,
     extract_domain_sequences,
 )
 from ..core.dataset import MutationDataset
@@ -54,7 +54,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
 
     Attributes
     ----------
-    sequence_dict_path : Union[str, Path]
+    sequence_source : Union[str, Path]
         Path to the file containing UniProt ID to sequence mapping
     header_parser : Callable[[str], Tuple[str, Dict[str, str]]]
         Parse Header in fasta files and extract relevant information
@@ -75,7 +75,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
     """
 
     # Path to sequence dictionary file
-    sequence_dict_path: Union[str, Path]
+    sequence_source: Union[str, Path]
 
     # Header parser function
     header_parser: Callable[[str], Tuple[str, Dict[str, str]]] = parse_uniprot_header
@@ -129,11 +129,11 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
         super().validate()
 
         # Validate sequence dictionary path
-        if self.sequence_dict_path is not None:
-            seq_path = Path(self.sequence_dict_path)
+        if self.sequence_source is not None:
+            seq_path = Path(self.sequence_source)
             if not seq_path.exists():
                 raise ValueError(
-                    f"Sequence dictionary file not found: {self.sequence_dict_path}"
+                    f"Sequence dictionary file not found: {self.sequence_source}"
                 )
 
         # Validate score columns
@@ -155,7 +155,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
 
 def create_human_domainome_sup4_cleaner(
     dataset_or_path: Union[str, Path, pd.DataFrame],
-    sequence_dict_path: Union[str, Path],
+    sequence_source: Union[str, Path],
     config: Optional[
         Union[HumanDomainomeSup4CleanerConfig, Dict[str, Any], str, Path]
     ] = None,
@@ -168,7 +168,7 @@ def create_human_domainome_sup4_cleaner(
         Raw HumanDomainome dataset DataFrame or file path to HumanDomainome
         - File: `SupplementaryTable4.txt` from the article
           'Site-saturation mutagenesis of 500 human protein domains'
-    sequence_dict_path : Union[str, Path]
+    sequence_source : Union[str, Path]
         Path to file containing UniProt ID to sequence mapping
     config : Optional[Union[HumanDomainomeSup4CleanerConfig, Dict[str, Any], str, Path]]
         Configuration for the cleaning pipeline. Can be:
@@ -221,34 +221,34 @@ def create_human_domainome_sup4_cleaner(
     ...     config="config.json"
     ... )
     """
-    seq_path_obj = Path(sequence_dict_path)
+    seq_path_obj = Path(sequence_source)
     if not seq_path_obj.exists():
         raise FileNotFoundError(
-            f"Sequence dictionary file does not exist: {sequence_dict_path}"
+            f"Sequence dictionary file does not exist: {sequence_source}"
         )
 
     # Handle configuration parameter
     if config is None:
         final_config = HumanDomainomeSup4CleanerConfig(
-            sequence_dict_path=sequence_dict_path
+            sequence_source=sequence_source
         )
     elif isinstance(config, HumanDomainomeSup4CleanerConfig):
         final_config = config
-        # Override sequence_dict_path if not set
-        if final_config.sequence_dict_path is None:
-            final_config.sequence_dict_path = sequence_dict_path
+        # Override sequence_source if not set
+        if final_config.sequence_source is None:
+            final_config.sequence_source = sequence_source
     elif isinstance(config, dict):
         # Partial configuration - merge with defaults
         default_config = HumanDomainomeSup4CleanerConfig(
-            sequence_dict_path=sequence_dict_path
+            sequence_source=sequence_source
         )
         final_config = default_config.merge(config)
     elif isinstance(config, (str, Path)):
         # Load from file
         final_config = HumanDomainomeSup4CleanerConfig.from_json(config)
-        # Override sequence_dict_path if not set
-        if final_config.sequence_dict_path is None:
-            final_config.sequence_dict_path = sequence_dict_path
+        # Override sequence_source if not set
+        if final_config.sequence_source is None:
+            final_config.sequence_source = sequence_source
     else:
         raise TypeError(
             f"config must be HumanDomainomeSup4CleanerConfig, dict, str, Path or None, "
@@ -261,10 +261,6 @@ def create_human_domainome_sup4_cleaner(
     )
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
-    # Load sequence dictionary
-    seq_dict = _load_sequence_dict(
-        final_config.sequence_dict_path, header_parser=final_config.header_parser
-    )
 
     try:
         # Create pipeline
@@ -298,7 +294,7 @@ def create_human_domainome_sup4_cleaner(
             )
             .delayed_then(
                 add_sequences_to_dataset,
-                sequence_dict=seq_dict,
+                sequence_source=final_config.sequence_source,
                 name_column=final_config.column_mapping.get("uniprot_ID", "uniprot_ID"),
             )
             .delayed_then(
@@ -391,27 +387,3 @@ def clean_human_domainome_sup4_dataset(
         )
 
 
-def _load_sequence_dict(
-    seq_dict_path: Union[str, Path],
-    header_parser: Optional[Callable[[str], Tuple[str, Dict[str, str]]]] = None,
-) -> Dict[str, str]:
-    """Load UniProt ID to sequence mapping from file
-
-    Parameters
-    ----------
-    seq_dict_path : Union[str, Path]
-        Path to sequence dictionary file (CSV, TSV, or FASTA format)
-    header_parser : Optional[Callable], default=None
-        Function to parse FASTA headers. If None, uses UniProt parser.
-        Only used for FASTA files.
-
-    Returns
-    -------
-    Dict[str, str]
-        Dictionary mapping UniProt IDs to sequences
-    """
-    # Use the new load_sequences function
-    seq_dict = load_sequences(seq_dict_path, header_parser=header_parser)
-
-    logger.info(f"Loaded {len(seq_dict)} sequences from {seq_dict_path}")
-    return seq_dict

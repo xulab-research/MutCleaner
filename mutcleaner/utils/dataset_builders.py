@@ -1,4 +1,26 @@
 # mutcleaner/utils/dataset_builders.py
+from __future__ import annotations
+from ..core.mutation import (
+    AminoAcidMutation,
+    BaseMutation,
+    CodonMutation,
+    MutationSet,
+)
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from typing import Any, Dict, List, Optional, Type, Tuple, Union
+
+    from ..core.alphabet import BaseAlphabet
+    from ..core.sequence import (
+        BaseSequence,
+        DNASequence,
+        ProteinSequence,
+        RNASequence,
+    )
+import pandas as pd
+from tqdm import tqdm
+
+
 
 """
 Functions are used in mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format()
@@ -22,18 +44,6 @@ format 2:
 ...     'mut_seq': ['KKDDEF', 'APCDEF', 'FFGHIS']
 ... })
 """
-from __future__ import annotations
-
-import pandas as pd
-from tqdm import tqdm
-from typing import TYPE_CHECKING
-
-from ..core.mutation import MutationSet
-
-if TYPE_CHECKING:
-    from typing import Any, Dict, List, Optional, Type, Tuple, Union
-
-    from ..core.sequence import ProteinSequence, DNASequence, RNASequence
 
 __all__ = ["convert_format_1", "convert_format_2"]
 
@@ -53,7 +63,9 @@ def convert_format_1(
     is_zero_based: bool,
     additional_metadata: Optional[Dict[str, Any]],
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
-) -> Tuple[pd.DataFrame, Dict[str, str]]:
+    mutation_type: Type[BaseMutation],
+    alphabet: BaseAlphabet,
+) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """Convert Format 1 (with WT rows) to mutation dataset format."""
 
     input_df = df.copy()
@@ -92,22 +104,28 @@ def convert_format_1(
 
         # Parse mutations (single or multiple)
         try:
-            mutation_data_list = _parse_mutations_string(mut_info, is_zero_based)
-        except ValueError as e:
-            raise ValueError(f"Cannot parse mutation '{mut_info}' in row {idx}: {e}")
-
+            mutations = _parse_mutations_string(
+                mut_info,
+                is_zero_based=is_zero_based,
+                mutation_type=mutation_type,
+                alphabet=alphabet,
+            )
+        except ValueError as error:
+            raise ValueError(
+                f"Cannot parse mutation {mut_info!r} in row {idx}: {error}"
+            ) from error
         # Create one output row per individual mutation within the set
         mutation_set_id = f"{mutation_set_prefix}_{idx + 1}"
         mutation_set_name = f"{name}_{mut_info}"
 
-        for mutation_data in mutation_data_list:
-            output_row = _create_output_row_from_mutation_data(
+        for mutation in mutations:
+            output_row = _create_output_row_from_mutation(
                 mutation_set_id,
                 mutation_set_name,
                 mut_info,
                 name,
                 score,
-                mutation_data,
+                mutation,
                 additional_metadata,
             )
             output_rows.append(output_row)
@@ -125,8 +143,12 @@ def convert_format_2(
     mutation_set_prefix: str,
     is_zero_based: bool,
     additional_metadata: Optional[Dict[str, Any]],
-    sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
-) -> Tuple[pd.DataFrame, Dict[str, str]]:
+    sequence_class: Type[
+        Union[ProteinSequence, DNASequence, RNASequence]
+    ],
+    mutation_type: Type[BaseMutation],
+    alphabet: BaseAlphabet,
+) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """Convert Format 2 (with sequence column) to mutation dataset format."""
 
     input_df = df.copy()
@@ -151,7 +173,12 @@ def convert_format_2(
 
         # Parse mutations (single or multiple)
         try:
-            mutation_data_list = _parse_mutations_string(mut_info, is_zero_based)
+            mutations = _parse_mutations_string(
+                mut_info,
+                is_zero_based=is_zero_based,
+                mutation_type=mutation_type,
+                alphabet=alphabet,
+            )
         except ValueError as e:
             raise ValueError(f"Cannot parse mutation '{mut_info}' in row {idx}: {e}")
 
@@ -159,14 +186,14 @@ def convert_format_2(
         mutation_set_id = f"{mutation_set_prefix}_{idx + 1}"
         mutation_set_name = f"{name}_{mut_info}"
 
-        for mutation_data in mutation_data_list:
-            output_row = _create_output_row_from_mutation_data(
+        for mutation in mutations:
+            output_row = _create_output_row_from_mutation(
                 mutation_set_id,
                 mutation_set_name,
                 mut_info,
                 name,
                 score,
-                mutation_data,
+                mutation,
                 additional_metadata,
             )
             output_rows.append(output_row)
@@ -175,122 +202,93 @@ def convert_format_2(
     return output_df, reference_sequences
 
 
-def _create_output_row_from_mutation_data(
+def _create_output_row_from_mutation(
     mutation_set_id: str,
     mutation_set_name: str,
     original_mutation_string: str,
     name: str,
     score: float,
-    mutation_data: Dict[str, Any],
+    mutation: BaseMutation,
     additional_metadata: Optional[Dict[str, Any]],
 ) -> Dict[str, Any]:
-    """
-    Create a single output row from mutation data.
-
-    Parameters
-    ----------
-    mutation_set_id : str
-        ID for the mutation set
-    mutation_set_name : str
-        Name for the mutation set
-    original_mutation_string : str
-        Original mutation string (may contain multiple mutations)
-    name : str
-        Protein/sequence name
-    score : float
-        Score associated with the mutation set
-    mutation_data : Dict[str, Any]
-        Data for a single mutation
-    additional_metadata : Optional[Dict[str, Any]]
-        Additional metadata for the mutation set
-
-    Returns
-    -------
-    Dict[str, Any]
-        Row data for the output DataFrame
-    """
+    """Create one flattened MutationDataset row from a mutation object."""
     output_row = {
         "mutation_set_id": mutation_set_id,
         "reference_id": name,
-        "mutation_string": mutation_data["mutation_string"],  # Individual mutation
-        "position": mutation_data["position"],
-        "mutation_type": "amino_acid",
-        "wild_amino_acid": mutation_data["wild_aa"],
-        "mutant_amino_acid": mutation_data["mutant_aa"],
+        "mutation_string": str(mutation),
+        "position": mutation.position,
+        "mutation_type": mutation.type,
         "mutation_set_name": mutation_set_name,
         "label": score,
-        "set_original_mutation_string": original_mutation_string,  # Store original string
+        "set_original_mutation_string": original_mutation_string,
     }
 
-    # Add additional metadata if provided
+    if isinstance(mutation, AminoAcidMutation):
+        output_row.update(
+            {
+                "wild_amino_acid": mutation.wild_amino_acid,
+                "mutant_amino_acid": mutation.mutant_amino_acid,
+            }
+        )
+
+    elif isinstance(mutation, CodonMutation):
+        output_row.update(
+            {
+                "wild_codon": mutation.wild_codon,
+                "mutant_codon": mutation.mutant_codon,
+                "sequence_type": mutation.seq_type,
+                "position_unit": "codon",
+            }
+        )
+
+    else:
+        raise TypeError(
+            f"Unsupported mutation type: {type(mutation).__name__}"
+        )
+
     if additional_metadata:
-        for key, value in additional_metadata.items():
-            output_row[f"set_{key}"] = value
+        output_row.update(
+            {
+                f"set_{key}": value
+                for key, value in additional_metadata.items()
+            }
+        )
 
     return output_row
 
 
 def _parse_mutations_string(
-    mutation_string: str, is_zero_based: bool
-) -> list[Dict[str, Any]]:
-    """
-    Parse a mutation string that may contain single or multiple mutations.
-
-    This function can handle:
-    - Single mutations: 'A0S'
-    - Multiple mutations: 'A0S,Q1D' or 'A0S;Q1D'
-
-    Uses MutationSet.from_string to parse complex mutation strings and
-    falls back to simple parsing for basic cases.
+    mutation_string: str,
+    is_zero_based: bool,
+    mutation_type: Type[BaseMutation],
+    alphabet: BaseAlphabet,
+) -> List[BaseMutation]:
+    """Parse one or more mutations from a mutation string.
 
     Parameters
     ----------
     mutation_string : str
-        Mutation string(s) to parse
-
+        String containing one or more mutations.
     is_zero_based : bool
-        Whether origin mutation positions are zero-based
+        Whether positions in the input string are zero-based.
+    mutation_type : Type[BaseMutation]
+        Mutation class used for parsing.
+    alphabet : BaseAlphabet
+        Alphabet used to validate mutation symbols.
 
     Returns
     -------
-    list[Dict[str, Any]]
-        List of mutation data dictionaries, each containing:
-        - 'wild_aa': wild-type amino acid
-        - 'position': position (0-based)
-        - 'mutant_aa': mutant amino acid
-        - 'mutation_string': individual mutation string
-
-    Raises
-    ------
-    ValueError
-        If the mutation string cannot be parsed
+    List[BaseMutation]
+        Parsed mutation objects.
     """
-    mutation_string = mutation_string.strip()
+    if not isinstance(mutation_string, str) or not mutation_string.strip():
+        raise ValueError("Mutation string cannot be empty")
 
-    # Use MutationSet.from_string to parse complex mutation strings
-    mutation_set = MutationSet.from_string(mutation_string, is_zero_based=is_zero_based)
+    mutation_set = MutationSet.from_string(
+        mutation_string.strip(),
+        is_zero_based=is_zero_based,
+        mutation_type=mutation_type,
+        alphabet=alphabet,
+    )
 
-    mutation_data_list = []
-    for mutation in mutation_set.mutations:
-        # Extract information from the mutation object
-        if (
-            hasattr(mutation, "wild_type")
-            and hasattr(mutation, "position")
-            and hasattr(mutation, "mutant_type")
-        ):
-            mutation_data = {
-                "wild_aa": mutation.wild_type,
-                "position": mutation.position,
-                "mutant_aa": mutation.mutant_type,
-                "mutation_string": str(mutation),  # Individual mutation string
-            }
-            mutation_data_list.append(mutation_data)
-        else:
-            raise ValueError(
-                f"Mutation object does not have expected attributes: {mutation}"
-            )
-
-    if not mutation_data_list:
-        raise ValueError("No valid mutations found in mutation set")
-
-    return mutation_data_list
+    return list(mutation_set.mutations)

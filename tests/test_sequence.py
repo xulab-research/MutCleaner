@@ -454,7 +454,7 @@ class TestApplyMutation:
         seq = DNASequence("ATGAAACCC")
         mutations = [
             CodonMutation("ATG", 0, "TTG"),  # ATG0TTG.
-            CodonMutation("CCC", 6, "GGG"),  # CCC6GGG.
+            CodonMutation("CCC", 2, "GGG"),  # CCC6GGG.
         ]
         mutation_set = CodonMutationSet(mutations)
 
@@ -476,7 +476,7 @@ class TestApplyMutation:
         seq = DNASequence("ATGAAA")  # Length 6.
 
         # Test a codon extending beyond sequence bounds.
-        mutation = CodonMutation("AAA", 4, "TTT")  # Position 4 + 3 = 7 > 6.
+        mutation = CodonMutation("AAA", 2, "TTT")  
         with pytest.raises(ValueError, match="extends beyond sequence length"):
             seq.apply_mutation(mutation)
 
@@ -570,7 +570,6 @@ class TestApplyMutation:
 
         with pytest.raises(TypeError, match="Unmatching mutation subtype"):
             seq.apply_mutation(unsupported_mutation)
-
 
 if __name__ == "__main__":
     # Run tests.

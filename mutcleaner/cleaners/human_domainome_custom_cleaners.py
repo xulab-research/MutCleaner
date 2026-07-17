@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 __all__ = [
     "generate_mutation_strings",
     "process_domain_positions",
-    "add_sequences_to_dataset",
     "extract_domain_sequences",
 ]
 
@@ -230,93 +229,6 @@ def process_domain_positions(
 
     tqdm.write(
         f"Position processing: {len(successful_dataset)} successful, {len(failed_dataset)} failed"
-    )
-
-    return successful_dataset, failed_dataset
-
-
-@multiout_step(main="success", failed="failed")
-def add_sequences_to_dataset(
-    dataset: pd.DataFrame, sequence_dict: Dict[str, str], name_column: str = "name"
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """Add full wild-type sequences to the dataset from sequence dictionary
-
-    This function maps sequences from a dictionary to the dataset. Records without
-    matching sequences are separated into the failed dataset.
-
-    Parameters
-    ----------
-    dataset : pd.DataFrame
-        Dataset containing protein names
-    sequence_dict : Dict[str, str]
-        Mapping from protein name to full wild-type sequence
-    name_column : str, default='name'
-        Column name containing protein identifiers
-
-    Returns
-    -------
-    Tuple[pd.DataFrame, pd.DataFrame]
-        (successful_dataset, failed_dataset) - datasets with and without sequences
-
-    Examples
-    --------
-    >>> import pandas as pd
-    >>> df = pd.DataFrame({
-    ...     'name': ['prot1', 'prot2', 'prot3'],
-    ...     'score': [1.0, 2.0, 3.0]
-    ... })
-    >>> seq_dict = {'prot1': 'AKCD', 'prot2': 'EFGH'}
-    >>> successful, failed = add_sequences_to_dataset(df, seq_dict)
-    >>> print(len(successful))  # Should be 2
-    2
-    >>> print(len(failed))  # Should be 1
-    1
-    """
-    tqdm.write("Adding wild-type sequences to dataset...")
-
-    # Validate name column exists
-    if name_column not in dataset.columns:
-        raise ValueError(f"Column '{name_column}' not found in dataset")
-
-    # Create a copy to avoid modifying the original
-    result_dataset = dataset.copy()
-    result_dataset["error_message"] = None
-
-    try:
-        # Map sequences to dataset
-        result_dataset["sequence"] = result_dataset[name_column].map(sequence_dict)
-
-        # Mark missing sequences as errors
-        missing_mask = result_dataset["sequence"].isnull()
-        result_dataset.loc[missing_mask, "error_message"] = (
-            "Sequence not found in sequence dictionary"
-        )
-
-        # Success mask is where we have sequences
-        success_mask = ~missing_mask
-
-        # Log missing proteins
-        if missing_mask.any():
-            missing_proteins = result_dataset[missing_mask][name_column].unique()
-            tqdm.write(
-                f"Warning: Missing sequences for {len(missing_proteins)} proteins: {list(missing_proteins[:10])}"
-                + (" ..." if len(missing_proteins) > 10 else "")
-            )
-
-    except Exception as e:
-        # If something goes wrong, mark all as failed
-        result_dataset["error_message"] = f"Error mapping sequences: {str(e)}"
-        success_mask = pd.Series([False] * len(result_dataset))
-
-    # Separate successful and failed datasets
-    successful_dataset = result_dataset[success_mask].drop(columns=["error_message"])
-    failed_dataset = result_dataset[~success_mask].drop(columns=["sequence"])
-
-    total_proteins = dataset[name_column].nunique()
-    successful_proteins = successful_dataset[name_column].nunique()
-
-    tqdm.write(
-        f"Sequence addition: {len(successful_dataset)} successful, {len(failed_dataset)} failed ({successful_proteins}/{total_proteins} proteins)"
     )
 
     return successful_dataset, failed_dataset

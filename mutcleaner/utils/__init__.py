@@ -7,7 +7,7 @@ from .data_source import (
 
 from .raw_data_downloader import (
     download,
-    download_cdna_proteolysis_source_file,
+    download_protein_cdna_proteolysis_source_file,
     download_proteingym_source_file,
     download_human_domainome_source_file,
     download_ddg_dtm_source_file,
@@ -27,7 +27,7 @@ __all__ = [
     "list_datasets_with_built_in_cleaners", 
     "show_download_instructions", 
     "download", 
-    "download_cdna_proteolysis_source_file", 
+    "download_protein_cdna_proteolysis_source_file", 
     "download_proteingym_source_file", 
     "download_human_domainome_source_file",
     "download_ddg_dtm_source_file",

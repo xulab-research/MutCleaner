@@ -9,10 +9,12 @@ from joblib import Parallel, delayed
 from pathlib import Path
 from tqdm import tqdm
 from typing import cast, TYPE_CHECKING
+from ..utils.sequence_io import load_sequences
 
-from ..core.alphabet import ProteinAlphabet, DNAAlphabet, RNAAlphabet
+from ..core.alphabet import ProteinAlphabet, DNAAlphabet, RNAAlphabet, BaseAlphabet
 from ..core.pipeline import pipeline_step, multiout_step
 from ..core.sequence import ProteinSequence, DNASequence, RNASequence
+from ..core.mutation import BaseMutation, AminoAcidMutation, CodonMutation
 from ..utils.cleaner_workers import (
     valid_single_mutation,
     apply_single_mutation,
@@ -57,6 +59,7 @@ __all__ = [
     "convert_to_mutation_dataset_format",
     "replace_in_column",
     "subtract_labels_by_wt",
+    "add_sequences_to_dataset",
     "remap_mutation_positions_by_name",
 ]
 
@@ -837,7 +840,9 @@ def validate_mutations(
     format_mutations: bool = True,
     mutation_sep: str = ",",
     is_zero_based: bool = False,
-    exclude_patterns: Union[str, Sequence[str], Callable, None] = None,
+    mutation_type=None,
+    alphabet=None,
+    exclude_patterns=None,
     cache_results: bool = True,
     num_workers: int = 4,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -860,6 +865,10 @@ def validate_mutations(
         Separator used to split multiple mutations in a single string (e.g., 'A123B,C456D')
     is_zero_based : bool, default=False
         Whether origin mutation positions are zero-based
+    mutation_type : str, optional
+        Type of mutation (e.g., 'CodonMutation', 'AminoAcidMutation')
+    alphabet : BaseAlphabet, optional
+        Alphabet to use for mutation validation
     exclude : Union[str, List[str], callable, None], default=None
         Patterns to exclude from validation. Can be:
         - A regex pattern string (e.g., r'^WT$|^wildtype$')
@@ -1019,6 +1028,8 @@ def validate_mutations(
             format_mutations,
             mutation_sep,
             is_zero_based,
+            mutation_type,
+            alphabet,
             cache if cache_results else None,
         )
         for mut_info in mutation_values
@@ -1079,6 +1090,8 @@ def apply_mutations_to_sequences(
     mutation_sep: str = ",",
     is_zero_based: bool = True,
     sequence_type: str = "protein",
+    mutation_type: Optional[Type[BaseMutation]] = None,
+    alphabet: Optional[BaseAlphabet] = None,
     num_workers: int = 4,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
@@ -1161,6 +1174,8 @@ def apply_mutations_to_sequences(
         mutation_sep=mutation_sep,
         is_zero_based=is_zero_based,
         sequence_class=SequenceClass,
+        mutation_type=mutation_type,
+        alphabet=alphabet,
     )
 
     # Parallel processing
@@ -1807,7 +1822,7 @@ def convert_to_mutation_dataset_format(
     mutation_set_prefix: str = "set",
     is_zero_based: bool = False,
     additional_metadata: Optional[Dict[str, Any]] = None,
-) -> Tuple[pd.DataFrame, Dict[str, str]]:
+) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """
     Convert a mutation DataFrame to the format required by MutationDataset.from_dataframe().
 
@@ -1928,13 +1943,23 @@ def convert_to_mutation_dataset_format(
     # Select appropriate sequence class based on sequence_type
     if sequence_type.lower() == "protein":
         SequenceClass = ProteinSequence
+        MutationClass = AminoAcidMutation
+        alphabet = ProteinAlphabet(include_stop=True)
+
     elif sequence_type.lower() == "dna":
         SequenceClass = DNASequence
+        MutationClass = CodonMutation
+        alphabet = DNAAlphabet()
+
     elif sequence_type.lower() == "rna":
         SequenceClass = RNASequence
+        MutationClass = CodonMutation
+        alphabet = RNAAlphabet()
+
     else:
         raise ValueError(
-            f"Unsupported sequence type: {sequence_type.lower()}. Must be 'protein', 'dna', or 'rna'"
+            f"Unsupported sequence type: {sequence_type!r}. "
+            "Must be 'protein', 'dna', or 'rna'"
         )
 
     # Intelligently determine input format based on actual data content
@@ -1960,6 +1985,8 @@ def convert_to_mutation_dataset_format(
             is_zero_based,
             additional_metadata,
             SequenceClass,
+            MutationClass,
+            alphabet,
         )
     elif has_wt_rows and not has_sequence_column:
         # Clearly Format 1: has WT rows, no sequence column
@@ -1975,6 +2002,8 @@ def convert_to_mutation_dataset_format(
             is_zero_based,
             additional_metadata,
             SequenceClass,
+            MutationClass,
+            alphabet,
         )
     elif has_sequence_column and has_wt_rows:
         # Ambiguous: has both sequence column and WT rows
@@ -1994,6 +2023,8 @@ def convert_to_mutation_dataset_format(
                 is_zero_based,
                 additional_metadata,
                 SequenceClass,
+                MutationClass,
+                alphabet,
             )
         else:
             tqdm.write(
@@ -2010,6 +2041,8 @@ def convert_to_mutation_dataset_format(
                 is_zero_based,
                 additional_metadata,
                 SequenceClass,
+                MutationClass,
+                alphabet,
             )
     else:
         # Neither format detected
@@ -2505,3 +2538,119 @@ def remap_mutation_positions_by_name(
     ]
 
     return result
+
+
+@multiout_step(main="success", failed="failed")
+def add_sequences_to_dataset(
+    dataset: pd.DataFrame,
+    sequence_source: Union[Dict[str, str], str, Path],
+    name_column: str = "name",
+    sequence_column: str = "sequence",
+    header_parser: Optional[
+        Callable[[str], Tuple[str, Dict[str, str]]]
+    ] = None,
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """Add full wild-type sequences to the dataset from sequence dictionary
+
+    This function maps sequences from a dictionary to the dataset. Records without
+    matching sequences are separated into the failed dataset.
+
+    Parameters
+    ----------
+    dataset : pd.DataFrame
+        Dataset containing protein names
+    sequence_source : Dict[str, str]
+        Mapping from protein name to full wild-type sequence
+    name_column : str, default='name'
+        Column name containing protein identifiers
+
+    Returns
+    -------
+    Tuple[pd.DataFrame, pd.DataFrame]
+        (successful_dataset, failed_dataset) - datasets with and without sequences
+
+    Examples
+    --------
+    >>> import pandas as pd
+    >>> df = pd.DataFrame({
+    ...     'name': ['prot1', 'prot2', 'prot3'],
+    ...     'score': [1.0, 2.0, 3.0]
+    ... })
+    >>> from typing import Dict
+    >>> from mutcleaner.cleaners.basic_cleaners import add_sequences_to_dataset
+    >>> from mutcleaner.loaders import load_sequences
+
+    >>> seq_dict = {'prot1': 'AKCD', 'prot2': 'EFGH'}
+    >>> successful, failed = add_sequences_to_dataset(df, seq_dict)
+    >>> print(len(successful))  # Should be 2
+    2
+    >>> print(len(failed))  # Should be 1
+    1
+    """
+    tqdm.write("Adding wild-type sequences to dataset...")
+
+    # Validate name column exists
+    if name_column not in dataset.columns:
+        raise ValueError(f"Column '{name_column}' not found in dataset")
+
+    if isinstance(sequence_source, dict):
+        sequence_dict = sequence_source
+    elif isinstance(sequence_source, (str, Path)):
+        sequence_dict = load_sequences(
+            sequence_source,
+            header_parser=header_parser,
+        )
+    else:
+        raise TypeError(
+            "sequence_source must be a sequence dictionary or file path, "
+            f"got {type(sequence_source).__name__}"
+        )
+
+    tqdm.write(
+        f"Loaded {len(sequence_dict)} reference sequences"
+    )
+
+    # Create a copy to avoid modifying the original
+    result_dataset = dataset.copy()
+    result_dataset["error_message"] = None
+
+    try:
+        # Map sequences to dataset
+        result_dataset[sequence_column] = result_dataset[name_column].map(sequence_dict)
+
+        # Mark missing sequences as errors
+        missing_mask = result_dataset[sequence_column].isnull()
+        result_dataset.loc[missing_mask, "error_message"] = (
+            "Sequence not found in sequence dictionary"
+        )
+
+        # Success mask is where we have sequences
+        success_mask = ~missing_mask
+
+        # Log missing proteins
+        if missing_mask.any():
+            missing_proteins = result_dataset[missing_mask][name_column].unique()
+            tqdm.write(
+                f"Warning: Missing sequences for {len(missing_proteins)} proteins: {list(missing_proteins[:10])}"
+                + (" ..." if len(missing_proteins) > 10 else "")
+            )
+
+    except Exception as e:
+        # If something goes wrong, mark all as failed
+        result_dataset["error_message"] = f"Error mapping sequences: {str(e)}"
+        success_mask = pd.Series([False] * len(result_dataset))
+
+    # Separate successful and failed datasets
+    successful_dataset = result_dataset[success_mask].drop(columns=["error_message"])
+    failed_dataset = result_dataset[~success_mask].drop(columns=[sequence_column])
+
+    total_proteins = dataset[name_column].nunique()
+    successful_proteins = successful_dataset[name_column].nunique()
+
+    tqdm.write(
+        f"Sequence addition: {len(successful_dataset)} successful, {len(failed_dataset)} failed ({successful_proteins}/{total_proteins} proteins)"
+    )
+
+    print("successful_dataset:", successful_dataset)
+
+    return successful_dataset, failed_dataset

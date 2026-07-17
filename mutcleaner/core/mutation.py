@@ -192,7 +192,12 @@ class AminoAcidMutation(BaseMutation):
 
 
 class CodonMutation(BaseMutation):
-    """Represents a codon mutation"""
+    """Represent a codon substitution.
+
+    The ``position`` attribute is always stored as a zero-based codon
+    index relative to the coding sequence. The corresponding nucleotide
+    interval is ``position * 3 : position * 3 + 3``.
+    """
 
     def __init__(
         self,
@@ -212,10 +217,20 @@ class CodonMutation(BaseMutation):
 
         # Use appropriate alphabet based on detected sequence type
         self.alphabet = alphabet if alphabet is not None else (RNAAlphabet() if self.seq_type == "RNA" else DNAAlphabet())
-        print("Alphabet:", self.alphabet, "seq_type:", self.seq_type)
+        # print("Alphabet:", self.alphabet, "seq_type:", self.seq_type)
 
         if not self._is_valid():
             raise ValueError(f"Invalid codon mutation: {self}")
+
+    @property
+    def nucleotide_start(self) -> int:
+        """Return the zero-based nucleotide start of this codon."""
+        return self.position * 3
+
+    @property
+    def nucleotide_end(self) -> int:
+        """Return the exclusive nucleotide end of this codon."""
+        return self.nucleotide_start + 3
 
     @staticmethod
     def _detect_seq_type(wild_codon: str, mutant_codon: str) -> Literal["DNA", "RNA", "Both"]:

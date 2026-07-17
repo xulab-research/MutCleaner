@@ -155,19 +155,25 @@ class BaseSequence(ABC):
         elif isinstance(mutation, BaseMutation):
             # Validate mutation position and get mutation details
             if isinstance(mutation, CodonMutation):
+                codon_position = mutation.position
+                start_pos = mutation.nucleotide_start
+                end_pos = mutation.nucleotide_end
+
                 # For codon mutations, check 3 bases starting at position
-                if mutation.position < 0 or mutation.position + 2 >= len(self.sequence):
+                if start_pos < 0 or end_pos > len(self.sequence):
                     raise ValueError(
-                        f"Codon mutation at position {mutation.position} extends beyond sequence length {len(self.sequence)}"
+                        f"Codon position {codon_position} is out of bounds "
+                        f"for a sequence of length {len(self.sequence)} "
+                        f"({len(self.sequence) // 3} complete codons)"
                     )
 
                 # Check mutation subtypes (DNA or RNA)
-                VALID_COMBINATIONS = {
+                valid_combinations = {
                     "DNA": DNAAlphabet,
                     "Both": DNAAlphabet,
                     "RNA": RNAAlphabet,
                 }
-                expected_alphabet = VALID_COMBINATIONS.get(mutation.seq_type)
+                expected_alphabet = valid_combinations.get(mutation.seq_type)
 
                 if expected_alphabet is None or not isinstance(
                     self.alphabet, expected_alphabet
@@ -177,7 +183,7 @@ class BaseSequence(ABC):
                     )
 
                 # Validate original codon matches expected
-                actual_codon = self.sequence[mutation.position : mutation.position + 3]
+                actual_codon = self.sequence[start_pos:end_pos]
                 if actual_codon != mutation.wild_codon:
                     raise ValueError(
                         f"Expected codon '{mutation.wild_codon}' at position {mutation.position}, "
@@ -186,9 +192,9 @@ class BaseSequence(ABC):
 
                 # Apply codon mutation (replace 3 bases)
                 new_sequence = (
-                    self.sequence[: mutation.position]
+                    self.sequence[:start_pos]
                     + mutation.mutant_codon
-                    + self.sequence[mutation.position + 3 :]
+                    + self.sequence[end_pos:]
                 )
 
             elif isinstance(mutation, AminoAcidMutation):
@@ -266,20 +272,72 @@ class BaseSequence(ABC):
 
     def infer_mutation(self: SequenceType, other: SequenceType) -> MutationSet:
         """Infer a mutation that leads to a specific sequence"""
-        if type(self) != type(other):
-            raise TypeError("Sequences must be of the same type")
+        if type(self) is not type(other):
+            raise TypeError(
+                "Sequences must be of the same type, "
+                f"got {type(self).__name__} and {type(other).__name__}"
+            )
+
         if len(self.sequence) != len(other.sequence):
-            raise ValueError("Sequences must have the same length")
-        mutations = []
-        for pos, (wt_char, mut_char) in enumerate(zip(self.sequence, other.sequence)):
-            if wt_char != mut_char:
-                # Adjust position based on zero_based parameter
-                mutation = f"{wt_char}{pos}{mut_char}"
-                mutations.append(mutation)
-        mutations = MutationSet.from_string(
-            ",".join(mutations), sep=",", is_zero_based=True
+            raise ValueError(
+                "Sequences must have the same length, "
+                f"got {len(self.sequence)} and {len(other.sequence)}"
+            )
+
+        if isinstance(self, ProteinSequence):
+            mutations = [
+                AminoAcidMutation(
+                    wild_type=wild_amino_acid,
+                    position=position,
+                    mutant_type=mutant_amino_acid,
+                    alphabet=self.alphabet,
+                )
+                for position, (wild_amino_acid, mutant_amino_acid) in enumerate(
+                    zip(self.sequence, other.sequence)
+                )
+                if wild_amino_acid != mutant_amino_acid
+            ]
+
+            if not mutations:
+                raise ValueError("No amino-acid mutations were inferred")
+
+            return AminoAcidMutationSet(mutations)
+
+        if isinstance(self, (DNASequence, RNASequence)):
+            if len(self.sequence) % 3 != 0:
+                raise ValueError(
+                    f"{type(self).__name__} mutation inference requires sequence "
+                    f"lengths divisible by 3, got {len(self.sequence)}"
+                )
+
+            mutations = []
+
+            for codon_position in range(len(self.sequence) // 3):
+                start = codon_position * 3
+                end = start + 3
+
+                wild_codon = self.sequence[start:end]
+                mutant_codon = other.sequence[start:end]
+
+                if wild_codon != mutant_codon:
+                    mutations.append(
+                        CodonMutation(
+                            wild_type=wild_codon,
+                            position=codon_position,
+                            mutant_type=mutant_codon,
+                            alphabet=self.alphabet,
+                        )
+                    )
+
+            if not mutations:
+                raise ValueError("No codon mutations were inferred")
+
+            return CodonMutationSet(mutations)
+
+        raise TypeError(
+            f"Mutation inference is not supported for "
+            f"{type(self).__name__}"
         )
-        return mutations
 
 
 class ProteinSequence(BaseSequence):

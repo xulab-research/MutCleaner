@@ -1,10 +1,10 @@
 # mutcleaner/utils/data_source.py
 DATASETS = {
-    "cDNA Proteolysis Dataset": {
+    "Protein cDNA Proteolysis Dataset": {
         "paper_title": "Mega-scale experimental analysis of protein folding stability in biology and design",
         "official_doi": "https://doi.org/10.1038/s41586-023-06328-6",
         "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv?download=true"
+            "datasets/xulab-research/MutCleaner/resolve/main/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv?download=true"
         ],
         "file_name": ["Tsuboyama2023_Dataset2_Dataset3_20230416.csv"],
     },

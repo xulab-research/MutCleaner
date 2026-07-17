@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "download",
-    "download_cdna_proteolysis_source_file",
+    "download_protein_cdna_proteolysis_source_file",
     "download_proteingym_source_file",
     "download_human_domainome_source_file",
     "download_rbd_antibody_source_file",
@@ -441,20 +441,20 @@ def download_source_file_from_huggingface(
     return local_paths
 
 
-def download_cdna_proteolysis_source_file(
+def download_protein_cdna_proteolysis_source_file(
     dir: str, *, overwrite: bool = False
 ) -> Dict[str, str]:
     """
-    Download the source file for cDNA Proteolysis Dataset from the original source.
+    Download the source file for Protein cDNA Proteolysis Dataset from the original source.
 
     Returns
     -------
     Dict[str, str]
         key: file name,
-        value: file path pointing to cDNA Proteolysis Dataset source file
+        value: file path pointing to Protein cDNA Proteolysis Dataset source file
     """
     return download_source_file_from_huggingface(
-        "cDNA Proteolysis Dataset", dir, overwrite=overwrite
+        "Protein cDNA Proteolysis Dataset", dir, overwrite=overwrite
     )
 
 

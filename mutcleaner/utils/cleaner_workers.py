@@ -7,7 +7,8 @@ from tqdm import tqdm
 from typing import TYPE_CHECKING
 
 from .mutation_converter import invert_mutation_set
-from ..core.mutation import MutationSet
+from ..core.mutation import BaseMutation, MutationSet
+from ..core.alphabet import BaseAlphabet
 from ..core.types import SequenceType
 
 if TYPE_CHECKING:
@@ -44,7 +45,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
     Tuple[Optional[str], Optional[str]]
         (formatted_mutation, error_message) - one will be None
     """
-    mut_info, format_mutations, mutation_sep, is_zero_based, shared_cache = args
+    mut_info, format_mutations, mutation_sep, is_zero_based, mutation_type, alphabet, shared_cache = args
 
     if pd.isna(mut_info):
         return None, "Missing mutation information"
@@ -57,7 +58,11 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
         if format_mutations:
             # Parse and format mutation
             mutation_set = MutationSet.from_string(
-                mut_info, sep=mutation_sep, is_zero_based=is_zero_based
+                mut_info,
+                sep=mutation_sep,
+                is_zero_based=is_zero_based,
+                mutation_type=mutation_type,
+                alphabet=alphabet,
             )
             formatted_mut = str(mutation_set)
 
@@ -68,7 +73,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
             # Only validate, don't format
             # Try to create MutationSet to validate - if it succeeds, mutation is valid
             MutationSet.from_string(
-                mut_info, sep=mutation_sep, is_zero_based=is_zero_based
+                mut_info, sep=mutation_sep, is_zero_based=is_zero_based, mutation_type=mutation_type, alphabet=alphabet
             )
             # If no exception was raised, the mutation is valid
             if shared_cache is not None:
@@ -99,6 +104,8 @@ def apply_single_mutation(
     position_columns: Optional[Dict[str, str]],
     mutation_sep: str,
     is_zero_based: bool,
+    mutation_type: Optional[Type[BaseMutation]],
+    alphabet: Optional[BaseAlphabet],
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
 ) -> Tuple[Optional[str], Optional[str]]:
     """
@@ -152,7 +159,7 @@ def apply_single_mutation(
 
         sequence = sequence_class(sequence_str, name=name)
         mutation_set = MutationSet.from_string(
-            mut_info, sep=mutation_sep, is_zero_based=is_zero_based
+            mut_info, sep=mutation_sep, is_zero_based=is_zero_based, mutation_type=mutation_type, alphabet=alphabet
         )
         mutated_sequence = sequence.apply_mutation(mutation_set)
 

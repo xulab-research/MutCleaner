@@ -262,18 +262,31 @@ class MutationDataset:
 
             for mutation in mutation_set.mutations:
                 # Check if mutation position is within sequence bounds
-                if mutation.position >= len(reference_sequence):
-                    validation_results["invalid_mutation_sets"].append(
-                        {
-                            "mutation_set": set_name,
-                            "reference_id": reference_id,
-                            "mutation": str(mutation),
-                            "error": f"Position {mutation.position} exceeds sequence length (0-indexed)",
-                        }
-                    )
-                    set_valid = False
-                    continue
-
+                if isinstance(mutation, AminoAcidMutation):
+                    if mutation.position >= len(reference_sequence):
+                        validation_results["invalid_mutation_sets"].append(
+                            {
+                                "mutation_set": set_name,
+                                "reference_id": reference_id,
+                                "mutation": str(mutation),
+                                "error": f"Position {mutation.position} exceeds sequence length (0-indexed)",
+                            }
+                        )
+                        set_valid = False
+                        continue
+                
+                elif isinstance(mutation, CodonMutation):
+                    if mutation.nucleotide_end > len(reference_sequence):
+                        validation_results["invalid_mutation_sets"].append(
+                            {
+                                "mutation_set": set_name,
+                                "reference_id": reference_id,
+                                "mutation": str(mutation),
+                                "error": f"Position {mutation.position} exceeds sequence length (0-indexed)",
+                            }
+                        )
+                        set_valid = False
+                        continue  
                 # Check if wild type matches reference for amino acid mutations
                 if isinstance(mutation, AminoAcidMutation) and isinstance(
                     reference_sequence, ProteinSequence
@@ -308,7 +321,7 @@ class MutationDataset:
                 ):
                     try:
                         # Assuming position is codon position, get the codon at this position
-                        start_pos = mutation.position * 3
+                        start_pos = mutation.nucleotide_start
                         if start_pos + 3 <= len(reference_sequence):
                             ref_codon = str(
                                 reference_sequence[start_pos : start_pos + 3]
@@ -442,7 +455,7 @@ class MutationDataset:
                         if isinstance(reference_sequence, (DNASequence, RNASequence)):
                             try:
                                 # Get the codon at this position (assuming position is codon position)
-                                start_pos = mutation.position * 3
+                                start_pos = mutation.nucleotide_start
                                 if start_pos + 3 <= len(reference_sequence):
                                     ref_codon = str(
                                         reference_sequence[start_pos : start_pos + 3]
@@ -702,27 +715,113 @@ class MutationDataset:
     def _get_single_sequence_coverage(self, reference_id: str) -> Dict[str, Any]:
         """Get position coverage for a single reference sequence"""
         sequence = self.reference_sequences[reference_id]
-        all_positions = set()
 
-        for i, mutation_set in enumerate(self.mutation_sets):
-            if self.mutation_set_references[i] == reference_id:  # Always exists now
-                all_positions.update(mutation_set.get_positions())
+        mutations = [
+            mutation
+            for i, mutation_set in enumerate(self.mutation_sets)
+            if self.mutation_set_references[i] == reference_id
+            for mutation in mutation_set.mutations
+        ]
 
-        seq_length = len(sequence)
+        all_positions = {mutation.position for mutation in mutations}
+
+        if mutations and all(
+            isinstance(mutation, AminoAcidMutation)
+            for mutation in mutations
+        ):
+            if not isinstance(sequence, ProteinSequence):
+                raise ValueError(
+                    f"Amino-acid mutations require a ProteinSequence, "
+                    f"but reference {reference_id!r} is "
+                    f"{type(sequence).__name__}"
+                )
+
+            position_unit = "residue"
+            position_space_length = len(sequence)
+
+        elif mutations and all(
+            isinstance(mutation, CodonMutation)
+            for mutation in mutations
+        ):
+            if not isinstance(sequence, (DNASequence, RNASequence)):
+                raise ValueError(
+                    f"Codon mutations require a DNASequence or RNASequence, "
+                    f"but reference {reference_id!r} is "
+                    f"{type(sequence).__name__}"
+                )
+
+            if len(sequence) % 3 != 0:
+                raise ValueError(
+                    f"Reference sequence {reference_id!r} has length "
+                    f"{len(sequence)}, which is not divisible by 3"
+                )
+
+            position_unit = "codon"
+            position_space_length = len(sequence) // 3
+
+        elif mutations:
+            mutation_types = {
+                type(mutation).__name__
+                for mutation in mutations
+            }
+            raise ValueError(
+                f"Cannot calculate position coverage for reference "
+                f"{reference_id!r} with mixed mutation types: "
+                f"{sorted(mutation_types)}"
+            )
+
+        else:
+            # No mutation sets are associated with this reference.
+            if isinstance(sequence, ProteinSequence):
+                position_unit = "residue"
+                position_space_length = len(sequence)
+            elif isinstance(sequence, (DNASequence, RNASequence)):
+                if len(sequence) % 3 != 0:
+                    raise ValueError(
+                        f"Reference sequence {reference_id!r} has length "
+                        f"{len(sequence)}, which is not divisible by 3"
+                    )
+
+                position_unit = "codon"
+                position_space_length = len(sequence) // 3
+            else:
+                raise TypeError(
+                    f"Unsupported reference sequence type: "
+                    f"{type(sequence).__name__}"
+                )
+
+        invalid_positions = sorted(
+            position
+            for position in all_positions
+            if position < 0 or position >= position_space_length
+        )
+
+        if invalid_positions:
+            raise ValueError(
+                f"Reference {reference_id!r} contains out-of-range "
+                f"{position_unit} positions: {invalid_positions[:10]}"
+            )
+
         covered_positions = len(all_positions)
+        uncovered_positions = position_space_length - covered_positions
+
         coverage_percentage = (
-            (covered_positions / seq_length) * 100 if seq_length > 0 else 0
+            covered_positions / position_space_length * 100
+            if position_space_length > 0
+            else 0.0
         )
 
         return {
             "reference_id": reference_id,
             "sequence_name": sequence.name,
-            "sequence_length": seq_length,
+            "sequence_length": len(sequence),
             "sequence_type": type(sequence).__name__,
+            "position_unit": position_unit,
+            "position_space_length": position_space_length,
             "covered_positions": covered_positions,
-            "uncovered_positions": seq_length - covered_positions,
+            "uncovered_positions": uncovered_positions,
             "coverage_percentage": coverage_percentage,
-            "position_list": sorted(list(all_positions)),
+            "position_list": sorted(all_positions),
         }
 
     def convert_codon_to_amino_acid_sets(
@@ -804,11 +903,13 @@ class MutationDataset:
 
         tqdm.write(f"Saving dataset by reference to: {base_path}")
 
-        # Pre-group mutation sets by reference_id and calculate stats in one pass
+        # Group mutation sets and statistics by reference ID.
         ref_data = {}
 
         for i, mutation_set in tqdm(
-            enumerate(self.mutation_sets), desc="Grouping mutation sets "
+            enumerate(self.mutation_sets),
+            total=len(self.mutation_sets),
+            desc="Grouping mutation sets",
         ):
             ref_id = self.mutation_set_references[i]
 
@@ -817,86 +918,262 @@ class MutationDataset:
                     "mutation_sets": [],
                     "total_mutations": 0,
                     "covered_positions": set(),
+                    "mutation_types": set(),
                     "unique_labels": set(),
                 }
 
-            ref_data[ref_id]["mutation_sets"].append((i, mutation_set))
-            ref_data[ref_id]["total_mutations"] += len(mutation_set)
-            ref_data[ref_id]["covered_positions"].update(mutation_set.get_positions())
+            data = ref_data[ref_id]
 
-            # Track unique labels
-            label = self.mutation_set_labels.get(i, "unlabeled")
-            ref_data[ref_id]["unique_labels"].add(str(label))
-
-        # Process each reference
-        for ref_id, data in tqdm(ref_data.items(), desc="Saving data by reference "):
-            # Create sanitized directory name
-            sanitized_ref_id = self._sanitize_filename(ref_id)
-            ref_dir = base_path / sanitized_ref_id
-            ref_dir.mkdir(exist_ok=True)
-
-            # Get reference sequence
-            ref_sequence = self.reference_sequences[ref_id]
-
-            # Prepare data for CSV
-            csv_data = []
-
-            for set_index, mutation_set in data["mutation_sets"]:
-                mutation_name = str(mutation_set)
-
-                # Apply mutations to get mutated sequence
-                try:
-                    mutated_sequence = ref_sequence.apply_mutation(mutation_set)
-                    mutated_seq_str = str(mutated_sequence)
-                except Exception as e:
-                    print(
-                        f"Warning: Could not apply mutations for {mutation_name}: {e}"
-                    )
-                    mutated_seq_str = "ERROR_APPLYING_MUTATION"
-
-                label = self.mutation_set_labels.get(set_index, "")
-
-                csv_data.append(
-                    {
-                        "mutation_name": mutation_name,
-                        "mutated_sequence": mutated_seq_str,
-                        "label": label,
-                    }
-                )
-
-            # Save data.csv
-            df_ref = pd.DataFrame(csv_data)
-            df_ref.to_csv(ref_dir / "data.csv", index=False)
-
-            # Save wt.fasta
-            with open(ref_dir / "wt.fasta", "w") as f:
-                seq_name = ref_sequence.name if ref_sequence.name else ref_id
-                f.write(f">{seq_name}\n{str(ref_sequence)}\n")
-
-            # Prepare simplified metadata
-            seq_length = len(ref_sequence)
-            covered_positions = len(data["covered_positions"])
-            coverage_percentage = (
-                (covered_positions / seq_length) * 100 if seq_length > 0 else 0
+            data["mutation_sets"].append((i, mutation_set))
+            data["total_mutations"] += len(mutation_set)
+            data["covered_positions"].update(
+                mutation_set.get_positions()
+            )
+            data["mutation_types"].update(
+                type(mutation)
+                for mutation in mutation_set.mutations
             )
 
+            label = self.mutation_set_labels.get(i)
+
+            if label is None or pd.isna(label):
+                data["unique_labels"].add("unlabeled")
+            else:
+                data["unique_labels"].add(str(label))
+
+        # Process each reference independently.
+        for ref_id, data in tqdm(
+            ref_data.items(),
+            total=len(ref_data),
+            desc="Saving data by reference",
+        ):
+            sanitized_ref_id = self._sanitize_filename(str(ref_id))
+            ref_dir = base_path / sanitized_ref_id
+            ref_dir.mkdir(parents=True, exist_ok=True)
+
+            ref_sequence = self.reference_sequences[ref_id]
+            mutation_types = data["mutation_types"]
+
+            # Determine the coordinate system and number of valid positions.
+            if mutation_types == {AminoAcidMutation}:
+                if not isinstance(ref_sequence, ProteinSequence):
+                    raise ValueError(
+                        f"Amino-acid mutations for reference {ref_id!r} "
+                        f"require a ProteinSequence, but found "
+                        f"{type(ref_sequence).__name__}"
+                    )
+
+                position_unit = "residue"
+                position_space_length = len(ref_sequence)
+
+            elif mutation_types == {CodonMutation}:
+                if not isinstance(
+                    ref_sequence,
+                    (DNASequence, RNASequence),
+                ):
+                    raise ValueError(
+                        f"Codon mutations for reference {ref_id!r} "
+                        f"require a DNASequence or RNASequence, but found "
+                        f"{type(ref_sequence).__name__}"
+                    )
+
+                if len(ref_sequence) % 3 != 0:
+                    raise ValueError(
+                        f"Reference sequence {ref_id!r} has length "
+                        f"{len(ref_sequence)}, which is not divisible by 3"
+                    )
+
+                position_unit = "codon"
+                position_space_length = len(ref_sequence) // 3
+
+            else:
+                mutation_type_names = sorted(
+                    mutation_type.__name__
+                    for mutation_type in mutation_types
+                )
+
+                raise ValueError(
+                    f"Reference {ref_id!r} contains mixed or unsupported "
+                    f"mutation types: {mutation_type_names}"
+                )
+
+            # Validate that all positions are within the corresponding
+            # residue or codon coordinate space.
+            all_positions = data["covered_positions"]
+
+            invalid_positions = sorted(
+                position
+                for position in all_positions
+                if position < 0
+                or position >= position_space_length
+            )
+
+            if invalid_positions:
+                raise ValueError(
+                    f"Reference {ref_id!r} contains out-of-range "
+                    f"{position_unit} positions: "
+                    f"{invalid_positions[:10]}"
+                )
+
+            covered_positions = len(all_positions)
+            uncovered_positions = (
+                position_space_length - covered_positions
+            )
+
+            coverage_percentage = (
+                covered_positions
+                / position_space_length
+                * 100
+                if position_space_length > 0
+                else 0.0
+            )
+
+            successful_rows = []
+            failed_rows = []
+
+            # Apply each mutation set to the reference sequence.
+            for set_index, mutation_set in data["mutation_sets"]:
+                mutation_name = str(mutation_set)
+                label = self.mutation_set_labels.get(
+                    set_index,
+                    "",
+                )
+
+                try:
+                    mutated_sequence = ref_sequence.apply_mutation(
+                        mutation_set
+                    )
+
+                    successful_rows.append(
+                        {
+                            "mutation_name": mutation_name,
+                            "mutated_sequence": str(mutated_sequence),
+                            "label": label,
+                        }
+                    )
+
+                except Exception as error:
+                    error_message = (
+                        f"{type(error).__name__}: {error}"
+                    )
+
+                    failed_rows.append(
+                        {
+                            "mutation_name": mutation_name,
+                            "label": label,
+                            "error_message": error_message,
+                        }
+                    )
+
+                    tqdm.write(
+                        f"Warning: Could not apply mutation "
+                        f"{mutation_name!r} for reference {ref_id!r}: "
+                        f"{error_message}"
+                    )
+
+            # Save only successfully generated sequences to data.csv.
+            data_columns = [
+                "mutation_name",
+                "mutated_sequence",
+                "label",
+            ]
+
+            pd.DataFrame(
+                successful_rows,
+                columns=data_columns,
+            ).to_csv(
+                ref_dir / "data.csv",
+                index=False,
+            )
+
+            # Save failed records separately instead of placing error text
+            # inside the mutated_sequence column.
+            failed_path = ref_dir / "failed_data.csv"
+
+            if failed_rows:
+                failed_columns = [
+                    "mutation_name",
+                    "label",
+                    "error_message",
+                ]
+
+                pd.DataFrame(
+                    failed_rows,
+                    columns=failed_columns,
+                ).to_csv(
+                    failed_path,
+                    index=False,
+                )
+
+            elif failed_path.exists():
+                # Remove a stale failure file from an earlier run.
+                failed_path.unlink()
+
+            # Save the wild-type reference sequence.
+            sequence_name = (
+                ref_sequence.name
+                if ref_sequence.name
+                else str(ref_id)
+            )
+
+            with open(
+                ref_dir / "wt.fasta",
+                "w",
+                encoding="utf-8",
+            ) as fasta_file:
+                fasta_file.write(
+                    f">{sequence_name}\n{ref_sequence}\n"
+                )
+
+            # sequence_length is the actual number of sequence characters:
+            # amino acids for proteins and nucleotides for DNA/RNA.
             metadata = {
                 "reference_id": ref_id,
                 "sequence_name": ref_sequence.name,
                 "sequence_type": type(ref_sequence).__name__,
-                "sequence_length": seq_length,
+                "sequence_length": len(ref_sequence),
+                "position_unit": position_unit,
+                "position_space_length": position_space_length,
                 "num_mutation_sets": len(data["mutation_sets"]),
+                "num_saved_mutation_sets": len(successful_rows),
+                "num_failed_mutation_sets": len(failed_rows),
                 "total_mutations": data["total_mutations"],
                 "covered_positions": covered_positions,
+                "uncovered_positions": uncovered_positions,
                 "coverage_percentage": coverage_percentage,
                 "num_unique_labels": len(data["unique_labels"]),
-                "has_unlabeled": "unlabeled" in data["unique_labels"],
+                "has_unlabeled": (
+                    "unlabeled" in data["unique_labels"]
+                ),
                 "dataset_name": self.name,
             }
 
-            # Save metadata.json
-            with open(ref_dir / "metadata.json", "w") as f:
-                json.dump(metadata, f, indent=2, default=str)
+            # Add sequence-type-specific length information.
+            if isinstance(
+                ref_sequence,
+                (DNASequence, RNASequence),
+            ):
+                metadata.update(
+                    {
+                        "nucleotide_length": len(ref_sequence),
+                        "codon_length": len(ref_sequence) // 3,
+                    }
+                )
+
+            elif isinstance(ref_sequence, ProteinSequence):
+                metadata["residue_length"] = len(ref_sequence)
+
+            with open(
+                ref_dir / "metadata.json",
+                "w",
+                encoding="utf-8",
+            ) as metadata_file:
+                json.dump(
+                    metadata,
+                    metadata_file,
+                    indent=2,
+                    default=str,
+                )
 
     def save(
         self,
