@@ -477,7 +477,7 @@ class TestApplyMutation:
 
         # Test a codon extending beyond sequence bounds.
         mutation = CodonMutation("AAA", 2, "TTT")  
-        with pytest.raises(ValueError, match="extends beyond sequence length"):
+        with pytest.raises(ValueError, match=r"out of bounds"):
             seq.apply_mutation(mutation)
 
     def test_original_sequence_validation_amino_acid(self):
