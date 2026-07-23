@@ -54,7 +54,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
 
     Attributes
     ----------
-    sequence_source : Union[str, Path]
+    sequence_source : Union[Dict[str, str], str, Path]
         Path to the file containing UniProt ID to sequence mapping
     header_parser : Callable[[str], Tuple[str, Dict[str, str]]]
         Parse Header in fasta files and extract relevant information
@@ -75,7 +75,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
     """
 
     # Path to sequence dictionary file
-    sequence_source: Union[str, Path]
+    sequence_source: Union[Dict[str, str], str, Path]
 
     # Header parser function
     header_parser: Callable[[str], Tuple[str, Dict[str, str]]] = parse_uniprot_header
@@ -155,7 +155,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
 
 def create_human_domainome_sup4_cleaner(
     dataset_or_path: Union[str, Path, pd.DataFrame],
-    sequence_source: Union[str, Path],
+    sequence_source: Union[Dict[str, str], str, Path],
     config: Optional[
         Union[HumanDomainomeSup4CleanerConfig, Dict[str, Any], str, Path]
     ] = None,
@@ -168,7 +168,7 @@ def create_human_domainome_sup4_cleaner(
         Raw HumanDomainome dataset DataFrame or file path to HumanDomainome
         - File: `SupplementaryTable4.txt` from the article
           'Site-saturation mutagenesis of 500 human protein domains'
-    sequence_source : Union[str, Path]
+    sequence_source : Union[Dict[str, str], str, Path]
         Path to file containing UniProt ID to sequence mapping
     config : Optional[Union[HumanDomainomeSup4CleanerConfig, Dict[str, Any], str, Path]]
         Configuration for the cleaning pipeline. Can be:

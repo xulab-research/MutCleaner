@@ -236,7 +236,6 @@ def create_proteingym_dms_substitutions_cleaner(
         pipeline = (
             pipeline.delayed_then(
                 read_proteingym_dms_substitutions_data,
-                s
             )
             .delayed_then(
                 extract_and_rename_columns,
