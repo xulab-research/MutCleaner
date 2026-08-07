@@ -169,9 +169,9 @@ class BaseSequence(ABC):
 
                 # Check mutation subtypes (DNA or RNA)
                 valid_combinations = {
-                    "DNA": DNAAlphabet,
-                    "Both": DNAAlphabet,
-                    "RNA": RNAAlphabet,
+                    "DNA": (DNAAlphabet,),
+                    "RNA": (RNAAlphabet,),
+                    "Both": (DNAAlphabet, RNAAlphabet),
                 }
                 expected_alphabet = valid_combinations.get(mutation.seq_type)
 

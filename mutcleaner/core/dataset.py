@@ -21,6 +21,11 @@ from .sequence import (
     RNASequence,
     load_sequences_from_fasta,
 )
+from .alphabet import (
+    ProteinAlphabet, 
+    DNAAlphabet, 
+    RNAAlphabet
+)
 
 if TYPE_CHECKING:
     from typing import List, Literal, Optional, Sequence, Type, Union
@@ -337,6 +342,7 @@ class MutationDataset:
                                         "position": mutation.position,
                                     }
                                 )
+                                set_valid = False
                         else:
                             validation_results["invalid_mutation_sets"].append(
                                 {
@@ -854,9 +860,15 @@ class MutationDataset:
             name=f"{self.name}_aa_converted" if self.name else "aa_converted"
         )
 
-        # Copy all reference sequences
         for ref_id, sequence in self.reference_sequences.items():
-            converted_dataset.add_reference_sequence(ref_id, sequence)
+            if isinstance(sequence, (DNASequence, RNASequence)):
+                translated_sequence = sequence.translate(
+                    require_mod3=True,
+                )
+                converted_dataset.add_reference_sequence(ref_id, translated_sequence,)
+
+            else:
+                converted_dataset.add_reference_sequence(ref_id, sequence)
 
         if not convert_labels:
             converted_dataset.add_mutation_sets(converted_sets, converted_references)
@@ -1135,11 +1147,8 @@ class MutationDataset:
                 "position_unit": position_unit,
                 "position_space_length": position_space_length,
                 "num_mutation_sets": len(data["mutation_sets"]),
-                "num_saved_mutation_sets": len(successful_rows),
-                "num_failed_mutation_sets": len(failed_rows),
                 "total_mutations": data["total_mutations"],
                 "covered_positions": covered_positions,
-                "uncovered_positions": uncovered_positions,
                 "coverage_percentage": coverage_percentage,
                 "num_unique_labels": len(data["unique_labels"]),
                 "has_unlabeled": (
@@ -1147,21 +1156,6 @@ class MutationDataset:
                 ),
                 "dataset_name": self.name,
             }
-
-            # Add sequence-type-specific length information.
-            if isinstance(
-                ref_sequence,
-                (DNASequence, RNASequence),
-            ):
-                metadata.update(
-                    {
-                        "nucleotide_length": len(ref_sequence),
-                        "codon_length": len(ref_sequence) // 3,
-                    }
-                )
-
-            elif isinstance(ref_sequence, ProteinSequence):
-                metadata["residue_length"] = len(ref_sequence)
 
             with open(
                 ref_dir / "metadata.json",
@@ -1362,6 +1356,24 @@ class MutationDataset:
                     continue
 
                 ref_sequence = list(sequences.values())[0]  # Get first sequence
+                if isinstance(ref_sequence, ProteinSequence):
+                    mutation_type = AminoAcidMutation
+                    alphabet = ProteinAlphabet(include_stop=True)
+
+                elif isinstance(ref_sequence, DNASequence):
+                    mutation_type = CodonMutation
+                    alphabet = DNAAlphabet()
+
+                elif isinstance(ref_sequence, RNASequence):
+                    mutation_type = CodonMutation
+                    alphabet = RNAAlphabet()
+
+                else:
+                    raise TypeError(
+                        f"Unsupported reference sequence type: "
+                        f"{type(ref_sequence).__name__}"
+                    )
+                
                 dataset.add_reference_sequence(original_ref_id, ref_sequence)
 
                 # Load mutation data
@@ -1388,7 +1400,11 @@ class MutationDataset:
                     # Parse mutation from mutation_name
                     try:
                         mutation_set = MutationSet.from_string(
-                            mutation_name, sep=",", is_zero_based=is_zero_based
+                            mutation_name, 
+                            sep=",", 
+                            is_zero_based=is_zero_based,
+                            mutation_type=mutation_type,
+                            alphabet=alphabet,
                         )
                         dataset.add_mutation_set(mutation_set, original_ref_id, label)
                         mutation_sets_added += 1

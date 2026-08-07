@@ -370,13 +370,25 @@ class MutationSet(Generic[MutationType]):
         if not mutations:
             return
 
-        types_found = {m.type for m in mutations}
-        if len(types_found) > 1:
-            if types_found == {"codon_dna", "codon_both"}:
-                return
+        seq_types = {
+            mutation.seq_type
+            for mutation in mutations
+            if isinstance(mutation, CodonMutation)
+            and mutation.seq_type != "Both"
+        }
 
-            else:
-                raise ValueError(f"All mutations must have the same type property. " f"Found mixed types: {types_found}")
+        if seq_types <= {"DNA"}:
+            return
+
+        if seq_types <= {"RNA"}:
+            return
+    
+        if not seq_types:
+            return
+
+        raise ValueError(
+            "Codon mutations contain incompatible DNA and RNA types"
+        )
 
     def _validate_unique_positions(self, mutations: Sequence[MutationType]) -> None:
         """Validate that mutations have unique positions"""

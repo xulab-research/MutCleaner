@@ -63,3 +63,7 @@ validation/
 # Logs #
 ########
 logs/
+
+# plot #
+########
+plot/

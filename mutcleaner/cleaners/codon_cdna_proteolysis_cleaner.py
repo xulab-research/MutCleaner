@@ -96,8 +96,8 @@ class CodoncDNAProteolysisCleanerConfig(BaseCleanerConfig):
     # Mutation validation parameters
     validate_mut_workers: int = 16
 
-    # Wildtype validation parameters
-    validate_wt_workers: int = 16
+    # apply mutations to sequences parameters
+    process_workers: int = 16
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["label"])
@@ -205,7 +205,7 @@ def create_codon_cdna_proteolysis_cleaner(
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     mutation_column=final_config.column_mapping.get("COD", "COD")
-    name_column=final_config.column_mapping.get("name", "name")
+    name_column=final_config.column_mapping.get("protein", "protein")
 
     try:
         # Create pipeline
@@ -250,6 +250,7 @@ def create_codon_cdna_proteolysis_cleaner(
                 sequence_type="dna",
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
+                num_workers=final_config.process_workers,
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,
