@@ -326,7 +326,7 @@ class TestMutationSet:
         ]
 
         with pytest.raises(
-            ValueError, match="All mutations must have the same type property"
+            ValueError, match="Codon mutations contain incompatible DNA and RNA types"
         ):
             MutationSet(mutations, CodonMutation)
 
