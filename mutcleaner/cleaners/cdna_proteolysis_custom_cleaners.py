@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING
 
 from ..core.mutation import MutationSet
 from ..core.pipeline import multiout_step
-from ..core.sequence import ProteinSequence
-from ..utils.mutation_converter import invert_mutation_set
+from ..core.alphabet import ProteinAlphabet
+from ..core.mutation import AminoAcidMutation, MutationSet
 
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Sequence, Tuple, Union
@@ -23,6 +23,52 @@ __all__ = [
 
 def __dir__() -> List[str]:
     return __all__
+
+
+def _infer_wt_sequence(
+    mut_info: str,
+    mut_seq: str,
+) -> str:
+    
+    mutation_set = MutationSet.from_string(
+        mut_info,
+        sep=",",
+        is_zero_based=True,
+        mutation_type=AminoAcidMutation,
+        alphabet=ProteinAlphabet(include_stop=True),
+    )
+
+    sequence = ProteinAlphabet(include_stop=True).validate_sequence(
+        str(mut_seq).strip()
+    )
+
+    sequence_chars = list(sequence)
+
+    for mutation in mutation_set:
+        position = mutation.position
+
+        if position < 0 or position >= len(sequence_chars):
+            raise ValueError(
+                f"Amino acid mutation position {position} "
+                f"is out of bounds for sequence of "
+                f"length {len(sequence_chars)}"
+            )
+
+        actual_aa = sequence_chars[position]
+        expected_aa = mutation.mutant_amino_acid
+
+        if actual_aa != expected_aa:
+            raise ValueError(
+                f"Expected amino acid '{expected_aa}' "
+                f"at position {position}, "
+                f"but found '{actual_aa}'"
+            )
+
+        sequence_chars[position] = (
+            mutation.wild_amino_acid
+        )
+
+    return "".join(sequence_chars)
 
 
 @multiout_step(main="success", failed="failed")
@@ -239,25 +285,20 @@ def validate_wt_sequence_grouped(
 
         # Infer wild-type sequences
         inferred_wt_seqs = set()
-        result_rows = []
+        mutant_records = mutants.to_dict("records")
 
-        # First, add all original rows to result
-        for _, row in mutants.iterrows():
-            result_rows.append(row.to_dict())
+        result_rows = mutant_records.copy()
 
-        # Then, infer WT sequences
-        for _, row in mutants.iterrows():
+        for row in mutant_records:
             mut_info = row[mutation_column]
             mut_seq = row[sequence_column]
 
-            # Parse mutation and create sequence
-            mutation_set = MutationSet.from_string(mut_info, sep=",", is_zero_based=True)
-            sequence = ProteinSequence(str(mut_seq).strip())
-
-            # Infer wild-type sequence by applying inverted mutations
-            inverted_mutation_set = invert_mutation_set(mutation_set)
-            wt_seq = sequence.apply_mutation(inverted_mutation_set)
-            inferred_wt_seqs.add(str(wt_seq))
+            inferred_wt_seqs.add(
+                _infer_wt_sequence(
+                    mut_info,
+                    mut_seq,
+                )
+            )
 
         # Check consistency among inferred WT sequences
         if len(inferred_wt_seqs) > 1:

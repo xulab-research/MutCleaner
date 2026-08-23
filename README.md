@@ -1,8 +1,8 @@
 # MutCleaner
 
-[![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
 [![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=python&logoColor=white&color=orange)](https://pypi.org/project/mutcleaner/)
 [![Python version badge](https://img.shields.io/python/required-version-toml.svg?logo=python&logoColor=white&color=orange&tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fxulab-research%2FMutCleaner%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)](https://pypi.org/project/mutcleaner/)
+[![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
 [![Docs](https://github.com/xulab-research/MutCleaner/actions/workflows/docs.yml/badge.svg)](https://xulab-research.github.io/MutCleaner/)
 
@@ -56,19 +56,19 @@ pip install -e ".[dev]"
 ```text
 mutcleaner/
 ├── cleaners/                # Reusable cleaners and dataset-specific pipelines
-│   ├── basic_cleaners.py    # Reusable basic cleaning functions
-│   ├── base_config.py       # Shared cleaner configuration
-│   └── *_cleaner.py         # Dataset-specific cleaning pipelines
+│   ├── basic_cleaners.py    # Reusable data-cleaning and standardization steps
+│   ├── base_config.py       # Base configuration for dataset-specific cleaners
+│   └── ...                  # Dataset-specific cleaner modules
 ├── core/                    # Core data structures and processing logic
-│   ├── alphabet.py          # Biological alphabet definitions and validation
-│   ├── codon.py             # Codon table and sequence translation utilities
-│   ├── constants.py         # Shared biological constants
-│   ├── dataset.py           # Standard dataset abstraction and export logic
+│   ├── alphabet.py          # Biological alphabets and sequence validation
+│   ├── codon.py             # Codon-table definitions and translation
+│   ├── constants.py         # Biological alphabets, mappings and genetic-code constants
+│   ├── dataset.py           # MutationDataset representation, validation and export
 │   ├── mutation.py          # Mutation parsing, representation and validation
-│   ├── pipeline.py          # Reusable data cleaning pipeline framework
-│   ├── sequence.py          # DNA, RNA and protein sequence abstractions
-│   └── types.py             # Shared type aliases and annotations
-└── utils/                   # General helper functions for downloading and I/O
+│   ├── pipeline.py          # Composable data-cleaning pipeline framework
+│   ├── sequence.py          # DNA, RNA and protein sequence representations and operations
+│   └── types.py             # Shared type variables and type annotations
+└── utils/                   # Supporting utilities for conversion, processing and I/O
 ```
 ### Module Overview
 #### mutcleaner.cleaners
@@ -198,6 +198,12 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
       <td>MGnify ddG Dataset</td>
       <td><a href="https://doi.org/10.64898/2026.05.19.726285">Accurate protein stability prediction for small domains using mega-scale experiments</a></td>
       <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/MGnify_ddG_Dataset/MGnify_ddG_Dataset.csv">MGnify_ddG_Dataset.csv</a></td>
+    </tr>
+    </tr>
+      <td>Codon cDNA Proteolysis Dataset</td>
+      <td><a href="https://doi.org/10.1038/s41586-023-06328-6">Mega-scale experimental analysis of protein folding stability in biology and design</td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv">Chitosanase_dTm_Dataset.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta">wt.fasta</a>
+      </td>
     </tr>
   </tbody>
 </table>

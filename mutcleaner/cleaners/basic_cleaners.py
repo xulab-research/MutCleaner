@@ -2,12 +2,14 @@
 from __future__ import annotations
 
 import re
+import sys
 import numpy as np
 import pandas as pd
 from functools import partial
 from joblib import Parallel, delayed
 from pathlib import Path
 from tqdm import tqdm
+import multiprocessing as mp
 from typing import cast, TYPE_CHECKING
 from ..utils.sequence_io import load_sequences
 
@@ -879,7 +881,7 @@ def validate_mutations(
     cache_results : bool, default=True
         Whether to cache formatting results for performance
     num_workers : int, default=4
-        Number of parallel workers for processing, set to -1 for all available CPUs
+        Number of parallel workers for processing
 
     Returns
     -------
@@ -1011,14 +1013,22 @@ def validate_mutations(
         )
         return excluded_dataset, pd.DataFrame(columns=result.columns)
 
-    # Global cache for parallel processing (shared memory)
-    if cache_results:
-        from multiprocessing import Manager
+    # Prepare mutation values
+    mutation_values = validation_dataset[mutation_column]
 
-        manager = Manager()
-        cache = manager.dict()
+    if cache_results:
+        # Deduplicate mutation strings in the main process.
+        # Missing values receive code -1 and are handled separately.
+        codes, unique_values = pd.factorize(
+            mutation_values,
+            sort=False,
+            use_na_sentinel=True,
+        )
+        values_to_process = unique_values.tolist()
     else:
-        cache = None
+        codes = None
+        values_to_process = mutation_values.tolist()
+
 
     # Prepare arguments for parallel processing
     mutation_values = validation_dataset[mutation_column].tolist()
@@ -1030,16 +1040,58 @@ def validate_mutations(
             is_zero_based,
             mutation_type,
             alphabet,
-            cache if cache_results else None,
+            None,
         )
-        for mut_info in mutation_values
+        for mut_info in values_to_process
     ]
 
-    # Parallel processing
-    results = Parallel(n_jobs=num_workers, backend="loky")(
-        delayed(valid_single_mutation)(args)
-        for args in tqdm(args_list, desc="Processing mutations")
-    )
+    # Avoid joblib overhead for sequential execution.
+    if num_workers == 1:
+        processed_results = [
+            valid_single_mutation(args)
+            for args in tqdm(args_list, desc="Processing mutations")
+        ]
+    elif sys.platform.startswith("linux"):
+        chunksize = max(
+            1,
+            len(args_list) // (num_workers * 4),
+        )
+
+        ctx = mp.get_context()
+
+        with ctx.Pool(processes=num_workers) as pool:
+            processed_results = list(
+                tqdm(
+                    pool.imap(
+                        valid_single_mutation,
+                        args_list,
+                        chunksize=chunksize,
+                    ),
+                    total=len(args_list),
+                    desc="Processing mutations",
+                )
+            )
+    else:
+        processed_results = Parallel(
+            n_jobs=num_workers,
+            backend="loky",
+        )(
+            delayed(valid_single_mutation)(args)
+            for args in tqdm(
+                args_list,
+                desc="Processing mutations",
+            )
+        )
+
+    # Restore results to the original row order.
+    if cache_results:
+        missing_result = (None, "Missing mutation information")
+        results = [
+            missing_result if code == -1 else processed_results[code]
+            for code in codes
+        ]
+    else:
+        results = processed_results
 
     # Separate formatted mutations and error messages
     formatted_mutations, error_messages = map(list, zip(*results))

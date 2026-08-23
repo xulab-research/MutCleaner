@@ -15,10 +15,12 @@ from .basic_cleaners import (
     filter_and_clean_data,
     validate_mutations,
     convert_data_types,
+    subtract_labels_by_wt,
     apply_mutations_to_sequences,
     convert_to_mutation_dataset_format,
     average_labels_by_name,
 )
+from .trpb_custom_cleaner import standardize_trpb_mutation_dataset
 
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
@@ -194,6 +196,9 @@ def create_trpb_cleaner(
         # Add cleaning steps
         pipeline = (
             pipeline.delayed_then(
+                standardize_trpb_mutation_dataset,
+            )
+            .delayed_then(
                 extract_and_rename_columns,
                 column_mapping=final_config.column_mapping,
             )
@@ -212,6 +217,24 @@ def create_trpb_cleaner(
                 ),
                 is_zero_based=True,
                 num_workers=final_config.num_workers,
+                exclude_patterns=["WT"],
+            )
+            .delayed_then(
+                average_labels_by_name,
+                name_columns=final_config.column_mapping.get(
+                    "mutation_name", "mutation_name"
+                ),
+                label_columns=final_config.label_columns,
+            )
+            .delayed_then(
+                subtract_labels_by_wt,
+                name_column="name",
+                label_columns=final_config.label_columns,
+                mutation_column=final_config.column_mapping.get(
+                    "mutation_name", "mutation_name"
+                ),
+                wt_identifier="WT",
+                drop_wt_row=True,
             )
             .delayed_then(
                 apply_mutations_to_sequences,
@@ -221,11 +244,6 @@ def create_trpb_cleaner(
                 ),
                 is_zero_based=True,
                 num_workers=final_config.num_workers,
-            )
-            .delayed_then(
-                average_labels_by_name,
-                name_columns="mut_seq",
-                label_columns=final_config.label_columns,
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,

@@ -61,6 +61,7 @@ from .utils import (
     download_rbd_ace2_source_file,
     download_chitosanase_dtm_source_file,
     download_mgnify_ddg_source_file,
+    download_codon_cdna_proteolysis_source_file,
 )
 
 __all__ = [
@@ -105,4 +106,5 @@ __all__ = [
     "download_rbd_ace2_source_file",
     "download_chitosanase_dtm_source_file",
     "download_mgnify_ddg_source_file",
+    "download_codon_cdna_proteolysis_source_file",
 ]

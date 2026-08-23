@@ -180,12 +180,12 @@ from mutcleaner.cleaners import (
 
 def main():
     # Prepare dataset
-    download_cdna_proteolysis_source_file("raw_dataset/cDNA_Proteolysis_Dataset", overwrite=True)
+    download_cdna_proteolysis_source_file("raw_dataset/Protein_cDNA_Proteolysis_Dataset", overwrite=True)
 
     # File settings
-    dataset_filepath = Path("raw_dataset/cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv")
-    artifact_path = Path("logs/cDNA_Proteolysis_ddG_Dataset/artifacts.pkl")
-    artifact_csv_dir = Path("logs/cDNA_Proteolysis_ddG_Dataset")
+    dataset_filepath = Path("raw_dataset/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv")
+    artifact_path = Path("logs/Protein_cDNA_Proteolysis_ddG_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Protein_cDNA_Proteolysis_ddG_Dataset")
 
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
@@ -196,7 +196,7 @@ def main():
     )
 
     # Save data
-    cdna_dataset.save("cleaned_dataset/cleaned_cDNA_Proteolysis_ddG_Dataset")
+    cdna_dataset.save("cleaned_dataset/cleaned_Protein_cDNA_Proteolysis_ddG_Dataset")
     cdna_cleaning_pipeline.save_artifacts(artifact_path)
 
     # open the pickle file
@@ -240,9 +240,9 @@ def main():
     }
     
     # File settings
-    dataset_filepath = Path("raw_dataset/cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv")
-    artifact_path = Path("logs/cDNA_Proteolysis_dG_Dataset/artifacts.pkl")
-    artifact_csv_dir = Path("logs/cDNA_Proteolysis_dG_Dataset")
+    dataset_filepath = Path("raw_dataset/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv")
+    artifact_path = Path("logs/Protein_cDNA_Proteolysis_dG_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Protein_cDNA_Proteolysis_dG_Dataset")
 
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
@@ -253,7 +253,7 @@ def main():
     )
 
     # Save data
-    cdna_dataset.save("cleaned_dataset/cleaned_cDNA_Proteolysis_dG_Dataset")
+    cdna_dataset.save("cleaned_dataset/cleaned_Protein_cDNA_Proteolysis_dG_Dataset")
     cdna_cleaning_pipeline.save_artifacts(artifact_path)
 
     # open the pickle file

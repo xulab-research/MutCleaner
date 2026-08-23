@@ -309,6 +309,7 @@ class MutationDataset:
                                     "position": mutation.position,
                                 }
                             )
+                        set_valid = False
                     except IndexError:
                         validation_results["invalid_mutation_sets"].append(
                             {
@@ -1145,7 +1146,6 @@ class MutationDataset:
                 "sequence_type": type(ref_sequence).__name__,
                 "sequence_length": len(ref_sequence),
                 "position_unit": position_unit,
-                "position_space_length": position_space_length,
                 "num_mutation_sets": len(data["mutation_sets"]),
                 "total_mutations": data["total_mutations"],
                 "covered_positions": covered_positions,
@@ -1697,7 +1697,23 @@ class MutationDataset:
             }
         ]
 
-        # Group by mutation set to rebuild mutation sets
+        # Fast path for the common case where each DataFrame row represents
+        # exactly one mutation set. This avoids constructing tens of thousands
+        # of one-row DataFrames through ``groupby``.
+        if (
+            df["mutation_set_id"].notna().all()
+            and df["mutation_set_id"].is_unique
+        ):
+            cls._reconstruct_unique_mutation_sets(
+                dataset,
+                df,
+                set_metadata_cols,
+                mutation_metadata_cols,
+                specific_mutation_type,
+            )
+            return dataset
+
+        # General path for multi-mutation sets.
         grouped = df.groupby("mutation_set_id", sort=False)
 
         for _, group in tqdm(grouped, desc="Reconstructing mutation sets"):
@@ -1748,6 +1764,148 @@ class MutationDataset:
                 dataset.add_mutation_set(mutation_set, reference_id, label)
 
         return dataset
+
+    @classmethod
+    def _reconstruct_unique_mutation_sets(
+        cls,
+        dataset: "MutationDataset",
+        df: pd.DataFrame,
+        set_metadata_cols: List[str],
+        mutation_metadata_cols: List[str],
+        specific_mutation_type: Optional[Type[BaseMutation]] = None,
+    ) -> None:
+        """Reconstruct single-mutation sets without pandas ``groupby`` overhead.
+
+        This is a performance-oriented path for flattened DataFrames in which
+        ``mutation_set_id`` is unique for every row. The reconstructed objects
+        are equivalent to the general grouped path, but rows are consumed as
+        lightweight tuples and appended in bulk.
+        """
+        columns = list(df.columns)
+        column_index = {column: index for index, column in enumerate(columns)}
+
+        set_name_index = column_index.get("mutation_set_name")
+        label_index = column_index.get("label")
+        reference_index = column_index["reference_id"]
+        mutation_type_index = column_index["mutation_type"]
+        mutation_string_index = column_index["mutation_string"]
+        position_index = column_index["position"]
+
+        set_metadata_indices = [
+            (column[4:], column_index[column]) for column in set_metadata_cols
+        ]
+        mutation_metadata_indices = [
+            (column[9:], column_index[column])
+            for column in mutation_metadata_cols
+        ]
+
+        mutation_sets = []
+        reference_ids = []
+        labels = []
+
+        rows = df.itertuples(index=False, name=None)
+        for values in tqdm(
+            rows, total=len(df), desc="Reconstructing mutation sets"
+        ):
+            set_name = (
+                values[set_name_index]
+                if set_name_index is not None
+                else None
+            )
+            reference_id = values[reference_index]
+            label = values[label_index] if label_index is not None else None
+
+            set_metadata = {
+                key: value
+                for key, index in set_metadata_indices
+                if pd.notna(value := values[index])
+            }
+            mutation_metadata = {
+                key: value
+                for key, index in mutation_metadata_indices
+                if pd.notna(value := values[index])
+            }
+
+            mutation_type = values[mutation_type_index]
+            position = int(values[position_index])
+
+            if mutation_type == "amino_acid":
+                mutation = AminoAcidMutation(
+                    wild_type=values[column_index["wild_amino_acid"]],
+                    position=position,
+                    mutant_type=values[column_index["mutant_amino_acid"]],
+                    metadata=mutation_metadata,
+                )
+                mutation_set = AminoAcidMutationSet(
+                    mutations=[mutation],
+                    name=set_name,
+                    metadata=set_metadata,
+                )
+
+            elif mutation_type.startswith("codon_"):
+                mutation = CodonMutation(
+                    wild_type=values[column_index["wild_codon"]],
+                    position=position,
+                    mutant_type=values[column_index["mutant_codon"]],
+                    metadata=mutation_metadata,
+                )
+                mutation_set = CodonMutationSet(
+                    mutations=[mutation],
+                    name=set_name,
+                    metadata=set_metadata,
+                )
+
+            else:
+                if specific_mutation_type is None:
+                    raise ValueError(
+                        f"Unsupported mutation type: {mutation_type}, "
+                        "you must provide a specific mutation type"
+                    )
+
+                mutation_string = values[mutation_string_index]
+                try:
+                    mutation = MutationSet._create_mutation(
+                        mutation_string,
+                        mutation_type=specific_mutation_type,
+                        is_zero_based=True,
+                    )
+                except Exception as error:
+                    raise ValueError(
+                        f"Cannot create mutation from row: {error}"
+                    ) from error
+
+                concrete_type = type(mutation)
+                if concrete_type == AminoAcidMutation:
+                    mutation_set = AminoAcidMutationSet(
+                        mutations=[mutation],
+                        name=set_name,
+                        metadata=set_metadata,
+                    )
+                elif concrete_type == CodonMutation:
+                    mutation_set = CodonMutationSet(
+                        mutations=[mutation],
+                        name=set_name,
+                        metadata=set_metadata,
+                    )
+                else:
+                    mutation_set = MutationSet(
+                        mutations=[mutation],
+                        mutation_type=concrete_type,
+                        name=set_name,
+                        metadata=set_metadata,
+                    )
+
+            mutation_sets.append(mutation_set)
+            reference_ids.append(reference_id)
+            labels.append(label)
+
+        # References were validated before reconstruction, so bulk assignment is
+        # equivalent to repeated ``add_mutation_set`` calls without the Python
+        # method-call and dictionary-update overhead for every row.
+        dataset.mutation_sets = mutation_sets
+        dataset.mutation_set_references = dict(enumerate(reference_ids))
+        dataset.mutation_set_labels = dict(enumerate(labels))
+        dataset._df = None
 
     @staticmethod
     def _create_mutation_from_dict(

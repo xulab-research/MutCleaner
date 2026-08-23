@@ -297,6 +297,15 @@ DATASETS = {
         ],
         "file_name": ["MGnify_ddG_Dataset.csv"],
     },
+    "Codon cDNA Proteolysis Dataset": {
+        "paper_title": "Mega-scale experimental analysis of protein folding stability in biology and design",
+        "official_doi": "https://doi.org/10.1038/s41586-023-06328-6",
+        "huggingface_repos": [
+            "datasets/xulab-research/MutCleaner/resolve/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv?download=true",
+            "datasets/xulab-research/MutCleaner/resolve/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta?download=true"            
+        ],
+        "file_name": ["Codon_cDNA_Proteolysis_Dataset.csv","wt.fasta"],
+    },
 }
 
 
@@ -314,6 +323,7 @@ def list_datasets_with_built_in_cleaners() -> None:
     Predefined datasets:
 
     - cDNA Proteolysis Dataset
+    - Codon cDNA Proteolysis Dataset
     - ProteinGym DMS Substitutions Dataset
     - Human Domainome Dataset
     - ΔΔG Dataset

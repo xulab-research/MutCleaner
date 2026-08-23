@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+
+message: "If you use MutCleaner, please cite it using these metadata."
+
+title: "MutCleaner: Cleaning and Standardizing Biological Mutation Datasets for Variant Effect Prediction"
+
+type: software
+
+authors:
+  - family-names: Shi
+    given-names: Ziyu
+    orcid: "https://orcid.org/0009-0002-3748-2536"
+    affiliation: "School of Statistics and Mathematics, Zhongnan University of Economics and Law"
+
+  - family-names: Tang
+    given-names: Yuxiang
+    orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
+    affiliation: "School of Life Sciences, Tsinghua University"
+
+version: "1.0.0"
+
+license: Apache-2.0
+
+repository-code: "https://github.com/xulab-research/MutCleaner"
+
+url: "https://xulab-research.github.io/MutCleaner/"
+
+abstract: >
+  MutCleaner is an extensible Python framework for cleaning,
+  validating, and standardizing biological mutation datasets
+  from heterogeneous sources and formats.
+
+keywords:
+  - bioinformatics
+  - biological mutation data
+  - data cleaning
+  - protein mutations
+  - codon mutations
+  - variant effect prediction
+  - Python
