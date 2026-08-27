@@ -14,8 +14,36 @@ authors:
 
   - family-names: Tang
     given-names: Yuxiang
-    orcid: "https://orcid.org/XXXX-XXXX-XXXX-XXXX"
-    affiliation: "School of Life Sciences, Tsinghua University"
+    orcid: "https://orcid.org/0009-0001-1449-334X"
+    affiliation: "MOE Key Laboratory of Bioinformatics, Center for Synthetic and Systematic Biology, School of Life Sciences, Tsinghua University"
+  
+  - family-names: Yang
+    given-names: Mengxin
+    orcid: "https://orcid.org/0009-0009-3754-8778"
+    affiliation: "School of Statistics and Mathematics, Zhongnan University of Economics and Law"
+
+  - family-names: Shi
+    given-names: Yancheng
+    orcid: "https://orcid.org/0009-0007-0061-8627"
+    affiliation: "School of Statistics and Mathematics, Zhongnan University of Economics and Law"
+  
+  - family-names: Yu
+    given-names: Shize
+    orcid: "https://orcid.org/0009-0005-0448-9055"
+    affiliation: "School of Software Engineering, Huazhong University of Science and Technology"
+  
+  - family-names: Xu
+    given-names: Yunxin
+    email: "xyx@zuel.edu.cn"
+    affiliation: "School of Statistics and Mathematics, Zhongnan University of Economics and Law"
+    orcid: "https://orcid.org/0000-0002-9981-2097"
+
+contact:
+  - family-names: Xu
+    given-names: Yunxin
+    email: "xyx@zuel.edu.cn"
+    affiliation: "School of Statistics and Mathematics, Zhongnan University of Economics and Law"
+    orcid: "https://orcid.org/0000-0002-9981-2097"
 
 version: "1.0.0"
 

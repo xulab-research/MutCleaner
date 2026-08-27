@@ -309,7 +309,7 @@ class MutationDataset:
                                     "position": mutation.position,
                                 }
                             )
-                        set_valid = False
+                            set_valid = False
                     except IndexError:
                         validation_results["invalid_mutation_sets"].append(
                             {
@@ -319,6 +319,7 @@ class MutationDataset:
                                 "error": f"Position {mutation.position} out of range",
                             }
                         )
+                        
                         set_valid = False
 
                 # Check codon mutations for nucleotide sequences
