@@ -1,4 +1,3 @@
-# mutcleaner/cleaners/gb_cleaner.py
 from __future__ import annotations
 
 import pandas as pd
@@ -19,7 +18,7 @@ from .basic_cleaners import (
     validate_mutations,
     apply_mutations_to_sequences,
 )
-from .human_myoglobin_custom_cleaners import convert_codon_to_amino_acid
+from .protein_human_myoglobin_custom_cleaners import convert_codon_to_amino_acid
 
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
@@ -28,9 +27,9 @@ if TYPE_CHECKING:
     from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 __all__ = [
-    "HumanMyoglobinCleanerConfig",
-    "create_human_myoglobin_cleaner",
-    "clean_human_myoglobin_dataset",
+    "ProteinProteinHumanMyoglobinCleanerConfig",
+    "create_protein_human_myoglobin_cleaner",
+    "clean_protein_human_myoglobin_dataset",
 ]
 
 
@@ -43,12 +42,12 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class HumanMyoglobinCleanerConfig(BaseCleanerConfig):
+class ProteinHumanMyoglobinCleanerConfig(BaseCleanerConfig):
     """
     Configuration class for human Myoglobin dataset cleaner.
     Inherits from BaseCleanerConfig and adds hMb-specific configuration options.
 
-    Simply run `mutcleaner.download_hMb_source_file()` to download the dataset.
+    Simply run `mutcleaner.download_protein_human_myoglobin_source_file()` to download the dataset.
 
     Alternatively, the raw hMb file can be obtained from:
 
@@ -133,10 +132,10 @@ class HumanMyoglobinCleanerConfig(BaseCleanerConfig):
             raise ValueError(f"Missing required column mappings: {missing}")
 
 
-def create_human_myoglobin_cleaner(
+def create_protein_human_myoglobin_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
     config: Optional[
-        Union[HumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]
+        Union[ProteinHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]
     ] = None,
 ) -> Pipeline:
     """Create human myoglobin dataset cleaning pipeline
@@ -145,9 +144,9 @@ def create_human_myoglobin_cleaner(
     ----------
     dataset_or_path : Optional[Union[pd.DataFrame, str, Path]], default=None
         Raw dataset DataFrame or file path to human myoglobin dataset.
-    config : Optional[Union[HumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]]
+    config : Optional[Union[ProteinHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]]
         Configuration for the cleaning pipeline. Can be:
-        - HumanMyoglobinCleanerConfig object
+        - ProteinHumanMyoglobinCleanerConfig object
         - Dictionary with configuration parameters (merged with defaults)
         - Path to JSON configuration file (str or Path)
         - None (uses default configuration)
@@ -166,19 +165,19 @@ def create_human_myoglobin_cleaner(
     """
     # Handle configuration parameter
     if config is None:
-        final_config = HumanMyoglobinCleanerConfig()
-    elif isinstance(config, HumanMyoglobinCleanerConfig):
+        final_config = ProteinHumanMyoglobinCleanerConfig()
+    elif isinstance(config, ProteinHumanMyoglobinCleanerConfig):
         final_config = config
     elif isinstance(config, dict):
         # Partial configuration - merge with defaults
-        default_config = HumanMyoglobinCleanerConfig()
+        default_config = ProteinHumanMyoglobinCleanerConfig()
         final_config = default_config.merge(config)
     elif isinstance(config, (str, Path)):
         # Load from file
-        final_config = HumanMyoglobinCleanerConfig.from_json(config)
+        final_config = ProteinHumanMyoglobinCleanerConfig.from_json(config)
     else:
         raise TypeError(
-            f"config must be HumanMyoglobinCleanerConfig, dict, str, Path or None, got {type(config)}"
+            f"config must be ProteinHumanMyoglobinCleanerConfig, dict, str, Path or None, got {type(config)}"
         )
 
     # Log configuration summary
@@ -260,7 +259,7 @@ def create_human_myoglobin_cleaner(
         )
 
 
-def clean_human_myoglobin_dataset(
+def clean_protein_human_myoglobin_dataset(
     pipeline: Pipeline,
 ) -> Tuple[Pipeline, MutationDataset]:
     """Clean human myoglobin dataset using configurable pipeline

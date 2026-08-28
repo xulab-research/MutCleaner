@@ -26,7 +26,7 @@ __all__ = [
     "download_antitoxin_pard3_source_file",
     "download_trpb_source_file",
     "download_ctxm_source_file",
-    "download_human_myoglobin_source_file",
+    "download_protein_human_myoglobin_source_file",
     "download_archstabms1e10_source_file",
     "download_ddg_dtm_source_file",
     "download_chitosanase_dtm_source_file", 
@@ -606,11 +606,11 @@ def download_archstabms1e10_source_file(
     )
 
 
-def download_human_myoglobin_source_file(
+def download_protein_human_myoglobin_source_file(
     dir: str, *, overwrite: bool = False
 ) -> Dict[str, str]:
     """
-    Download the source file for HumanMyoglobin dataset from the original source.
+    Download the source file for Protein Human Myoglobin Epistasis dataset from the original source.
 
     Parameters
     ----------
@@ -623,10 +623,10 @@ def download_human_myoglobin_source_file(
     -------
     Dict[str, str]
         key: file name,
-        value: file path pointing to HumanMyoglobin dataset source file
+        value: file path pointing to Protein Human Myoglobin Epistasis dataset source file
     """
     return download_source_file_from_huggingface(
-        "Human Myoglobin Epistasis Dataset", dir, overwrite=overwrite, sub_dataset="Human Myoglobin Epistasis Dataset"
+        "Protein Human Myoglobin Epistasis Dataset", dir, overwrite=overwrite
     )
 
 

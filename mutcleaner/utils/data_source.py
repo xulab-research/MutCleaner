@@ -147,13 +147,13 @@ DATASETS = {
             }
         }
     },
-    "Human Myoglobin Epistasis Dataset":{
+    "Protein Human Myoglobin Epistasis Dataset":{
         "paper_title": "Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning",
         "official_doi": "https://doi.org/10.1101/2024.02.24.581358",
         "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/Human_Myoglobin_Epistasis_Dataset/Human_Myoglobin_Epistasis_Dataset.csv?download=true"
+            "datasets/xulab-research/MutCleaner/resolve/main/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv?download=true"
         ],
-        "file_name": ["Human_Myoglobin_Epistasis_Dataset.csv"],
+        "file_name": ["Protein_Human_Myoglobin_Epistasis_Dataset.csv"],
     },
     "CTXM Epistasis Dataset":{
         "paper_title": "Network of epistatic interactions in an enzyme active site revealed by DMS",
@@ -338,7 +338,7 @@ def list_datasets_with_built_in_cleaners() -> None:
     - ΔTm Dataset
     - Antitoxin ParD3 Epistasis Dataset
     - TrpB Epistasis Dataset
-    - Human Myoglobin Epistasis Dataset
+    - Protein Human Myoglobin Epistasis Dataset
     - CTXM Epistasis Dataset
     - RBD Antibody Dataset
     - RBD ACE2 Dataset

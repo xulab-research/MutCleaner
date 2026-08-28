@@ -50,10 +50,10 @@ from .ctxm_cleaner import (
     clean_ctxm_dataset,
     create_ctxm_cleaner,
 )
-from .human_myoglobin_cleaner import (
-    HumanMyoglobinCleanerConfig,
-    clean_human_myoglobin_dataset,
-    create_human_myoglobin_cleaner,
+from .protein_human_myoglobin_cleaner import (
+    ProteinHumanMyoglobinCleanerConfig,
+    create_protein_human_myoglobin_cleaner,
+    clean_protein_human_myoglobin_dataset,
 )
 from .rbd_ace2_cleaner import (
     RBDACE2CleanerConfig,
@@ -117,9 +117,9 @@ __all__ = [
     "CTXMCleanerConfig",
     "create_ctxm_cleaner",
     "clean_ctxm_dataset",
-    "HumanMyoglobinCleanerConfig",
-    "create_human_myoglobin_cleaner",
-    "clean_human_myoglobin_dataset",
+    "ProteinHumanMyoglobinCleanerConfig",
+    "create_protein_human_myoglobin_cleaner",
+    "clean_protein_human_myoglobin_dataset",
     "RBDACE2CleanerConfig",
     "create_rbd_ace2_cleaner",
     "clean_rbd_ace2_dataset",

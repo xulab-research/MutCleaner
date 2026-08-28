@@ -615,7 +615,7 @@ if __name__ == "__main__":
 
 See {py:class}`mutcleaner.cleaners.TrpBCleanerConfig` for details.
 
-## Human Myoglobin Epistasis Dataset
+## Protein Human Myoglobin Epistasis Dataset
 
 ### Basic Usage
 
@@ -625,32 +625,32 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_human_myoglobin_source_file
+from mutcleaner import download_protein_human_myoglobin_source_file
 from mutcleaner.cleaners import (
-    create_human_myoglobin_cleaner,
-    clean_human_myoglobin_dataset,
+    create_protein_human_myoglobin_cleaner,
+    clean_protein_human_myoglobin_dataset,
 )
 
 
 def main():
     # Prepare data
-    download_human_myoglobin_source_file("raw_dataset/Human_Myoglobin_Epistasis_Dataset", overwrite=True)
+    download_protein_human_myoglobin_source_file("raw_dataset/Protein_Human_Myoglobin_Epistasis_Dataset", overwrite=True)
     # File settings
-    dataset_filepath = Path("raw_dataset/Human_Myoglobin_Epistasis_Dataset/Human_Myoglobin_Epistasis_Dataset.csv")
-    artifact_path = Path("logs/Human_Myoglobin_Epistasis_Dataset/artifacts.pkl")
-    artifact_csv_dir = Path("logs/Human_Myoglobin_Epistasis_Dataset")
+    dataset_filepath = Path("raw_dataset/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv")
+    artifact_path = Path("logs/Protein_Human_Myoglobin_Epistasis_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Protein_Human_Myoglobin_Epistasis_Dataset")
 
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    human_myoglobin_cleaning_pipeline = create_human_myoglobin_cleaner(dataset_filepath)
-    human_myoglobin_cleaning_pipeline, human_myoglobin_dataset_dataset = clean_human_myoglobin_dataset(
-        human_myoglobin_cleaning_pipeline
+    protein_human_myoglobin_cleaning_pipeline = create_protein_human_myoglobin_cleaner(dataset_filepath)
+    protein_human_myoglobin_cleaning_pipeline, protein_human_myoglobin_dataset_dataset = clean_protein_human_myoglobin_dataset(
+        protein_human_myoglobin_cleaning_pipeline
     )
 
     # Save data
-    human_myoglobin_dataset_dataset.save("cleaned_dataset/cleaned_Human_Myoglobin_Epistasis_Dataset")
-    human_myoglobin_cleaning_pipeline.save_artifacts(artifact_path)
+    protein_human_myoglobin_dataset_dataset.save("cleaned_dataset/cleaned_Protein_Human_Myoglobin_Epistasis_Dataset")
+    protein_human_myoglobin_cleaning_pipeline.save_artifacts(artifact_path)
 
     # open the pickle file and read the object
     with open(artifact_path, "rb") as file:
@@ -665,11 +665,12 @@ if __name__ == "__main__":
 
     multiprocessing.freeze_support()
     main()
+
 ```
 
 ### Advanced Settings
 
-See {py:class}`mutcleaner.cleaners.HumanMyoglobinCleanerConfig` for details.
+See {py:class}`mutcleaner.cleaners.ProteinHumanMyoglobinCleanerConfig` for details.
 
 ## CTXM Epistasis Dataset
 

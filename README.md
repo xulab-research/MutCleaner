@@ -153,7 +153,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     <tr>
       <td>Human Myoglobin Epistasis Dataset</td>
       <td><a href="https://doi.org/10.1101/2024.02.24.581358">Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Myoglobin_Epistasis_Dataset/Human_Myoglobin_Epistasis_Dataset.csv">Human_Myoglobin_Epistasis_Dataset.csv</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv">Protein_Human_Myoglobin_Epistasis_Dataset.csv</a></td>
     </tr>
     <tr>
       <td>CTXM Epistasis Dataset</td>
