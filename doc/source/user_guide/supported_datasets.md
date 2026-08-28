@@ -1064,3 +1064,60 @@ if __name__ == "__main__":
 ### Advanced Settings
 
 See {py:class}`mutcleaner.cleaners.MGnifyddGCleanerConfig` for details.
+
+
+## Codon DMS Substitutions Dataset
+
+### Basic Usage
+
+You can download the source file directly by running (see {py:func}`mutcleaner.utils.download_codon_dms_substitutions_source_file` for details):
+```python
+import pickle
+from pathlib import Path
+from mutcleaner import download_codon_dms_substitutions_source_file
+from mutcleaner.cleaners import (
+    create_codon_dms_substitutions_cleaner,
+    clean_codon_dms_substitutions_dataset,
+)
+
+
+def main():
+    # download the Codon DMS Substitutions Dataset
+    download_codon_dms_substitutions_source_file("raw_dataset/Codon_DMS_Substitutions_Dataset", overwrite=True)
+
+    # File settings
+    dataset_filepath = Path("raw_dataset/Codon_DMS_Substitutions_Dataset/Codon_DMS_Substitutions_Dataset.zip")
+    artifact_path = Path("logs/Codon_DMS_Substitutions_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Codon_DMS_Substitutions_Dataset")
+
+    artifact_csv_dir.mkdir(parents=True, exist_ok=True)
+
+    # Clean data
+    codon_dms_substitutions_cleaning_pipeline = create_codon_dms_substitutions_cleaner(dataset_filepath)
+    codon_dms_substitutions_cleaning_pipeline, codon_dms_substitutions_dataset = clean_codon_dms_substitutions_dataset(
+        codon_dms_substitutions_cleaning_pipeline
+    )
+
+    # Save data
+    codon_dms_substitutions_dataset.save("cleaned_dataset/cleaned_Codon_DMS_Substitutions_Dataset")
+    codon_dms_substitutions_cleaning_pipeline.save_artifacts(artifact_path)
+
+    # open the pickle file
+    with open(artifact_path, "rb") as file:
+        artifacts = pickle.load(file)
+
+    for artifact_name, artifact_df in artifacts.items():
+        artifact_df.to_csv(f"{artifact_csv_dir}/{artifact_name}.csv", index=False)
+
+
+if __name__ == "__main__":
+    import multiprocessing
+
+    multiprocessing.freeze_support()
+    main()
+
+```
+
+### Advanced Settings
+
+See {py:class}`mutcleaner.cleaners.CodonDMSSubstitutionsCleanerConfig` for details.

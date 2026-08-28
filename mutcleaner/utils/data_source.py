@@ -306,6 +306,14 @@ DATASETS = {
         ],
         "file_name": ["Codon_cDNA_Proteolysis_Dataset.csv","wt.fasta"],
     },
+    "Codon DMS Substitutions Dataset": {
+        "paper_title": "MaveDB 2024: a curated community database with over seven million variant effects from multiplexed functional assays",
+        "official_doi": "https://doi.org/10.1186/s13059-025-03476-y",
+        "huggingface_repos": [
+            "datasets/xulab-research/MutCleaner/resolve/main/Codon_DMS_Substitutions_Dataset/Codon_DMS_Substitutions_Dataset.zip?download=true",      
+        ],
+        "file_name": ["Codon_DMS_Substitutions_Dataset.zip"],
+    },
 }
 
 
@@ -336,6 +344,8 @@ def list_datasets_with_built_in_cleaners() -> None:
     - RBD ACE2 Dataset
     - Chitosanase dTm Dataset
     - MGnify ddG Dataset
+    - Codon cDNA Proteolysis Dataset
+    - Codon DMS Substitutions Dataset
     """
     print("Public datasets with ready-to-use cleaning pipelines:")
     for key, info in DATASETS.items():

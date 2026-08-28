@@ -205,6 +205,13 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
       <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv">Chitosanase_dTm_Dataset.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta">wt.fasta</a>
       </td>
     </tr>
+    </tr>
+      <td>Codon DMS Substitutions Dataset</td>
+      <td><a href="https://doi.org/10.1186/s13059-025-03476-y">MaveDB 2024: a curated community database with over seven million variant effects from multiplexed functional assays</td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/
+      Codon_DMS_Substitutions_Dataset/Codon_DMS_Substitutions_Datasetzip">Codon_DMS_Substitutions_Dataset.zip</a>
+      </td>
+    </tr>
   </tbody>
 </table>
 

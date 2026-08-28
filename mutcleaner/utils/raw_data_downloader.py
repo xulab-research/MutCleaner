@@ -31,7 +31,8 @@ __all__ = [
     "download_ddg_dtm_source_file",
     "download_chitosanase_dtm_source_file", 
     "download_mgnify_ddg_source_file",
-    "download_codon_cdna_proteolysis_source_file"
+    "download_codon_cdna_proteolysis_source_file",
+    "download_codon_dms_substitutions_source_file"
 ]
 
 
@@ -855,3 +856,19 @@ def download_codon_cdna_proteolysis_source_file(dir: str, *, overwrite: bool = F
         value: file path pointing to Codon cDNA Proteolysis Dataset source file
     """
     return download_source_file_from_huggingface("Codon cDNA Proteolysis Dataset", dir, overwrite=overwrite)
+
+
+def download_codon_dms_substitutions_source_file(
+    dir: str, *, overwrite: bool = False
+) -> Dict[str, str]:
+    """
+    Download the source file for Codon DMS Substitutions Dataset from the original source.
+
+    Returns
+    -------
+    Dict[str, str]
+        key: file name,
+        value: file path pointing to the Codon DMS Substitutions Dataset source file
+    """
+    return download_source_file_from_huggingface("Codon DMS Substitutions Dataset", dir, overwrite=overwrite)
+

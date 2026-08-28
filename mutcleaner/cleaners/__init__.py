@@ -65,7 +65,6 @@ from .rbd_antibody_cleaner import (
     clean_rbd_antibody_dataset,
     create_rbd_antibody_cleaner,
 )
-
 from .chitosanase_dtm_cleaner import (
     ChitosanasedTmCleanerConfig,
     create_chitosanase_dtm_cleaner,
@@ -80,6 +79,11 @@ from .codon_cdna_proteolysis_cleaner import (
     CodoncDNAProteolysisCleanerConfig,
     create_codon_cdna_proteolysis_cleaner,
     clean_codon_cdna_proteolysis_dataset,
+)
+from .codon_dms_substitutions_cleaner import (
+    CodonDMSSubstitutionsCleanerConfig,
+    create_codon_dms_substitutions_cleaner,
+    clean_codon_dms_substitutions_dataset,
 )
 
 __all__ = [
@@ -131,4 +135,7 @@ __all__ = [
     "CodoncDNAProteolysisCleanerConfig",
     "create_codon_cdna_proteolysis_cleaner",
     "clean_codon_cdna_proteolysis_dataset",
+    "CodonDMSSubstitutionsCleanerConfig",
+    "create_codon_dms_substitutions_cleaner",
+    "clean_codon_dms_substitutions_dataset",
 ]
