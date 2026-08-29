@@ -253,13 +253,12 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
 If you use MutCleaner in your research, please cite:
 
 ```bibtex
-@software{mutcleaner,
-  title={
-    MutCleaner: An efficient framework for cleaning, standardizing, and processing biological mutation data.
-  },
-  author={Ziyu Shi and Yuxiang Tang},
-  year={2026},
-  url={https://github.com/xulab-research/MutCleaner}
+@misc{mutcleaner,
+  title = {MutCleaner: Cleaning and Standardizing Biological Mutation Datasets for Variant Effect Prediction},
+  author = {Shi, Ziyu and Tang, Yuxiang and Yang, Mengxin and Shi, Yancheng and Yu, Shize and Xu, Yunxin},
+  year = {2026},
+  url = {https://github.com/xulab-research/MutCleaner}
+}
 }
 ```
 
