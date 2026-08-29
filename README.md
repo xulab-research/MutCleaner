@@ -6,7 +6,7 @@
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
 [![Docs](https://github.com/xulab-research/MutCleaner/actions/workflows/docs.yml/badge.svg)](https://xulab-research.github.io/MutCleaner/)
 
-MutCleaner is an extensible Python toolkit for cleaning and standardizing biological mutation datasets, integrating dataset-specific cleaning pipelines with core abstractions for protein, nucleotide, and codon-level mutation representations.
+MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets through composable cleaning pipelines, unified sequence and mutation data structures, and dataset-specific cleaners.
 
 * **Documentation**: https://xulab-research.github.io/MutCleaner
 * **Cleaning Examples**: https://xulab-research.github.io/MutCleaner/user_guide/supported_datasets.html
@@ -258,7 +258,6 @@ If you use MutCleaner in your research, please cite:
   author = {Shi, Ziyu and Tang, Yuxiang and Yang, Mengxin and Shi, Yancheng and Yu, Shize and Xu, Yunxin},
   year = {2026},
   url = {https://github.com/xulab-research/MutCleaner}
-}
 }
 ```
 
