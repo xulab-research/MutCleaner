@@ -43,6 +43,7 @@ from .cleaners import (
     chitosanase_dtm_cleaner,
     mgnify_ddg_cleaner,
     codon_dms_substitutions_cleaner,
+    codon_human_myoglobin_cleaner,
 )
 
 from .utils import (
@@ -64,6 +65,7 @@ from .utils import (
     download_mgnify_ddg_source_file,
     download_codon_cdna_proteolysis_source_file,
     download_codon_dms_substitutions_source_file,
+    download_codon_human_myoglobin_source_file,
 )
 
 __all__ = [
@@ -111,4 +113,5 @@ __all__ = [
     "download_mgnify_ddg_source_file",
     "download_codon_cdna_proteolysis_source_file",
     "download_codon_dms_substitutions_source_file",
+    "download_codon_human_myoglobin_source_file"
 ]

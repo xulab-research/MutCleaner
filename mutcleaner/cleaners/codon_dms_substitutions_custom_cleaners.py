@@ -5,11 +5,8 @@ from tqdm import tqdm
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ..core.codon import CodonTable
 from ..utils.sequence_io import load_sequences
-from ..core.alphabet import BaseAlphabet, DNAAlphabet
-from ..core.mutation import CodonMutation, MutationSet
-from ..core.pipeline import pipeline_step, multiout_step
+from ..core.pipeline import pipeline_step
 
 if TYPE_CHECKING:
     from typing import Union
@@ -110,82 +107,3 @@ def read_codon_dms_substitutions_dataset(
     finally:
         if temp_dir is not None:
             temp_dir.cleanup()
-
-
-@multiout_step(main="success", failed="failed")
-def filiter_stop_codon_mutation(
-    dataset: pd.DataFrame,
-    mutation_column: str = "mut_info",
-    mutation_sep: str = ",",
-    is_zero_based: bool = True,
-    alphabet: Optional[BaseAlphabet] = None,
-) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Filter records containing mutations that introduce stop codons.
-
-    A record is considered a stop-codon mutation if any mutant codon in its
-    mutation set translates to a stop codon under the standard DNA genetic
-    code. Records containing stop-codon mutations are returned in the failed
-    DataFrame.
-
-    Parameters
-    ----------
-    dataset : pd.DataFrame
-        Input dataset containing validated and standardized codon mutations.
-    mutation_column : str, default="mut_info"
-        Column containing codon mutation annotations.
-    mutation_sep : str, default=","
-        Separator between multiple codon mutations.
-    is_zero_based : bool, default=True
-        Whether mutation positions are zero-based.
-    alphabet : Optional[BaseAlphabet], default=None
-        Alphabet used to parse codon mutations. If None, ``DNAAlphabet()`` is
-        used.
-
-    Returns
-    -------
-    Tuple[pd.DataFrame, pd.DataFrame]
-        DataFrames containing retained records and records with stop-codon
-        mutations, respectively.
-
-    Raises
-    ------
-    ValueError
-        If ``mutation_column`` is not present in the dataset.
-    """
-    if mutation_column not in dataset.columns:
-        raise ValueError(f"Column '{mutation_column}' not found in dataset")
-
-    alphabet = alphabet or DNAAlphabet()
-    codon_table = CodonTable.get_standard_table("DNA")
-
-    stop_cache = {
-        mut_info: any(
-            codon_table.is_stop_codon(mutation.mutant_codon)
-            for mutation in MutationSet.from_string(
-                str(mut_info),
-                sep=mutation_sep,
-                is_zero_based=is_zero_based,
-                mutation_type=CodonMutation,
-                alphabet=alphabet,
-            )
-        )
-        for mut_info in dataset[mutation_column].dropna().unique()
-    }
-
-    stop_mask = dataset[mutation_column].map(stop_cache).fillna(False).astype(bool)
-    
-    total_count = len(dataset)
-    stop_count = int(stop_mask.sum())
-    tqdm.write(
-        f"Filtering stop-codon mutations: {total_count} total records, "
-        f"{stop_count} records filtered"
-    )
-
-    successful = dataset.loc[~stop_mask].copy()
-    failed = dataset.loc[stop_mask].copy()
-
-    if not failed.empty:
-        failed["error_message"] = "Mutation introduces a stop codon"
-
-    return successful, failed

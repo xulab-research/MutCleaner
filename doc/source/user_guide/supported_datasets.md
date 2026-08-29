@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
 See {py:class}`mutcleaner.cleaners.ProteinGymCleanerConfig` for details.
 
-## cDNA Proteolysis Dataset
+## Protein cDNA Proteolysis Dataset
 
 
 ### ΔΔG as Label (Default Pipeline)
@@ -620,7 +620,7 @@ See {py:class}`mutcleaner.cleaners.TrpBCleanerConfig` for details.
 ### Basic Usage
 
 The following example shows the complete workflow for downloading, cleaning,
-saving the cleaned Human Myoglobin Epistasis dataset, and exporting the
+saving the cleaned Protein Human Myoglobin Epistasis dataset, and exporting the
 cleaning artifacts:
 ```python
 import pickle
@@ -1066,6 +1066,61 @@ if __name__ == "__main__":
 
 See {py:class}`mutcleaner.cleaners.MGnifyddGCleanerConfig` for details.
 
+## Codon cDNA Proteolysis Dataset
+
+### Basic Usage
+
+You can download the source file directly by running (see {py:func}`mutcleaner.utils.download_codon_cdna_proteolysis_source_file` for details):
+```python
+import pickle
+from pathlib import Path
+from mutcleaner import download_codon_cdna_proteolysis_source_file
+from mutcleaner.cleaners import (
+    create_codon_cdna_proteolysis_cleaner,
+    clean_codon_cdna_proteolysis_dataset,
+)
+
+
+def main():
+    # download the Codon cDNA Proteolysis dataset
+    download_codon_cdna_proteolysis_source_file("raw_dataset/Codon_cDNA_Proteolysis_Dataset", overwrite=True)
+
+    # File settings
+    dataset_filepath = Path("raw_dataset/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv")
+    artifact_path = Path("logs/Codon_cDNA_Proteolysis_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Codon_cDNA_Proteolysis_Dataset")
+
+    artifact_csv_dir.mkdir(parents=True, exist_ok=True)
+
+    # Clean data
+    codon_cdna_cleaning_pipeline = create_codon_cdna_proteolysis_cleaner(dataset_filepath, sequence_source="raw_dataset/Codon_cDNA_Proteolysis_Dataset/wt.fasta")
+    codon_cdna_cleaning_pipeline, codon_cdna_dataset = clean_codon_cdna_proteolysis_dataset(
+        codon_cdna_cleaning_pipeline
+    )
+
+    # Save data
+    codon_cdna_dataset.save("cleaned_dataset/cleaned_Codon_cDNA_Proteolysis_Dataset")
+    codon_cdna_cleaning_pipeline.save_artifacts(artifact_path)
+
+    # open the pickle file
+    with open(artifact_path, "rb") as file:
+        artifacts = pickle.load(file)
+
+    for artifact_name, artifact_df in artifacts.items():
+        artifact_df.to_csv(f"{artifact_csv_dir}/{artifact_name}.csv", index=False)
+
+
+if __name__ == "__main__":
+    import multiprocessing
+
+    multiprocessing.freeze_support()
+    main()
+
+```
+
+### Advanced Settings
+
+See {py:class}`mutcleaner.cleaners.CodoncDNAProteolysisCleanerConfig` for details.
 
 ## Codon DMS Substitutions Dataset
 
@@ -1122,3 +1177,60 @@ if __name__ == "__main__":
 ### Advanced Settings
 
 See {py:class}`mutcleaner.cleaners.CodonDMSSubstitutionsCleanerConfig` for details.
+
+## Codon Human Myoglobin Epistasis Dataset
+
+### Basic Usage
+
+The following example shows the complete workflow for downloading, cleaning,
+saving the cleaned Codon Human Myoglobin Epistasis dataset, and exporting the
+cleaning artifacts:
+```python
+import pickle
+from pathlib import Path
+from mutcleaner import download_codon_human_myoglobin_source_file
+from mutcleaner.cleaners import (
+    create_codon_human_myoglobin_cleaner,
+    clean_codon_human_myoglobin_dataset,
+)
+
+
+def main():
+    # Prepare data
+    download_codon_human_myoglobin_source_file("raw_dataset/Codon_Human_Myoglobin_Epistasis_Dataset", overwrite=True)
+    # File settings
+    dataset_filepath = Path("raw_dataset/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv")
+    artifact_path = Path("logs/Codon_Human_Myoglobin_Epistasis_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Codon_Human_Myoglobin_Epistasis_Dataset")
+
+    artifact_csv_dir.mkdir(parents=True, exist_ok=True)
+
+    # Clean data
+    codon_human_myoglobin_cleaning_pipeline = create_codon_human_myoglobin_cleaner(dataset_filepath)
+    codon_human_myoglobin_cleaning_pipeline, codon_human_myoglobin_dataset_dataset = clean_codon_human_myoglobin_dataset(
+        codon_human_myoglobin_cleaning_pipeline
+    )
+
+    # Save data
+    codon_human_myoglobin_dataset_dataset.save("cleaned_dataset/cleaned_Codon_Human_Myoglobin_Epistasis_Dataset")
+    codon_human_myoglobin_cleaning_pipeline.save_artifacts(artifact_path)
+
+    # open the pickle file and read the object
+    with open(artifact_path, "rb") as file:
+        artifacts = pickle.load(file)
+
+    for artifact_name, artifact_df in artifacts.items():
+        artifact_df.to_csv(f"{artifact_csv_dir}/{artifact_name}.csv", index=False)
+
+
+if __name__ == "__main__":
+    import multiprocessing
+
+    multiprocessing.freeze_support()
+    main()
+
+```
+
+### Advanced Settings
+
+See {py:class}`mutcleaner.cleaners.CodonHumanMyoglobinCleanerConfig` for details.

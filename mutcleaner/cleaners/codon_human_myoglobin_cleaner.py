@@ -12,24 +12,26 @@ from .basic_cleaners import (
     extract_and_rename_columns,
     filter_and_clean_data,
     convert_data_types,
+    filter_stop_codon_mutations,
     convert_to_mutation_dataset_format,
     add_columns,
     average_labels_by_name,
     validate_mutations,
     apply_mutations_to_sequences,
 )
-from .protein_human_myoglobin_custom_cleaners import convert_codon_to_amino_acid
 
+from ..core.alphabet import DNAAlphabet
 from ..core.dataset import MutationDataset
+from ..core.mutation import CodonMutation
 from ..core.pipeline import Pipeline, create_pipeline
 
 if TYPE_CHECKING:
     from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 __all__ = [
-    "ProteinHumanMyoglobinCleanerConfig",
-    "create_protein_human_myoglobin_cleaner",
-    "clean_protein_human_myoglobin_dataset",
+    "CodonHumanMyoglobinCleanerConfig",
+    "create_codon_human_myoglobin_cleaner",
+    "clean_codon_human_myoglobin_dataset",
 ]
 
 
@@ -42,16 +44,16 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class ProteinHumanMyoglobinCleanerConfig(BaseCleanerConfig):
+class CodonHumanMyoglobinCleanerConfig(BaseCleanerConfig):
     """
-    Configuration class for Protein human Myoglobin dataset cleaner.
+    Configuration class for the Codon Human Myoglobin Epistasis Dataset cleaner.
     Inherits from BaseCleanerConfig and adds hMb-specific configuration options.
 
-    Simply run `mutcleaner.download_protein_human_myoglobin_source_file()` to download the dataset.
+    Simply run `mutcleaner.download_codon_human_myoglobin_source_file()` to download the dataset.
 
-    Alternatively, the raw hMb file can be obtained from:
+    Alternatively, the raw codon hMb file can be obtained from:
 
-    - Hugging Face: https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv
+    - Hugging Face: https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv
 
     Attributes
     ----------
@@ -74,7 +76,7 @@ class ProteinHumanMyoglobinCleanerConfig(BaseCleanerConfig):
     # Column mapping configuration
     column_mapping: Dict[str, str] = field(
         default_factory=lambda: {
-            "COD": "codon_mutations",
+            "COD": "mut_info",
             "fitness": "label",
         }
     )
@@ -90,7 +92,12 @@ class ProteinHumanMyoglobinCleanerConfig(BaseCleanerConfig):
     type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float"})
 
     # obtained from the article
-    wt_sequence = "MGLSDGEWQLVLNVWGKVEADIPGHGQEVLIRLFKGHPETLEKFDKFKHLKSEDEMKASEDLKKHGATVLTALGGILKKKGHHEAEIKPLAQSHATKHKIPVKYLEFISECIIQVLQSKHPGDFGADAQGAMNKALELFRKDMASNYKELGFQG"
+    wt_sequence = ("ATGGGTTTATCGGATGGAGAATGGCAGTTGGTACTTAATGTATGGGGTAAAGTTGAGGCAGACATCCCAGGACATGGCCA"
+                   "GGAAGTATTAATCCGTTTATTTAAAGGACACCCAGAGACGCTAGAGAAATTCGATAAATTTAAGCATCTTAAATCCGAAG"
+                   "ACGAGATGAAGGCTTCTGAGGACTTAAAGAAACACGGGGCTACTGTGTTGACTGCATTAGGTGGTATTCTAAAGAAGAAA"
+                   "GGTCACCACGAGGCCGAAATAAAGCCACTAGCCCAGTCCCATGCTACAAAACACAAAATTCCCGTAAAATATCTAGAGTT"
+                   "TATTTCAGAGTGCATAATTCAGGTTTTGCAATCTAAACACCCAGGCGACTTCGGAGCCGACGCTCAGGGTGCGATGAACA"
+                   "AAGCTTTAGAATTGTTTAGGAAGGACATGGCCTCTAATTACAAGGAGCTAGGCTTCCAGGGC")
 
     # Mutation validation parameters
     validate_mut_workers: int = 16
@@ -103,7 +110,7 @@ class ProteinHumanMyoglobinCleanerConfig(BaseCleanerConfig):
     primary_label_column: str = "label"
 
     # Override default pipeline name
-    pipeline_name: str = "hMb Cleaning Pipeline"
+    pipeline_name: str = "Codon hMb Cleaning Pipeline"
 
     def validate(self) -> None:
         """Validate hMb-specific configuration parameters
@@ -132,21 +139,21 @@ class ProteinHumanMyoglobinCleanerConfig(BaseCleanerConfig):
             raise ValueError(f"Missing required column mappings: {missing}")
 
 
-def create_protein_human_myoglobin_cleaner(
+def create_codon_human_myoglobin_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
     config: Optional[
-        Union[ProteinHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]
+        Union[CodonHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]
     ] = None,
 ) -> Pipeline:
-    """Create protein human myoglobin dataset cleaning pipeline
+    """Create codon human myoglobin dataset cleaning pipeline
 
     Parameters
     ----------
     dataset_or_path : Optional[Union[pd.DataFrame, str, Path]], default=None
-        Raw dataset DataFrame or file path to protein human myoglobin dataset.
-    config : Optional[Union[ProteinHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]]
+        Raw dataset DataFrame or file path to codon human myoglobin dataset.
+    config : Optional[Union[CodonHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]]
         Configuration for the cleaning pipeline. Can be:
-        - ProteinHumanMyoglobinCleanerConfig object
+        - CodonHumanMyoglobinCleanerConfig object
         - Dictionary with configuration parameters (merged with defaults)
         - Path to JSON configuration file (str or Path)
         - None (uses default configuration)
@@ -165,19 +172,19 @@ def create_protein_human_myoglobin_cleaner(
     """
     # Handle configuration parameter
     if config is None:
-        final_config = ProteinHumanMyoglobinCleanerConfig()
-    elif isinstance(config, ProteinHumanMyoglobinCleanerConfig):
+        final_config = CodonHumanMyoglobinCleanerConfig()
+    elif isinstance(config, CodonHumanMyoglobinCleanerConfig):
         final_config = config
     elif isinstance(config, dict):
         # Partial configuration - merge with defaults
-        default_config = ProteinHumanMyoglobinCleanerConfig()
+        default_config = CodonHumanMyoglobinCleanerConfig()
         final_config = default_config.merge(config)
     elif isinstance(config, (str, Path)):
         # Load from file
-        final_config = ProteinHumanMyoglobinCleanerConfig.from_json(config)
+        final_config = CodonHumanMyoglobinCleanerConfig.from_json(config)
     else:
         raise TypeError(
-            f"config must be ProteinHumanMyoglobinCleanerConfig, dict, str, Path or None, got {type(config)}"
+            f"config must be CodonHumanMyoglobinCleanerConfig, dict, str, Path or None, got {type(config)}"
         )
 
     # Log configuration summary
@@ -212,31 +219,41 @@ def create_protein_human_myoglobin_cleaner(
                 },
             )
             .delayed_then(
-                convert_codon_to_amino_acid,
-                codon_column="codon_mutations",
-                amino_acid_column="mut_info",
-                drop_codon_column=True,
+                validate_mutations,
+                mutation_column=final_config.column_mapping.get("COD", "COD"),
+                num_workers=final_config.validate_mut_workers,
+                mutation_sep=",",
+                mutation_type=CodonMutation,
+                alphabet=DNAAlphabet(),
             )
             .delayed_then(
-                validate_mutations,
-                mutation_column="mut_info",
-                num_workers=final_config.validate_mut_workers,
+                filter_stop_codon_mutations,
+                mutation_column=final_config.column_mapping.get("COD", "COD"),
+                mutation_sep=",",
+                is_zero_based=True,
+                alphabet=DNAAlphabet(),
             )
             .delayed_then(
                 apply_mutations_to_sequences,
+                mutation_column=final_config.column_mapping.get("COD", "COD"),
                 sequence_column="wt_seq",
+                sequence_type="dna",
+                mutation_type=CodonMutation,
+                alphabet=DNAAlphabet(),
                 num_workers=final_config.process_workers,
             )
             .delayed_then(
                 average_labels_by_name,
-                name_columns="mut_info",
+                name_columns=final_config.column_mapping.get("COD", "COD"),
                 label_columns=final_config.primary_label_column,
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,
                 name_column="name",
-                mutation_column="mut_info",
+                mutation_column=final_config.column_mapping.get("COD", "COD"),
                 sequence_column="wt_seq",
+                mutated_sequence_column="mut_seq",
+                sequence_type="dna",
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -259,15 +276,15 @@ def create_protein_human_myoglobin_cleaner(
         )
 
 
-def clean_protein_human_myoglobin_dataset(
+def clean_codon_human_myoglobin_dataset(
     pipeline: Pipeline,
 ) -> Tuple[Pipeline, MutationDataset]:
-    """Clean protein human myoglobin dataset using configurable pipeline
+    """Clean human myoglobin dataset using configurable pipeline
 
     Parameters
     ----------
     pipeline : Pipeline
-        Protein Human myoglobin dataset cleaning pipeline
+        Human myoglobin dataset cleaning pipeline
 
     Returns
     -------
@@ -279,18 +296,18 @@ def clean_protein_human_myoglobin_dataset(
     --------
     Use default configuration:
 
-    >>> pipeline = create_protein_human_myoglobin_cleaner(df)  # df is raw human myoglobin dataset file
+    >>> pipeline = create_codon_human_myoglobin_cleaner(df)  # df is raw human myoglobin dataset file
 
     Use partial configuration:
 
-    >>> pipeline = create_protein_human_myoglobin_cleaner(df, config={
+    >>> pipeline = create_codon_human_myoglobin_cleaner(df, config={
     ...     "validate_mut_workers": 8,
     ... })
 
     Load configuration from file:
 
-    >>> pipeline = create_protein_human_myoglobin_cleaner(df, config="config.json")
-    >>> pipeline, dataset = clean_protein_human_myoglobin_dataset(pipeline)
+    >>> pipeline = create_codon_human_myoglobin_cleaner(df, config="config.json")
+    >>> pipeline, dataset = clean_codon_human_myoglobin_dataset(pipeline)
     """
     try:
         # Run pipeline

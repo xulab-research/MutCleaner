@@ -15,9 +15,9 @@ from .basic_cleaners import (
     extract_and_rename_columns,
     filter_and_clean_data,
     validate_mutations,
+    filter_stop_codon_mutations,
 )
 from .codon_dms_substitutions_custom_cleaners import (
-    filiter_stop_codon_mutation,
     read_codon_dms_substitutions_dataset,
 )
 from ..core.alphabet import DNAAlphabet
@@ -204,7 +204,7 @@ def create_codon_dms_substitutions_cleaner(
                 num_workers=final_config.validate_mut_workers,
             )
             .delayed_then(
-                filiter_stop_codon_mutation,
+                filter_stop_codon_mutations,
                 mutation_column="mut_info",
                 mutation_sep=",",
                 is_zero_based=True,

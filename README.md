@@ -151,7 +151,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
       <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/TrpB_Epistasis_Dataset/TrpB_Epistasis_Dataset.csv">TrpB_Epistasis_Dataset.csv</a></td>
     </tr>
     <tr>
-      <td>Human Myoglobin Epistasis Dataset</td>
+      <td>Protein Human Myoglobin Epistasis Dataset</td>
       <td><a href="https://doi.org/10.1101/2024.02.24.581358">Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning</a></td>
       <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv">Protein_Human_Myoglobin_Epistasis_Dataset.csv</a></td>
     </tr>
@@ -202,7 +202,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     </tr>
       <td>Codon cDNA Proteolysis Dataset</td>
       <td><a href="https://doi.org/10.1038/s41586-023-06328-6">Mega-scale experimental analysis of protein folding stability in biology and design</td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv">Chitosanase_dTm_Dataset.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta">wt.fasta</a>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv">Codon_cDNA_Proteolysis_Dataset.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta">wt.fasta</a>
       </td>
     </tr>
     </tr>
@@ -211,6 +211,11 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
       <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/
       Codon_DMS_Substitutions_Dataset/Codon_DMS_Substitutions_Datasetzip">Codon_DMS_Substitutions_Dataset.zip</a>
       </td>
+    </tr>
+    <tr>
+      <td>Codon Human Myoglobin Epistasis Dataset</td>
+      <td><a href="https://doi.org/10.1101/2024.02.24.581358">Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv">Codon_Human_Myoglobin_Epistasis_Dataset.csv</a></td>
     </tr>
   </tbody>
 </table>

@@ -314,6 +314,14 @@ DATASETS = {
         ],
         "file_name": ["Codon_DMS_Substitutions_Dataset.zip"],
     },
+    "Codon Human Myoglobin Epistasis Dataset":{
+        "paper_title": "Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning",
+        "official_doi": "https://doi.org/10.1101/2024.02.24.581358",
+        "huggingface_repos": [
+            "datasets/xulab-research/MutCleaner/resolve/main/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv?download=true"
+        ],
+        "file_name": ["Codon_Human_Myoglobin_Epistasis_Dataset.csv"],
+    },
 }
 
 
