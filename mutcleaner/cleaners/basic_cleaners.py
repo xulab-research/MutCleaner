@@ -2705,8 +2705,6 @@ def add_sequences_to_dataset(
         f"Sequence addition: {len(successful_dataset)} successful, {len(failed_dataset)} failed ({successful_proteins}/{total_proteins} proteins)"
     )
 
-    print("successful_dataset:", successful_dataset)
-
     return successful_dataset, failed_dataset
 
 

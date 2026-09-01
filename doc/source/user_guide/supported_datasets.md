@@ -77,7 +77,7 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    hd_cleaning_pipeline = create_human_domainome_sup4_cleaner(dataset_or_path="raw_dataset/Human_Domainome_Dataset/SupplementaryTable4.txt", sequence_dict_path="raw_dataset/Human_Domainome_Dataset/wild_type.fasta")
+    hd_cleaning_pipeline = create_human_domainome_sup4_cleaner(dataset_or_path="raw_dataset/Human_Domainome_Dataset/SupplementaryTable4.txt", sequence_source="raw_dataset/Human_Domainome_Dataset/wild_type.fasta")
     hd_cleaning_pipeline, hd_dataset = clean_human_domainome_sup4_dataset(
         hd_cleaning_pipeline
     )
@@ -171,7 +171,7 @@ cleaning artifacts, using ΔΔG as the label:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_cdna_proteolysis_source_file
+from mutcleaner import download_protein_cdna_proteolysis_source_file
 from mutcleaner.cleaners import (
     create_cdna_proteolysis_cleaner,
     clean_cdna_proteolysis_dataset,
@@ -180,7 +180,7 @@ from mutcleaner.cleaners import (
 
 def main():
     # Prepare dataset
-    download_cdna_proteolysis_source_file("raw_dataset/Protein_cDNA_Proteolysis_Dataset", overwrite=True)
+    download_protein_cdna_proteolysis_source_file("raw_dataset/Protein_cDNA_Proteolysis_Dataset", overwrite=True)
 
     # File settings
     dataset_filepath = Path("raw_dataset/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv")
