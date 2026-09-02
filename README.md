@@ -113,7 +113,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     <tr>
       <td>Human Domainome Dataset</td>
       <td><a href="https://doi.org/10.1038/s41586-024-08370-4">Site-saturation mutagenesis of 500 human protein domains</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Domainome_Dataset/SupplementaryTable2.txt">SupplementaryTable2.txt</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Domainome_Dataset/SupplementaryTable4.txt">SupplementaryTable4.txt</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Domainome_Dataset/wild_type.fasta">wild_type.fasta</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Domainome_Dataset/SupplementaryTable2.txt">SupplementaryTable2.txt</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Domainome_Dataset/SupplementaryTable4.txt">SupplementaryTable4.txt</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Human_Domainome_Dataset/wild_type.fasta">wild_type.fasta</a></td>
     </tr>
     <tr>
       <td>ProteinGym DMS Substitutions Dataset</td>
@@ -128,17 +128,17 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     <tr>
       <td>ddG Dataset</td>
       <td><a href="https://doi.org/10.1038/s43588-024-00716-2">Improving the prediction of protein stability changes upon mutations by geometric learning and a pre-training strategy</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/M1261.csv">M1261.csv</a>, <a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S461.csv">S461.csv</a>, <a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S669.csv">S669.csv</a>, <a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S783.csv">S783.csv</a>, <a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S8754.csv">S8754.csv</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/M1261.csv">M1261.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S461.csv">S461.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S669.csv">S669.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S783.csv">S783.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ddG_Dataset/S8754.csv">S8754.csv</a></td>
     </tr>
     <tr>
       <td>dTm Dataset</td>
       <td><a href="https://doi.org/10.1038/s43588-024-00716-2">Improving the prediction of protein stability changes upon mutations by geometric learning and a pre-training strategy</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/dTm_Dataset/S4346.csv">S4346.csv</a>, <a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/dTm_Dataset/S557.csv">S557.csv</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/dTm_Dataset/S4346.csv">S4346.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/dTm_Dataset/S557.csv">S557.csv</a></td>
     </tr>
     <tr>
       <td>ArchStabMS1E10 Epistasis Dataset</td>
       <td><a href="https://doi.org/10.1038/s41586-024-07966-0">The genetic architecture of protein stability</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset.csv">ArchStabMS1E10_Epistasis_Sup4_Dataset.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv">ArchStabMS1E10_Epistasis_Sup5_Dataset.csv</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset.csv">ArchStabMS1E10_Epistasis_Sup4_Dataset.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv">ArchStabMS1E10_Epistasis_Sup5_Dataset.csv</a></td>
     </tr>
     <tr>
       <td>Antitoxin ParD3 Epistasis Dataset</td>
@@ -158,12 +158,12 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     <tr>
       <td>CTXM Epistasis Dataset</td>
       <td><a href="https://doi.org/10.1073/pnas.2313513121">Network of epistatic interactions in an enzyme active site revealed by DMS</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/CTXM_Epistasis_Dataset/CTXM_Cefotaxime_Epistasis_Dataset.csv">CTXM_Cefotaxime_Epistasis_Dataset.csv</a>, <a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/CTXM_Epistasis_Dataset/CTXM_Ampicillin_Epistasis_Dataset.csv">CTXM_Ampicillin_Epistasis_Dataset.csv</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/CTXM_Epistasis_Dataset/CTXM_Cefotaxime_Epistasis_Dataset.csv">CTXM_Cefotaxime_Epistasis_Dataset.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/CTXM_Epistasis_Dataset/CTXM_Ampicillin_Epistasis_Dataset.csv">CTXM_Ampicillin_Epistasis_Dataset.csv</a></td>
     </tr>
     <tr>
       <td rowspan="4" valign="middle">RBD ACE2 Dataset</td>
       <td><a href="https://doi.org/10.1126/science.abo7896">Shifting mutational constraints in the SARS-CoV-2 receptor-binding domain during viral evolution</a></td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_variants_bc_binding.csv">SARS-CoV-2-RBD_DMS_variants_bc_binding.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_Delta_bc_binding.csv">SARS-CoV-2-RBD_Delta_bc_binding.csv</a></td>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_variants_bc_binding.csv">SARS-CoV-2-RBD_DMS_variants_bc_binding.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_Delta_bc_binding.csv">SARS-CoV-2-RBD_Delta_bc_binding.csv</a></td>
     </tr>
     <tr>
       <td><a href="https://doi.org/10.1371/journal.ppat.1010951">Deep mutational scans for ACE2 binding, RBD expression, and antibody escape in the SARS-CoV-2 Omicron BA.1 and BA.2 receptor-binding domains</a></td>
@@ -202,7 +202,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     </tr>
       <td>Codon cDNA Proteolysis Dataset</td>
       <td><a href="https://doi.org/10.1038/s41586-023-06328-6">Mega-scale experimental analysis of protein folding stability in biology and design</td>
-      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv">Codon_cDNA_Proteolysis_Dataset.csv</a>,<a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta">wt.fasta</a>
+      <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv">Codon_cDNA_Proteolysis_Dataset.csv</a><br><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta">wt.fasta</a>
       </td>
     </tr>
     </tr>
