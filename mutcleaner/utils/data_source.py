@@ -131,7 +131,10 @@ DATASETS = {
             "datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset.csv?download=true",
             "datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv?download=true",
         ],
-        "file_name": ["ArchStabMS1E10_Epistasis_Sup4_Dataset.csv","ArchStabMS1E10_Epistasis_Sup5_Dataset.csv"],
+        "file_name": [
+            "ArchStabMS1E10_Epistasis_Sup4_Dataset.csv",
+            "ArchStabMS1E10_Epistasis_Sup5_Dataset.csv",
+        ],
         "sub_datasets": {
             "ArchStabMS1E10_Epistasis_Sup4_Dataset": {
                 "huggingface_repos": [
@@ -144,10 +147,10 @@ DATASETS = {
                     "datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv?download=true"
                 ],
                 "file_name": ["ArchStabMS1E10_Epistasis_Sup5_Dataset.csv"],
-            }
-        }
+            },
+        },
     },
-    "Protein Human Myoglobin Epistasis Dataset":{
+    "Protein Human Myoglobin Epistasis Dataset": {
         "paper_title": "Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning",
         "official_doi": "https://doi.org/10.1101/2024.02.24.581358",
         "huggingface_repos": [
@@ -155,7 +158,7 @@ DATASETS = {
         ],
         "file_name": ["Protein_Human_Myoglobin_Epistasis_Dataset.csv"],
     },
-    "CTXM Epistasis Dataset":{
+    "CTXM Epistasis Dataset": {
         "paper_title": "Network of epistatic interactions in an enzyme active site revealed by DMS",
         "official_doi": "https://doi.org/10.1073/pnas.2313513121",
         "huggingface_repos": [
@@ -179,9 +182,9 @@ DATASETS = {
                 ],
                 "file_name": ["Doubles_C2_processed.txt"],
             },
-        }
+        },
     },
-    "TrpB Epistasis Dataset":{
+    "TrpB Epistasis Dataset": {
         "paper_title": "A combinatorially complete epistatic fitness landscape in an enzyme active site",
         "official_doi": "https://doi.org/10.1073/pnas.2400439121",
         "huggingface_repos": [
@@ -189,7 +192,7 @@ DATASETS = {
         ],
         "file_name": ["TrpB_Epistasis_Dataset.csv"],
     },
-    "Antitoxin ParD3 Epistasis Dataset":{
+    "Antitoxin ParD3 Epistasis Dataset": {
         "paper_title": "Antitoxin_ParD3_datasets",
         "official_doi": "https://doi.org/10.1038/s41467-024-45621-4",
         "huggingface_repos": [
@@ -253,7 +256,9 @@ DATASETS = {
                 "huggingface_repos": [
                     "datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv?download=true"
                 ],
-                "file_name": ["SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv"],
+                "file_name": [
+                    "SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv"
+                ],
             },
             "Omicron_XBB_BQ": {
                 "huggingface_repos": [
@@ -302,19 +307,19 @@ DATASETS = {
         "official_doi": "https://doi.org/10.1038/s41586-023-06328-6",
         "huggingface_repos": [
             "datasets/xulab-research/MutCleaner/resolve/main/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv?download=true",
-            "datasets/xulab-research/MutCleaner/resolve/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta?download=true"            
+            "datasets/xulab-research/MutCleaner/resolve/main/Codon_cDNA_Proteolysis_Dataset/wt.fasta?download=true",
         ],
-        "file_name": ["Codon_cDNA_Proteolysis_Dataset.csv","wt.fasta"],
+        "file_name": ["Codon_cDNA_Proteolysis_Dataset.csv", "wt.fasta"],
     },
     "Codon DMS Substitutions Dataset": {
         "paper_title": "MaveDB 2024: a curated community database with over seven million variant effects from multiplexed functional assays",
         "official_doi": "https://doi.org/10.1186/s13059-025-03476-y",
         "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/Codon_DMS_Substitutions_Dataset/Codon_DMS_Substitutions_Dataset.zip?download=true",      
+            "datasets/xulab-research/MutCleaner/resolve/main/Codon_DMS_Substitutions_Dataset/Codon_DMS_Substitutions_Dataset.zip?download=true",
         ],
         "file_name": ["Codon_DMS_Substitutions_Dataset.zip"],
     },
-    "Codon Human Myoglobin Epistasis Dataset":{
+    "Codon Human Myoglobin Epistasis Dataset": {
         "paper_title": "Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning",
         "official_doi": "https://doi.org/10.1101/2024.02.24.581358",
         "huggingface_repos": [

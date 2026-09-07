@@ -87,7 +87,9 @@ class CTXMCleanerConfig(BaseCleanerConfig):
     )
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(default_factory=lambda: {"fitness": "float"})
+    type_conversions: Dict[str, str] = field(
+        default_factory=lambda: {"fitness": "float"}
+    )
 
     # Wildtype sequence obtained from article
     wt_sequence = "RMMFAAAACIPLLLGSAPLYAQTSAVQQKLAALEKSSGGRLGVALIDTADNTQVLYRGDERFPMCSTSKVMAAAAVLKQSETQKQLLNQPVEIKPADLVNYNPIAEKHVNGTMTLAELSAAALQYSDNTAMNKLIAQLGGPGGVTAFARAIGDETFRLDRTEPTLNTAIPGDPRDTTTPRAMAQTLRQLTLGHALGETQRAQLVTWLKGNTTGAASIRAGLPTSWTVGDKTGSGDYGTTNDIAVIWPQGRAPLVLVTYFTQPQQNAESRRDVLASAARIIAEGL"
@@ -103,16 +105,29 @@ class CTXMCleanerConfig(BaseCleanerConfig):
 
     ambler_to_seq_mapping: Dict[str, str] = field(
         default_factory=lambda: {
-            'S70':'S66','K73':'K69','N104':'N100','Y105':'Y101','N106':'N102',
-            'S130':'S126','N132':'N128','E166':'E162','P167':'P163','N170':'N166',
-            'K234':'K230','T235':'T231','G236':'G232','S237':'S233','G238':'G234',
-            'D240':'D235','R276':'R270'
+            "S70": "S66",
+            "K73": "K69",
+            "N104": "N100",
+            "Y105": "Y101",
+            "N106": "N102",
+            "S130": "S126",
+            "N132": "N128",
+            "E166": "E162",
+            "P167": "P163",
+            "N170": "N166",
+            "K234": "K230",
+            "T235": "T231",
+            "G236": "G232",
+            "S237": "S233",
+            "G238": "G234",
+            "D240": "D235",
+            "R276": "R270",
         }
     )
 
     # wt name
     wt_name: str = "CTXM_ampicillin"
-    
+
     primary_label_column: str = "fitness"
 
     # Override default pipeline name

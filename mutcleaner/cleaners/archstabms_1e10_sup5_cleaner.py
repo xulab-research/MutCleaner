@@ -46,9 +46,7 @@ def __dir__() -> List[str]:
 # Create module logger
 logger = logging.getLogger(__name__)
 
-GRB2_SH3_WT_SEQUENCE = (
-    "TYVQALFDFDPQEDGELGFRRGDFIHVMDNSDPNWWKGACHGQTGMFPRNYVTPVN"
-)
+GRB2_SH3_WT_SEQUENCE = "TYVQALFDFDPQEDGELGFRRGDFIHVMDNSDPNWWKGACHGQTGMFPRNYVTPVN"
 
 SRC_WT_SEQUENCE = (
     "MGSNKSKPKDASQRRRSLEPAENVHGAGGGAFPASQTPSKPASADGHRGPSAAFAPAAAEPK"
@@ -114,9 +112,7 @@ class ArchStabMS1E10CleanerSup5Config(BaseCleanerConfig):
     )
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"label": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float"})
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["label"])
@@ -151,7 +147,7 @@ class ArchStabMS1E10CleanerSup5Config(BaseCleanerConfig):
         if missing:
             raise ValueError(f"Missing required column mappings: {missing}")
 
-    
+
 def create_archstabms_1e10_sup5_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
     config: Optional[
@@ -237,7 +233,7 @@ def create_archstabms_1e10_sup5_cleaner(
                 remap_mutation_positions_by_name,
                 position_offsets={"4_Folding": 3},
                 name_column=final_config.column_mapping.get("name", "name"),
-                mutation_column=final_config.column_mapping.get("id_ref", "id_ref")
+                mutation_column=final_config.column_mapping.get("id_ref", "id_ref"),
             )
             .delayed_then(
                 convert_data_types,
@@ -245,11 +241,11 @@ def create_archstabms_1e10_sup5_cleaner(
             )
             .delayed_then(
                 convert_pairwise_couplings_to_ddg,
-                group_columns=[
-                    final_config.column_mapping.get("name", "name")
-                ],
+                group_columns=[final_config.column_mapping.get("name", "name")],
                 mutation_column=final_config.column_mapping.get("id_ref", "id_ref"),
-                label_column=final_config.column_mapping.get("mean_kcal/mol", "mean_kcal/mol"),
+                label_column=final_config.column_mapping.get(
+                    "mean_kcal/mol", "mean_kcal/mol"
+                ),
             )
             .delayed_then(
                 apply_mutations_to_sequences,
@@ -260,9 +256,15 @@ def create_archstabms_1e10_sup5_cleaner(
                 convert_to_mutation_dataset_format,
                 name_column=final_config.column_mapping.get("name", "name"),
                 mutation_column=final_config.column_mapping.get("id_ref", "id_ref"),
-                sequence_column=final_config.column_mapping.get("wt_sequence", "wt_sequence"),
-                mutated_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
-                label_column=final_config.column_mapping.get("mean_kcal/mol", "mean_kcal/mol"),
+                sequence_column=final_config.column_mapping.get(
+                    "wt_sequence", "wt_sequence"
+                ),
+                mutated_sequence_column=final_config.column_mapping.get(
+                    "mut_seq", "mut_seq"
+                ),
+                label_column=final_config.column_mapping.get(
+                    "mean_kcal/mol", "mean_kcal/mol"
+                ),
                 is_zero_based=True,
             )
         )

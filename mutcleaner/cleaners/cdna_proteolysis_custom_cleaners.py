@@ -29,7 +29,7 @@ def _infer_wt_sequence(
     mut_info: str,
     mut_seq: str,
 ) -> str:
-    
+
     mutation_set = MutationSet.from_string(
         mut_info,
         sep=",",
@@ -64,9 +64,7 @@ def _infer_wt_sequence(
                 f"but found '{actual_aa}'"
             )
 
-        sequence_chars[position] = (
-            mutation.wild_amino_acid
-        )
+        sequence_chars[position] = mutation.wild_amino_acid
 
     return "".join(sequence_chars)
 
@@ -168,7 +166,7 @@ def validate_wt_sequence(
 
     try:
         results = Parallel(n_jobs=num_workers, backend="loky")(
-            delayed(_process_protein_group)(group_data) 
+            delayed(_process_protein_group)(group_data)
             for group_data in tqdm(grouped, desc="Processing proteins")
         )
     except Exception as e:
@@ -319,7 +317,7 @@ def validate_wt_sequence_grouped(
                 error_row["error_message"] = (
                     "Inferred WT sequence differs from original WT sequence: "
                     f"{explicit_wt_seq} vs. {inferred_wt}"
-                    )
+                )
                 return [error_row], "failed"
             else:
                 result_rows.append(wt_row_dict)
@@ -340,6 +338,10 @@ def validate_wt_sequence_grouped(
 
     except Exception as e:
         # Save error information in first row
-        error_row = mutants.iloc[0].to_dict() if "mutants" in locals() and len(mutants) > 0 else {name_column: str(protein_name)}
+        error_row = (
+            mutants.iloc[0].to_dict()
+            if "mutants" in locals() and len(mutants) > 0
+            else {name_column: str(protein_name)}
+        )
         error_row["error_message"] = f"{type(e).__name__}: {str(e)}"
         return [error_row], "failed"

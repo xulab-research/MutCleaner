@@ -71,6 +71,7 @@ class CodoncDNAProteolysisCleanerConfig(BaseCleanerConfig):
     primary_label_column : str
         Primary score column for the dataset
     """
+
     # Path to sequence source or Dict with sequence data
     sequence_source: Union[Dict[str, str], str, Path]
 
@@ -91,7 +92,9 @@ class CodoncDNAProteolysisCleanerConfig(BaseCleanerConfig):
     )
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float64"})
+    type_conversions: Dict[str, str] = field(
+        default_factory=lambda: {"label": "float64"}
+    )
 
     # Mutation validation parameters
     validate_mut_workers: int = 16
@@ -204,8 +207,8 @@ def create_codon_cdna_proteolysis_cleaner(
     )
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
-    mutation_column=final_config.column_mapping.get("COD", "COD")
-    name_column=final_config.column_mapping.get("protein", "protein")
+    mutation_column = final_config.column_mapping.get("COD", "COD")
+    name_column = final_config.column_mapping.get("protein", "protein")
 
     try:
         # Create pipeline

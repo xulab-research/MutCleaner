@@ -335,8 +335,7 @@ class BaseSequence(ABC):
             return CodonMutationSet(mutations)
 
         raise TypeError(
-            f"Mutation inference is not supported for "
-            f"{type(self).__name__}"
+            f"Mutation inference is not supported for " f"{type(self).__name__}"
         )
 
 

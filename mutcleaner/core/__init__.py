@@ -12,7 +12,6 @@ from .pipeline import (
 )
 from .sequence import DNASequence, RNASequence, ProteinSequence
 
-
 # fmt: off
 __all__ = [
     # Alphabets

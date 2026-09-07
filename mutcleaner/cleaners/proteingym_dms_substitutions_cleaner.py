@@ -15,7 +15,9 @@ from .basic_cleaners import (
     infer_wildtype_sequences,
     convert_to_mutation_dataset_format,
 )
-from .proteingym_dms_substitutions_custom_cleaners import read_proteingym_dms_substitutions_data
+from .proteingym_dms_substitutions_custom_cleaners import (
+    read_proteingym_dms_substitutions_data,
+)
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
 
@@ -288,7 +290,9 @@ def create_proteingym_dms_substitutions_cleaner(
         raise RuntimeError(f"Error in creating ProteinGym cleaning pipeline: {str(e)}")
 
 
-def clean_proteingym_dms_substitutions_dataset(pipeline: Pipeline) -> Tuple[Pipeline, MutationDataset]:
+def clean_proteingym_dms_substitutions_dataset(
+    pipeline: Pipeline,
+) -> Tuple[Pipeline, MutationDataset]:
     """Clean ProteinGym dataset using configurable pipeline
 
     Parameters
@@ -307,9 +311,13 @@ def clean_proteingym_dms_substitutions_dataset(pipeline: Pipeline) -> Tuple[Pipe
         pipeline.execute()
 
         # Extract results
-        proteingym_dms_substitutions_dataset_df, proteingym_dms_substitutions_ref_seq = pipeline.data
+        (
+            proteingym_dms_substitutions_dataset_df,
+            proteingym_dms_substitutions_ref_seq,
+        ) = pipeline.data
         proteingym_dms_substitutions_dataset = MutationDataset.from_dataframe(
-            proteingym_dms_substitutions_dataset_df, proteingym_dms_substitutions_ref_seq
+            proteingym_dms_substitutions_dataset_df,
+            proteingym_dms_substitutions_ref_seq,
         )
 
         logger.info(

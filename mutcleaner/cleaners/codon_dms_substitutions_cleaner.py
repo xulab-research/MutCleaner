@@ -239,7 +239,9 @@ def create_codon_dms_substitutions_cleaner(
         return pipeline
 
     except Exception as e:
-        logger.error(f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}")
+        logger.error(
+            f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}"
+        )
         raise RuntimeError(
             f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}"
         ) from e
@@ -275,9 +277,7 @@ def clean_codon_dms_substitutions_dataset(
         return pipeline, dataset
 
     except Exception as e:
-        logger.error(
-            f"Error in running Codon DMS Substitutions cleaning pipeline: {e}"
-        )
+        logger.error(f"Error in running Codon DMS Substitutions cleaning pipeline: {e}")
         raise RuntimeError(
             f"Error in running Codon DMS Substitutions cleaning pipeline: {e}"
         ) from e

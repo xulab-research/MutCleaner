@@ -229,9 +229,7 @@ def create_human_domainome_sup4_cleaner(
 
     # Handle configuration parameter
     if config is None:
-        final_config = HumanDomainomeSup4CleanerConfig(
-            sequence_source=sequence_source
-        )
+        final_config = HumanDomainomeSup4CleanerConfig(sequence_source=sequence_source)
     elif isinstance(config, HumanDomainomeSup4CleanerConfig):
         final_config = config
         # Override sequence_source if not set
@@ -260,7 +258,6 @@ def create_human_domainome_sup4_cleaner(
         f"HumanDomainome dataset (SupplementaryTable4) will be cleaned with pipeline: {final_config.pipeline_name}"
     )
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
-
 
     try:
         # Create pipeline
@@ -385,5 +382,3 @@ def clean_human_domainome_sup4_dataset(
         raise RuntimeError(
             f"Error in running HumanDomainome cleaning pipeline: {str(e)}"
         )
-
-

@@ -241,7 +241,9 @@ def convert_pairwise_couplings_to_ddg(
 
         for index, mutations in mutation_parts.loc[mutation_orders.eq(2)].items():
             missing_mutations = [
-                mutation for mutation in mutations if mutation not in single_labels.index
+                mutation
+                for mutation in mutations
+                if mutation not in single_labels.index
             ]
 
             if missing_mutations:

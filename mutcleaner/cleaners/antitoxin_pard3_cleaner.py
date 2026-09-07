@@ -107,7 +107,7 @@ class AntitoxinParD3CleanerConfig(BaseCleanerConfig):
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["label"])
-    
+
     primary_label_column: str = "label"
 
     # Override default pipeline name
@@ -213,7 +213,7 @@ def create_antitoxin_pard3_cleaner(
                 type_conversions=final_config.type_conversions,
             )
             .delayed_then(
-                add_columns, 
+                add_columns,
                 columns_to_add={
                     "name": "antitoxin",
                     "wt_seq": final_config.wt_sequence,

@@ -3,22 +3,16 @@
 MutCleaner: An efficient framework for cleaning, standardizing, and processing biological mutation data.
 """
 
-__author__ = "Ziyu Shi and Yuxiang Tang"
+__author__ = "Xu Lab"
 
 __version__ = "0.9.0"
 
 from .core import (
-    # Alphabet
     alphabet,
-    # Codon
     codon,
-    # Mutation
     mutation,
-    # Sequence
     sequence,
-    # Dataset
     MutationDataset,
-    # Pipeline
     Pipeline,
     pipeline_step,
     multiout_step,
@@ -113,5 +107,5 @@ __all__ = [
     "download_mgnify_ddg_source_file",
     "download_codon_cdna_proteolysis_source_file",
     "download_codon_dms_substitutions_source_file",
-    "download_codon_human_myoglobin_source_file"
+    "download_codon_human_myoglobin_source_file",
 ]

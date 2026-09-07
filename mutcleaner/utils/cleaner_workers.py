@@ -45,7 +45,15 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
     Tuple[Optional[str], Optional[str]]
         (formatted_mutation, error_message) - one will be None
     """
-    mut_info, format_mutations, mutation_sep, is_zero_based, mutation_type, alphabet, shared_cache = args
+    (
+        mut_info,
+        format_mutations,
+        mutation_sep,
+        is_zero_based,
+        mutation_type,
+        alphabet,
+        shared_cache,
+    ) = args
 
     if pd.isna(mut_info):
         return None, "Missing mutation information"
@@ -73,7 +81,11 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
             # Only validate, don't format
             # Try to create MutationSet to validate - if it succeeds, mutation is valid
             MutationSet.from_string(
-                mut_info, sep=mutation_sep, is_zero_based=is_zero_based, mutation_type=mutation_type, alphabet=alphabet
+                mut_info,
+                sep=mutation_sep,
+                is_zero_based=is_zero_based,
+                mutation_type=mutation_type,
+                alphabet=alphabet,
             )
             # If no exception was raised, the mutation is valid
             if shared_cache is not None:
@@ -159,7 +171,11 @@ def apply_single_mutation(
 
         sequence = sequence_class(sequence_str, name=name)
         mutation_set = MutationSet.from_string(
-            mut_info, sep=mutation_sep, is_zero_based=is_zero_based, mutation_type=mutation_type, alphabet=alphabet
+            mut_info,
+            sep=mutation_sep,
+            is_zero_based=is_zero_based,
+            mutation_type=mutation_type,
+            alphabet=alphabet,
         )
         mutated_sequence = sequence.apply_mutation(mutation_set)
 
@@ -356,6 +372,7 @@ def infer_single_mutationset(
         return inferred_mutations, None
     except Exception as e:
         return None, str(e)
+
 
 def validate_single_mutation_and_sequence(
     row_data: Tuple,

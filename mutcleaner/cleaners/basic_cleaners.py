@@ -1031,7 +1031,6 @@ def validate_mutations(
         codes = None
         values_to_process = mutation_values.tolist()
 
-
     # Prepare arguments for parallel processing
     mutation_values = validation_dataset[mutation_column].tolist()
     args_list = [
@@ -1089,8 +1088,7 @@ def validate_mutations(
     if cache_results:
         missing_result = (None, "Missing mutation information")
         results = [
-            missing_result if code == -1 else processed_results[code]
-            for code in codes
+            missing_result if code == -1 else processed_results[code] for code in codes
         ]
     else:
         results = processed_results
@@ -2217,12 +2215,12 @@ def add_columns(
     dataset : pd.DataFrame
         The input DataFrame to which the 'dataset_name' will be added.
     columns_to_add : Dict[str, Any]
-        A dictionary where keys are the new column names and values are the 
+        A dictionary where keys are the new column names and values are the
         constant values to assign to all rows in those columns.
     overwrite : bool, default=True
         Whether to overwrite existing columns with the same name. If False,
         a warning will be printed and existing columns will be skipped.
-    
+
     Returns
     -------
     dataset : pd.DataFrame
@@ -2246,13 +2244,13 @@ def add_columns(
         raise ValueError("The columns dictionary cannot be empty.")
 
     tqdm.write("Adding constant columns...")
-    
+
     result = dataset.copy()
-    
+
     available_columns = set(result.columns)
 
     added_columns_list = []
-    
+
     for col, value in columns_to_add.items():
         if col in available_columns and not overwrite:
             tqdm.write(f"Warning: Column '{col}' already exists. Skipping.")
@@ -2552,8 +2550,7 @@ def remap_mutation_positions_by_name(
             if match is None:
                 if strict:
                     raise ValueError(
-                        f"Invalid mutation {token!r} for "
-                        f"{name_column}={name!r}"
+                        f"Invalid mutation {token!r} for " f"{name_column}={name!r}"
                     )
                 remapped_mutations.append(token)
                 continue
@@ -2600,9 +2597,7 @@ def add_sequences_to_dataset(
     sequence_source: Union[Dict[str, str], str, Path],
     name_column: str = "name",
     sequence_column: str = "sequence",
-    header_parser: Optional[
-        Callable[[str], Tuple[str, Dict[str, str]]]
-    ] = None,
+    header_parser: Optional[Callable[[str], Tuple[str, Dict[str, str]]]] = None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Add full wild-type sequences to the dataset from sequence dictionary
 
@@ -2660,9 +2655,7 @@ def add_sequences_to_dataset(
             f"got {type(sequence_source).__name__}"
         )
 
-    tqdm.write(
-        f"Loaded {len(sequence_dict)} reference sequences"
-    )
+    tqdm.write(f"Loaded {len(sequence_dict)} reference sequences")
 
     # Create a copy to avoid modifying the original
     result_dataset = dataset.copy()
@@ -2770,7 +2763,7 @@ def filter_stop_codon_mutations(
     }
 
     stop_mask = dataset[mutation_column].map(stop_cache).fillna(False).astype(bool)
-    
+
     total_count = len(dataset)
     stop_count = int(stop_mask.sum())
     tqdm.write(

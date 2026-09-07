@@ -7,10 +7,7 @@ name = "mutcleaner"
 dynamic = ["version"]
 description = "An efficient framework for cleaning, standardizing, and processing biological mutation data."
 readme = "README.md"
-authors = [
-    { name = "Ziyu Shi" },
-    { name = "Yuxiang Tang" },
-]
+authors = [{ name = "Xu Lab" },]
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.13"

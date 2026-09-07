@@ -51,7 +51,7 @@ class TrpBCleanerConfig(BaseCleanerConfig):
     Simply run `mutcleaner.download_trpb_source_file()` to download the dataset.
 
     Alternatively, the raw TrpB file can be obtained from:
-    
+
     - Hugging Face: https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/TrpB_Epistasis_Dataset/TrpB_Epistasis_Dataset.csv
 
     Attributes

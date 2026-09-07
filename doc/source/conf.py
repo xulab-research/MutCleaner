@@ -6,8 +6,8 @@ project_root = Path(__file__).resolve().parents[2]
 sys.path.insert(0, f"{project_root}")
 
 project = "mutcleaner"
-copyright = "2026, Ziyu Shi, Yuxiang Tang"
-author = "Yuxiang Tang and Ziyu Shi"
+copyright = "Xu Lab"
+author = "Xu Lab"
 
 extensions = [
     "sphinx.ext.autodoc",
@@ -23,8 +23,6 @@ extensions = [
     "sphinx_design",
     "sphinx_autodoc_typehints",
 ]
-
-
 
 # autosummary configuration
 autosummary_generate = True

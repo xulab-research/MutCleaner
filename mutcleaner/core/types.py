@@ -12,6 +12,7 @@ MutationSetType : typing.TypeVar
 CleanerConfigType : typing.TypeVar
     Bound to :class:`~mutcleaner.cleaners.base_config.BaseCleanerConfig`.
 """
+
 from __future__ import annotations
 
 from typing import TypeVar, TYPE_CHECKING

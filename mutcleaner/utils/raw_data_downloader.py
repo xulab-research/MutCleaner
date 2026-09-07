@@ -29,11 +29,11 @@ __all__ = [
     "download_protein_human_myoglobin_source_file",
     "download_archstabms1e10_source_file",
     "download_ddg_dtm_source_file",
-    "download_chitosanase_dtm_source_file", 
+    "download_chitosanase_dtm_source_file",
     "download_mgnify_ddg_source_file",
     "download_codon_cdna_proteolysis_source_file",
     "download_codon_dms_substitutions_source_file"
-    "download_codon_human_myoglobin_source_file"
+    "download_codon_human_myoglobin_source_file",
 ]
 
 
@@ -473,7 +473,9 @@ def download_proteingym_source_file(
         key: file name,
         value: file path pointing to the ProteinGym DMS Substitutions Dataset source file
     """
-    return download_source_file_from_huggingface("ProteinGym DMS Substitutions Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "ProteinGym DMS Substitutions Dataset", dir, overwrite=overwrite
+    )
 
 
 def download_human_domainome_source_file(
@@ -603,7 +605,10 @@ def download_archstabms1e10_source_file(
         Mapping from file names to downloaded local file paths.
     """
     return download_source_file_from_huggingface(
-        "ArchStabMS1E10 Epistasis Dataset", dir, overwrite=overwrite, sub_dataset=sub_dataset
+        "ArchStabMS1E10 Epistasis Dataset",
+        dir,
+        overwrite=overwrite,
+        sub_dataset=sub_dataset,
     )
 
 
@@ -633,9 +638,13 @@ def download_protein_human_myoglobin_source_file(
 
 def download_ctxm_source_file(
     dir: str,
-    *, 
+    *,
     overwrite: bool = False,
-    sub_dataset: Optional[Literal["CTXM_Ampicillin_Epistasis_Dataset", "CTXM_Cefotaxime_Epistasis_Dataset"]] = None, 
+    sub_dataset: Optional[
+        Literal[
+            "CTXM_Ampicillin_Epistasis_Dataset", "CTXM_Cefotaxime_Epistasis_Dataset"
+        ]
+    ] = None,
 ) -> Dict[str, str]:
     """
     Download the source file for CTX-M dataset from the original source.
@@ -653,14 +662,19 @@ def download_ctxm_source_file(
         key: file name,
         value: file path pointing to CTX-M dataset source file
     """
-    if sub_dataset is not None and sub_dataset not in ["CTXM_Ampicillin_Epistasis_Dataset", "CTXM_Cefotaxime_Epistasis_Dataset"]:
-        raise ValueError("Unsupported sub-dataset. Supported options: CTXM_Ampicillin_Epistasis_Dataset, CTXM_Cefotaxime_Epistasis_Dataset")
-    return download_source_file_from_huggingface("CTXM Epistasis Dataset", dir, overwrite=overwrite, sub_dataset=sub_dataset)
+    if sub_dataset is not None and sub_dataset not in [
+        "CTXM_Ampicillin_Epistasis_Dataset",
+        "CTXM_Cefotaxime_Epistasis_Dataset",
+    ]:
+        raise ValueError(
+            "Unsupported sub-dataset. Supported options: CTXM_Ampicillin_Epistasis_Dataset, CTXM_Cefotaxime_Epistasis_Dataset"
+        )
+    return download_source_file_from_huggingface(
+        "CTXM Epistasis Dataset", dir, overwrite=overwrite, sub_dataset=sub_dataset
+    )
 
 
-def download_trpb_source_file(
-    dir: str, *, overwrite: bool = False
-) -> Dict[str, str]:
+def download_trpb_source_file(dir: str, *, overwrite: bool = False) -> Dict[str, str]:
     """
     Download the source file for TrpB dataset from the original source.
 
@@ -677,7 +691,9 @@ def download_trpb_source_file(
         key: file name,
         value: file path pointing to TrpB dataset source file
     """
-    return download_source_file_from_huggingface("TrpB Epistasis Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "TrpB Epistasis Dataset", dir, overwrite=overwrite
+    )
 
 
 def download_antitoxin_pard3_source_file(
@@ -699,7 +715,9 @@ def download_antitoxin_pard3_source_file(
         key: file name,
         value: file path pointing to Antitoxin ParD3 Epistasis Dataset source file
     """
-    return download_source_file_from_huggingface("Antitoxin ParD3 Epistasis Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "Antitoxin ParD3 Epistasis Dataset", dir, overwrite=overwrite
+    )
 
 
 def download_rbd_antibody_source_file(
@@ -798,7 +816,9 @@ def download_rbd_ace2_source_file(
     )
 
 
-def download_chitosanase_dtm_source_file(dir: str, *, overwrite: bool = False) -> Dict[str, str]:
+def download_chitosanase_dtm_source_file(
+    dir: str, *, overwrite: bool = False
+) -> Dict[str, str]:
     """
     Download the source file for Chitosanase dTm Dataset from the original source.
 
@@ -815,10 +835,14 @@ def download_chitosanase_dtm_source_file(dir: str, *, overwrite: bool = False) -
         key: file name,
         value: file path pointing to Chitosanase dTm Dataset source file
     """
-    return download_source_file_from_huggingface("Chitosanase dTm Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "Chitosanase dTm Dataset", dir, overwrite=overwrite
+    )
 
 
-def download_mgnify_ddg_source_file(dir: str, *, overwrite: bool = False) -> Dict[str, str]:
+def download_mgnify_ddg_source_file(
+    dir: str, *, overwrite: bool = False
+) -> Dict[str, str]:
     """
     Download the source file for MGnify ddG Dataset from the original source.
 
@@ -835,11 +859,14 @@ def download_mgnify_ddg_source_file(dir: str, *, overwrite: bool = False) -> Dic
         key: file name,
         value: file path pointing to MGnify ddG Dataset source file
     """
-    return download_source_file_from_huggingface("MGnify ddG Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "MGnify ddG Dataset", dir, overwrite=overwrite
+    )
 
 
-
-def download_codon_cdna_proteolysis_source_file(dir: str, *, overwrite: bool = False) -> Dict[str, str]:
+def download_codon_cdna_proteolysis_source_file(
+    dir: str, *, overwrite: bool = False
+) -> Dict[str, str]:
     """
     Download the source file for Codon cDNA Proteolysis Dataset from the original source.
 
@@ -856,7 +883,9 @@ def download_codon_cdna_proteolysis_source_file(dir: str, *, overwrite: bool = F
         key: file name,
         value: file path pointing to Codon cDNA Proteolysis Dataset source file
     """
-    return download_source_file_from_huggingface("Codon cDNA Proteolysis Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "Codon cDNA Proteolysis Dataset", dir, overwrite=overwrite
+    )
 
 
 def download_codon_dms_substitutions_source_file(
@@ -871,7 +900,9 @@ def download_codon_dms_substitutions_source_file(
         key: file name,
         value: file path pointing to the Codon DMS Substitutions Dataset source file
     """
-    return download_source_file_from_huggingface("Codon DMS Substitutions Dataset", dir, overwrite=overwrite)
+    return download_source_file_from_huggingface(
+        "Codon DMS Substitutions Dataset", dir, overwrite=overwrite
+    )
 
 
 def download_codon_human_myoglobin_source_file(

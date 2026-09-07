@@ -21,11 +21,7 @@ from .sequence import (
     RNASequence,
     load_sequences_from_fasta,
 )
-from .alphabet import (
-    ProteinAlphabet, 
-    DNAAlphabet, 
-    RNAAlphabet
-)
+from .alphabet import ProteinAlphabet, DNAAlphabet, RNAAlphabet
 
 if TYPE_CHECKING:
     from typing import List, Literal, Optional, Sequence, Type, Union
@@ -279,7 +275,7 @@ class MutationDataset:
                         )
                         set_valid = False
                         continue
-                
+
                 elif isinstance(mutation, CodonMutation):
                     if mutation.nucleotide_end > len(reference_sequence):
                         validation_results["invalid_mutation_sets"].append(
@@ -291,7 +287,7 @@ class MutationDataset:
                             }
                         )
                         set_valid = False
-                        continue  
+                        continue
                 # Check if wild type matches reference for amino acid mutations
                 if isinstance(mutation, AminoAcidMutation) and isinstance(
                     reference_sequence, ProteinSequence
@@ -319,7 +315,7 @@ class MutationDataset:
                                 "error": f"Position {mutation.position} out of range",
                             }
                         )
-                        
+
                         set_valid = False
 
                 # Check codon mutations for nucleotide sequences
@@ -734,8 +730,7 @@ class MutationDataset:
         all_positions = {mutation.position for mutation in mutations}
 
         if mutations and all(
-            isinstance(mutation, AminoAcidMutation)
-            for mutation in mutations
+            isinstance(mutation, AminoAcidMutation) for mutation in mutations
         ):
             if not isinstance(sequence, ProteinSequence):
                 raise ValueError(
@@ -748,8 +743,7 @@ class MutationDataset:
             position_space_length = len(sequence)
 
         elif mutations and all(
-            isinstance(mutation, CodonMutation)
-            for mutation in mutations
+            isinstance(mutation, CodonMutation) for mutation in mutations
         ):
             if not isinstance(sequence, (DNASequence, RNASequence)):
                 raise ValueError(
@@ -768,10 +762,7 @@ class MutationDataset:
             position_space_length = len(sequence) // 3
 
         elif mutations:
-            mutation_types = {
-                type(mutation).__name__
-                for mutation in mutations
-            }
+            mutation_types = {type(mutation).__name__ for mutation in mutations}
             raise ValueError(
                 f"Cannot calculate position coverage for reference "
                 f"{reference_id!r} with mixed mutation types: "
@@ -867,7 +858,10 @@ class MutationDataset:
                 translated_sequence = sequence.translate(
                     require_mod3=True,
                 )
-                converted_dataset.add_reference_sequence(ref_id, translated_sequence,)
+                converted_dataset.add_reference_sequence(
+                    ref_id,
+                    translated_sequence,
+                )
 
             else:
                 converted_dataset.add_reference_sequence(ref_id, sequence)
@@ -940,12 +934,9 @@ class MutationDataset:
 
             data["mutation_sets"].append((i, mutation_set))
             data["total_mutations"] += len(mutation_set)
-            data["covered_positions"].update(
-                mutation_set.get_positions()
-            )
+            data["covered_positions"].update(mutation_set.get_positions())
             data["mutation_types"].update(
-                type(mutation)
-                for mutation in mutation_set.mutations
+                type(mutation) for mutation in mutation_set.mutations
             )
 
             label = self.mutation_set_labels.get(i)
@@ -1002,8 +993,7 @@ class MutationDataset:
 
             else:
                 mutation_type_names = sorted(
-                    mutation_type.__name__
-                    for mutation_type in mutation_types
+                    mutation_type.__name__ for mutation_type in mutation_types
                 )
 
                 raise ValueError(
@@ -1018,8 +1008,7 @@ class MutationDataset:
             invalid_positions = sorted(
                 position
                 for position in all_positions
-                if position < 0
-                or position >= position_space_length
+                if position < 0 or position >= position_space_length
             )
 
             if invalid_positions:
@@ -1030,14 +1019,10 @@ class MutationDataset:
                 )
 
             covered_positions = len(all_positions)
-            uncovered_positions = (
-                position_space_length - covered_positions
-            )
+            uncovered_positions = position_space_length - covered_positions
 
             coverage_percentage = (
-                covered_positions
-                / position_space_length
-                * 100
+                covered_positions / position_space_length * 100
                 if position_space_length > 0
                 else 0.0
             )
@@ -1054,9 +1039,7 @@ class MutationDataset:
                 )
 
                 try:
-                    mutated_sequence = ref_sequence.apply_mutation(
-                        mutation_set
-                    )
+                    mutated_sequence = ref_sequence.apply_mutation(mutation_set)
 
                     successful_rows.append(
                         {
@@ -1067,9 +1050,7 @@ class MutationDataset:
                     )
 
                 except Exception as error:
-                    error_message = (
-                        f"{type(error).__name__}: {error}"
-                    )
+                    error_message = f"{type(error).__name__}: {error}"
 
                     failed_rows.append(
                         {
@@ -1124,20 +1105,14 @@ class MutationDataset:
                 failed_path.unlink()
 
             # Save the wild-type reference sequence.
-            sequence_name = (
-                ref_sequence.name
-                if ref_sequence.name
-                else str(ref_id)
-            )
+            sequence_name = ref_sequence.name if ref_sequence.name else str(ref_id)
 
             with open(
                 ref_dir / "wt.fasta",
                 "w",
                 encoding="utf-8",
             ) as fasta_file:
-                fasta_file.write(
-                    f">{sequence_name}\n{ref_sequence}\n"
-                )
+                fasta_file.write(f">{sequence_name}\n{ref_sequence}\n")
 
             # sequence_length is the actual number of sequence characters:
             # amino acids for proteins and nucleotides for DNA/RNA.
@@ -1152,9 +1127,7 @@ class MutationDataset:
                 "covered_positions": covered_positions,
                 "coverage_percentage": coverage_percentage,
                 "num_unique_labels": len(data["unique_labels"]),
-                "has_unlabeled": (
-                    "unlabeled" in data["unique_labels"]
-                ),
+                "has_unlabeled": ("unlabeled" in data["unique_labels"]),
                 "dataset_name": self.name,
             }
 
@@ -1173,7 +1146,9 @@ class MutationDataset:
     def save(
         self,
         filepath: str,
-        save_type: Optional[Literal["mutcleaner", "pickle", "dataframe"]] = "mutcleaner",
+        save_type: Optional[
+            Literal["mutcleaner", "pickle", "dataframe"]
+        ] = "mutcleaner",
     ):
         """
         Save the dataset to files.
@@ -1374,7 +1349,7 @@ class MutationDataset:
                         f"Unsupported reference sequence type: "
                         f"{type(ref_sequence).__name__}"
                     )
-                
+
                 dataset.add_reference_sequence(original_ref_id, ref_sequence)
 
                 # Load mutation data
@@ -1401,8 +1376,8 @@ class MutationDataset:
                     # Parse mutation from mutation_name
                     try:
                         mutation_set = MutationSet.from_string(
-                            mutation_name, 
-                            sep=",", 
+                            mutation_name,
+                            sep=",",
                             is_zero_based=is_zero_based,
                             mutation_type=mutation_type,
                             alphabet=alphabet,
@@ -1701,10 +1676,7 @@ class MutationDataset:
         # Fast path for the common case where each DataFrame row represents
         # exactly one mutation set. This avoids constructing tens of thousands
         # of one-row DataFrames through ``groupby``.
-        if (
-            df["mutation_set_id"].notna().all()
-            and df["mutation_set_id"].is_unique
-        ):
+        if df["mutation_set_id"].notna().all() and df["mutation_set_id"].is_unique:
             cls._reconstruct_unique_mutation_sets(
                 dataset,
                 df,
@@ -1796,8 +1768,7 @@ class MutationDataset:
             (column[4:], column_index[column]) for column in set_metadata_cols
         ]
         mutation_metadata_indices = [
-            (column[9:], column_index[column])
-            for column in mutation_metadata_cols
+            (column[9:], column_index[column]) for column in mutation_metadata_cols
         ]
 
         mutation_sets = []
@@ -1805,14 +1776,8 @@ class MutationDataset:
         labels = []
 
         rows = df.itertuples(index=False, name=None)
-        for values in tqdm(
-            rows, total=len(df), desc="Reconstructing mutation sets"
-        ):
-            set_name = (
-                values[set_name_index]
-                if set_name_index is not None
-                else None
-            )
+        for values in tqdm(rows, total=len(df), desc="Reconstructing mutation sets"):
+            set_name = values[set_name_index] if set_name_index is not None else None
             reference_id = values[reference_index]
             label = values[label_index] if label_index is not None else None
 

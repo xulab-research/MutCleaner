@@ -76,7 +76,9 @@ class MGnifyddGCleanerConfig(BaseCleanerConfig):
         }
     )
 
-    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float32"})
+    type_conversions: Dict[str, str] = field(
+        default_factory=lambda: {"label": "float32"}
+    )
 
     infer_mut_workers: int = 16
 
@@ -106,12 +108,17 @@ class MGnifyddGCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(f"primary_label_column '{self.primary_label_column}' " f"must be contained in label_columns {self.label_columns}")
+            raise ValueError(
+                f"primary_label_column '{self.primary_label_column}' "
+                f"must be contained in label_columns {self.label_columns}"
+            )
 
         required_mappings = {"name", "wt_seq", "mut_seq", "label"}
         missing = required_mappings - set(self.column_mapping.values())
         if missing:
-            raise ValueError(f"Missing required target column mappings inside column_mapping: {missing}")
+            raise ValueError(
+                f"Missing required target column mappings inside column_mapping: {missing}"
+            )
 
 
 def create_mgnify_ddg_cleaner(
@@ -121,7 +128,7 @@ def create_mgnify_ddg_cleaner(
     """
     Create MGnify protein stability dataset cleaning pipeline.
 
-    This function pieces together modular basic cleaners to standardize the MGnify 
+    This function pieces together modular basic cleaners to standardize the MGnify
     subsets into regularized training matrices for deep learning architectures.
 
     Parameters
@@ -146,9 +153,13 @@ def create_mgnify_ddg_cleaner(
     elif isinstance(config, (str, Path)):
         final_config = MGnifyddGCleanerConfig.from_json(config)
     else:
-        raise TypeError(f"config must be MGnifyddGCleanerConfig, dict, str, Path or None, got {type(config)}")
+        raise TypeError(
+            f"config must be MGnifyddGCleanerConfig, dict, str, Path or None, got {type(config)}"
+        )
 
-    logger.info(f"MGnify_ddG dataset will be cleaned with pipeline: {final_config.pipeline_name}")
+    logger.info(
+        f"MGnify_ddG dataset will be cleaned with pipeline: {final_config.pipeline_name}"
+    )
     logger.debug(f"Configuration summary:\n{final_config.get_summary()}")
 
     try:
@@ -163,10 +174,14 @@ def create_mgnify_ddg_cleaner(
             .delayed_then(
                 infer_mutations_from_sequences,
                 wt_sequence_column=final_config.column_mapping.get("wt_seq", "wt_seq"),
-                mut_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
+                mut_sequence_column=final_config.column_mapping.get(
+                    "mut_seq", "mut_seq"
+                ),
                 num_workers=final_config.infer_mut_workers,
             )
-            .delayed_then(convert_data_types, type_conversions=final_config.type_conversions)
+            .delayed_then(
+                convert_data_types, type_conversions=final_config.type_conversions
+            )
             .delayed_then(
                 aggregate_labels_by_name,
                 name_columns=[
@@ -183,7 +198,9 @@ def create_mgnify_ddg_cleaner(
                 name_column=final_config.column_mapping.get("name", "name"),
                 mutation_column="inferred_mutations",
                 sequence_column=final_config.column_mapping.get("wt_seq", "wt_seq"),
-                mutated_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
+                mutated_sequence_column=final_config.column_mapping.get(
+                    "mut_seq", "mut_seq"
+                ),
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -193,7 +210,9 @@ def create_mgnify_ddg_cleaner(
 
     except Exception as e:
         logger.error(f"Failed to initialize MGnify-ddG cleaning pipeline: {str(e)}")
-        raise RuntimeError(f"Failed to initialize MGnify-ddG cleaning pipeline: {str(e)}")
+        raise RuntimeError(
+            f"Failed to initialize MGnify-ddG cleaning pipeline: {str(e)}"
+        )
 
 
 def clean_mgnify_ddg_dataset(
@@ -218,12 +237,20 @@ def clean_mgnify_ddg_dataset(
         pipeline.execute()
         formatted_df, ref_dict = pipeline.data
 
-        mgnify_dataset = MutationDataset.from_dataframe(formatted_df, reference_sequences=ref_dict)
+        mgnify_dataset = MutationDataset.from_dataframe(
+            formatted_df, reference_sequences=ref_dict
+        )
 
-        logger.info(f"Successfully executed MGnify-ddG pipeline: {len(formatted_df)} mutations across {len(ref_dict)} unique proteins.")
+        logger.info(
+            f"Successfully executed MGnify-ddG pipeline: {len(formatted_df)} mutations across {len(ref_dict)} unique proteins."
+        )
 
         return pipeline, mgnify_dataset
 
     except Exception as e:
-        logger.error(f"Error encountered during MGnify-ddG pipeline execution: {str(e)}")
-        raise RuntimeError(f"Error encountered during MGnify-ddG pipeline execution: {str(e)}")
+        logger.error(
+            f"Error encountered during MGnify-ddG pipeline execution: {str(e)}"
+        )
+        raise RuntimeError(
+            f"Error encountered during MGnify-ddG pipeline execution: {str(e)}"
+        )

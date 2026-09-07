@@ -7,6 +7,7 @@ from ..core.mutation import (
     MutationSet,
 )
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from typing import Any, Dict, List, Optional, Type, Tuple, Union
 
@@ -19,8 +20,6 @@ if TYPE_CHECKING:
     )
 import pandas as pd
 from tqdm import tqdm
-
-
 
 """
 Functions are used in mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format()
@@ -143,9 +142,7 @@ def convert_format_2(
     mutation_set_prefix: str,
     is_zero_based: bool,
     additional_metadata: Optional[Dict[str, Any]],
-    sequence_class: Type[
-        Union[ProteinSequence, DNASequence, RNASequence]
-    ],
+    sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
     mutation_type: Type[BaseMutation],
     alphabet: BaseAlphabet,
 ) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
@@ -242,16 +239,11 @@ def _create_output_row_from_mutation(
         )
 
     else:
-        raise TypeError(
-            f"Unsupported mutation type: {type(mutation).__name__}"
-        )
+        raise TypeError(f"Unsupported mutation type: {type(mutation).__name__}")
 
     if additional_metadata:
         output_row.update(
-            {
-                f"set_{key}": value
-                for key, value in additional_metadata.items()
-            }
+            {f"set_{key}": value for key, value in additional_metadata.items()}
         )
 
     return output_row

@@ -1,5 +1,9 @@
 # MutCleaner
 
+<p align="center">
+  <img src="assets/overview.svg" alt="MutCleaner overview" width="900">
+</p>
+
 [![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=python&logoColor=white&color=orange)](https://pypi.org/project/mutcleaner/)
 [![Python version badge](https://img.shields.io/python/required-version-toml.svg?logo=python&logoColor=white&color=orange&tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fxulab-research%2FMutCleaner%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)](https://pypi.org/project/mutcleaner/)
 [![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
@@ -255,7 +259,7 @@ If you use MutCleaner in your research, please cite:
 ```bibtex
 @misc{mutcleaner,
   title = {MutCleaner: Cleaning and Standardizing Biological Mutation Datasets for Variant Effect Prediction},
-  author = {Shi, Ziyu and Tang, Yuxiang and Yang, Mengxin and Shi, Yancheng and Yu, Shize and Xu, Yunxin},
+  author = {Xu Lab},
   year = {2026},
   url = {https://github.com/xulab-research/MutCleaner}
 }

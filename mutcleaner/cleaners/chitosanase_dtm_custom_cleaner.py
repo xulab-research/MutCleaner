@@ -19,7 +19,9 @@ def __dir__() -> List[str]:
 
 
 @pipeline_step
-def parse_chitosanase_raw_file(file_path: str | Path, wt_separator: str = '">wt') -> pd.DataFrame:
+def parse_chitosanase_raw_file(
+    file_path: str | Path, wt_separator: str = '">wt'
+) -> pd.DataFrame:
     """Parse a raw Chitosanase input file and return the raw DataFrame.
 
     The raw file contains a CSV block followed by a wild-type sequence.
@@ -63,7 +65,9 @@ def parse_chitosanase_raw_file(file_path: str | Path, wt_separator: str = '">wt'
         wt_seq = parts[1].replace('"', "").replace(",", "").strip()
         wt_seq = "".join(wt_seq.split())
     else:
-        raise ValueError(f"Cannot find WT sequence separator '{wt_separator}' in the expected format.")
+        raise ValueError(
+            f"Cannot find WT sequence separator '{wt_separator}' in the expected format."
+        )
 
     df = pd.read_csv(io.StringIO(csv_text))
     df["wt_seq"] = wt_seq
