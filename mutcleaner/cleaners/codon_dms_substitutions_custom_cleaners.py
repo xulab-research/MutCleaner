@@ -66,13 +66,7 @@ def read_codon_dms_substitutions_dataset(
         else:
             raise ValueError(f"Data path must be a directory or ZIP file: {data_path}")
 
-        assay_dirs = sorted(
-            path
-            for path in working_dir.rglob("*")
-            if path.is_dir()
-            and (path / "data.csv").exists()
-            and (path / "wt.fasta").exists()
-        )
+        assay_dirs = sorted(path for path in working_dir.rglob("*") if path.is_dir() and (path / "data.csv").exists() and (path / "wt.fasta").exists())
 
         if not assay_dirs:
             raise ValueError(f"No assay directories found in {data_path}")
@@ -85,10 +79,7 @@ def read_codon_dms_substitutions_dataset(
             wt_sequences = load_sequences(assay_dir / "wt.fasta")
 
             if len(wt_sequences) != 1:
-                raise ValueError(
-                    f"Expected one wild-type sequence in {assay_dir / 'wt.fasta'}, "
-                    f"found {len(wt_sequences)}"
-                )
+                raise ValueError(f"Expected one wild-type sequence in {assay_dir / 'wt.fasta'}, " f"found {len(wt_sequences)}")
 
             df = pd.read_csv(assay_dir / "data.csv")
             df["wt_sequence"] = next(iter(wt_sequences.values()))
@@ -97,10 +88,7 @@ def read_codon_dms_substitutions_dataset(
 
         dataset = pd.concat(datasets, ignore_index=True)
 
-        tqdm.write(
-            f"Loaded Codon DMS Substitutions Dataset: "
-            f"{len(dataset)} mutation records from {len(assay_dirs)} assays"
-        )
+        tqdm.write(f"Loaded Codon DMS Substitutions Dataset: " f"{len(dataset)} mutation records from {len(assay_dirs)} assays")
 
         return dataset
 

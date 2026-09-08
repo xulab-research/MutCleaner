@@ -36,16 +36,16 @@ def __dir__() -> List[str]:
 class MultiOutput(NamedTuple):
     """Container for functions that return multiple outputs"""
 
-    main: Any  # Main data to pass to next step
-    side: Dict[str, Any] = {}  # Side outputs to store
+    main: Any
+    side: Dict[str, Any] = {}
 
 
 @dataclass
 class PipelineOutput:
     """Structured output from pipeline steps"""
 
-    data: Any  # Main data flow
-    artifacts: Dict[str, Any]  # Named artifacts/side outputs
+    data: Any
+    artifacts: Dict[str, Any]
 
     def __getitem__(self, key: str):
         """Allow dictionary-style access to artifacts"""
@@ -99,10 +99,7 @@ class PipelineStep:
 
             elif step_type == "multi_output":
                 # This shouldn't happen if @multiout_step is working correctly
-                raise RuntimeError(
-                    f"Function {self.function.__name__} is marked as multi_output "
-                    f"but didn't return MultiOutput. This indicates a decorator bug."
-                )
+                raise RuntimeError(f"Function {self.function.__name__} is marked as multi_output " f"but didn't return MultiOutput. This indicates a decorator bug.")
 
             elif step_type == "single_output":
                 # Function decorated with @pipeline_step - treat any result as single value
@@ -114,9 +111,7 @@ class PipelineStep:
                 import warnings
 
                 warnings.warn(
-                    f"Function {getattr(self.function, '__name__', 'unknown')} is not "
-                    f"decorated with @pipeline_step or @multiout_step. "
-                    f"Consider adding @pipeline_step for better pipeline integration.",
+                    f"Function {getattr(self.function, '__name__', 'unknown')} is not " f"decorated with @pipeline_step or @multiout_step. " f"Consider adding @pipeline_step for better pipeline integration.",
                     UserWarning,
                 )
                 self.result = result
@@ -142,9 +137,7 @@ class PipelineStep:
             "success": self.success,
             "execution_time": self.execution_time,
             "has_side_outputs": bool(self.side_outputs),
-            "side_output_keys": (
-                list(self.side_outputs.keys()) if self.side_outputs else []
-            ),
+            "side_output_keys": (list(self.side_outputs.keys()) if self.side_outputs else []),
             "error": str(self.error) if self.error else None,
         }
 
@@ -152,14 +145,12 @@ class PipelineStep:
 class Pipeline:
     """Pipeline for processing data with pandas-style method chaining"""
 
-    def __init__(
-        self, data: Any = None, name: Optional[str] = None, logging_level: str = "INFO"
-    ):
+    def __init__(self, data: Any = None, name: Optional[str] = None, logging_level: str = "INFO"):
         self.name = name or "Pipeline"
-        self._data = data  # Store actual data
-        self._artifacts: Dict[str, Any] = {}  # Store artifacts separately
+        self._data = data
+        self._artifacts: Dict[str, Any] = {}
         self.steps: List[PipelineStep] = []
-        self.delayed_steps: List[DelayedStep] = []  # store delayed steps
+        self.delayed_steps: List[DelayedStep] = []
         self.results: List[Any] = []
 
         # Setup logging
@@ -169,9 +160,7 @@ class Pipeline:
         # Add handler if logger doesn't have one
         if not self.logger.handlers:
             handler = logging.StreamHandler()
-            formatter = logging.Formatter(
-                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-            )
+            formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
             handler.setFormatter(formatter)
             self.logger.addHandler(handler)
 
@@ -222,10 +211,7 @@ class Pipeline:
             import warnings
 
             warnings.warn(
-                f"Pipeline has {len(self.delayed_steps)} pending delayed steps. "
-                f"Using then() will execute immediately without running delayed steps first. "
-                f"Consider using execute() to run delayed steps first, or use delayed_then() "
-                f"to add this step to the delayed queue.",
+                f"Pipeline has {len(self.delayed_steps)} pending delayed steps. " f"Using then() will execute immediately without running delayed steps first. " f"Consider using execute() to run delayed steps first, or use delayed_then() " f"to add this step to the delayed queue.",
                 UserWarning,
                 stacklevel=2,
             )
@@ -265,21 +251,15 @@ class Pipeline:
             # Store result for history
             self.results.append(self.data)
 
-            self.logger.info(
-                f"Step '{step_name}' completed in {step.execution_time:.3f}s"
-            )
+            self.logger.info(f"Step '{step_name}' completed in {step.execution_time:.3f}s")
 
             # Log side outputs if any
             if step.side_outputs:
-                self.logger.info(
-                    f"Step '{step_name}' produced {len(step.side_outputs)} side outputs"
-                )
+                self.logger.info(f"Step '{step_name}' produced {len(step.side_outputs)} side outputs")
 
         except Exception as e:
             self.logger.error(f"Step '{step_name}' failed: {str(e)}")
-            raise RuntimeError(
-                f"Pipeline failed at step '{step_name}': {str(e)}"
-            ) from e
+            raise RuntimeError(f"Pipeline failed at step '{step_name}': {str(e)}") from e
 
         return self
 
@@ -299,9 +279,7 @@ class Pipeline:
 
         return self
 
-    def add_delayed_step(
-        self, func: Callable, index: Optional[int] = None, *args, **kwargs
-    ) -> "Pipeline":
+    def add_delayed_step(self, func: Callable, index: Optional[int] = None, *args, **kwargs) -> "Pipeline":
         """
         Add a delayed step before a specific position in the delayed execution queue.
 
@@ -348,9 +326,7 @@ class Pipeline:
         if index is None:
             # Append to the end (same as delayed_then)
             self.delayed_steps.append(delayed_step)
-            self.logger.debug(
-                f"Added delayed step '{step_name}' at end (position {len(self.delayed_steps)-1})"
-            )
+            self.logger.debug(f"Added delayed step '{step_name}' at end (position {len(self.delayed_steps)-1})")
         else:
             # Insert at specific position
             if index < 0:
@@ -366,9 +342,7 @@ class Pipeline:
                 actual_index = len(self.delayed_steps)
 
             self.delayed_steps.insert(actual_index, delayed_step)
-            self.logger.debug(
-                f"Inserted delayed step '{step_name}' at position {actual_index}"
-            )
+            self.logger.debug(f"Inserted delayed step '{step_name}' at position {actual_index}")
 
         return self
 
@@ -396,32 +370,18 @@ class Pipeline:
         elif isinstance(index_or_name, str):
             # Find index by name
             index = next(
-                (
-                    i
-                    for i, step in enumerate(self.delayed_steps)
-                    if step.name == index_or_name
-                ),
+                (i for i, step in enumerate(self.delayed_steps) if step.name == index_or_name),
                 None,
             )
             if index is None:
-                self.logger.debug(
-                    f"Cannot remove delayed step with name '{index_or_name}'. No such step found."
-                )
-                raise ValueError(
-                    f"Cannot remove delayed step with name '{index_or_name}'. No such step found."
-                )
+                self.logger.debug(f"Cannot remove delayed step with name '{index_or_name}'. No such step found.")
+                raise ValueError(f"Cannot remove delayed step with name '{index_or_name}'. No such step found.")
         else:
-            raise TypeError(
-                f"Expect int or str for type(index_or_name), got {type(index_or_name)}"
-            )
+            raise TypeError(f"Expect int or str for type(index_or_name), got {type(index_or_name)}")
 
         if index >= len(self.delayed_steps):
-            self.logger.debug(
-                f"Cannot remove delayed step at index {index}. Index out of range."
-            )
-            raise ValueError(
-                f"Cannot remove delayed step at index {index}. Index out of range."
-            )
+            self.logger.debug(f"Cannot remove delayed step at index {index}. Index out of range.")
+            raise ValueError(f"Cannot remove delayed step at index {index}. Index out of range.")
 
         self.logger.debug(f"Removed delayed step at position {index}")
         del self.delayed_steps[index]
@@ -499,21 +459,15 @@ class Pipeline:
                 # Store result for history
                 self.results.append(self.data)
 
-                self.logger.info(
-                    f"Delayed step '{step.name}' completed in {step.execution_time:.3f}s"
-                )
+                self.logger.info(f"Delayed step '{step.name}' completed in {step.execution_time:.3f}s")
 
                 # Log side outputs if any
                 if step.side_outputs:
-                    self.logger.info(
-                        f"Delayed step '{step.name}' produced {len(step.side_outputs)} side outputs"
-                    )
+                    self.logger.info(f"Delayed step '{step.name}' produced {len(step.side_outputs)} side outputs")
 
             except Exception as e:
                 self.logger.error(f"Delayed step '{step.name}' failed: {str(e)}")
-                raise RuntimeError(
-                    f"Pipeline failed at delayed step '{step.name}': {str(e)}"
-                ) from e
+                raise RuntimeError(f"Pipeline failed at delayed step '{step.name}': {str(e)}") from e
 
         return self
 
@@ -571,9 +525,7 @@ class Pipeline:
         """Alias of `then`, used to define format transformations."""
         return self.then(transformer, *args, **kwargs)
 
-    def validate(
-        self, validator: Callable, error_msg: str = "Validation failed"
-    ) -> "Pipeline":
+    def validate(self, validator: Callable, error_msg: str = "Validation failed") -> "Pipeline":
         """Validate data and raise error if invalid"""
 
         def validate_data(data):
@@ -590,11 +542,7 @@ class Pipeline:
             if func:
                 func(data)
             else:
-                msg = (
-                    f"{prefix}Pipeline data: {repr(data)}"
-                    if prefix
-                    else f"Pipeline data: {repr(data)}"
-                )
+                msg = f"{prefix}Pipeline data: {repr(data)}" if prefix else f"Pipeline data: {repr(data)}"
                 self.logger.debug(msg)
             return data
 
@@ -637,9 +585,7 @@ class Pipeline:
         if name in self.artifacts:
             return self.artifacts[name]
         else:
-            raise KeyError(
-                f"Artifact '{name}' not found. Available: {list(self.artifacts.keys())}"
-            )
+            raise KeyError(f"Artifact '{name}' not found. Available: {list(self.artifacts.keys())}")
 
     def get_all_artifacts(self) -> Dict[str, Any]:
         """Get all stored artifacts"""
@@ -658,9 +604,7 @@ class Pipeline:
                     if i < len(self.results):
                         return self.results[i]
                     else:
-                        raise ValueError(
-                            f"Step '{step_index}' has not completed execution"
-                        )
+                        raise ValueError(f"Step '{step_index}' has not completed execution")
             raise ValueError(f"Step '{step_index}' not found")
 
     def get_execution_summary(self) -> Dict[str, Any]:
@@ -684,9 +628,7 @@ class Pipeline:
                 "success": step.success,
                 "execution_time": step.execution_time,
                 "error": str(step.error) if step.error else None,
-                "side_outputs": (
-                    list(step.side_outputs.keys()) if step.side_outputs else []
-                ),
+                "side_outputs": (list(step.side_outputs.keys()) if step.side_outputs else []),
             }
             summary["steps"].append(step_info)
 
@@ -699,9 +641,7 @@ class Pipeline:
         # Show executed steps
         for i, step in enumerate(self.steps):
             status = "✓" if step.success else "✗" if step.error else "○"
-            time_str = (
-                f"({step.execution_time:.3f}s)" if step.execution_time else "(pending)"
-            )
+            time_str = f"({step.execution_time:.3f}s)" if step.execution_time else "(pending)"
 
             # Check if it's a decorated pipeline step
             if hasattr(step.function, "_is_pipeline_step"):
@@ -710,10 +650,7 @@ class Pipeline:
                 lines.append(f"{status} Step {i+1}: {step.name} {time_str}")
 
             # Add description if available
-            if (
-                hasattr(step.function, "_step_description")
-                and step.function._step_description
-            ):
+            if hasattr(step.function, "_step_description") and step.function._step_description:
                 lines.append(f"   └─ {step.function._step_description.strip()}")
 
             # Show side outputs
@@ -726,20 +663,13 @@ class Pipeline:
             lines.append("\nDelayed Steps:")
             lines.append("-" * 20)
             for i, delayed_step in enumerate(self.delayed_steps):
-                is_pipeline_step = getattr(
-                    delayed_step.function, "_is_pipeline_step", False
-                )
+                is_pipeline_step = getattr(delayed_step.function, "_is_pipeline_step", False)
                 status_str = "[validated]" if is_pipeline_step else ""
                 lines.append(f"⏸ Delayed {i+1}: {delayed_step.name} {status_str}")
 
                 # Add description if available
-                if (
-                    hasattr(delayed_step.function, "_step_description")
-                    and delayed_step.function._step_description
-                ):
-                    lines.append(
-                        f"   └─ {delayed_step.function._step_description.strip()}"
-                    )
+                if hasattr(delayed_step.function, "_step_description") and delayed_step.function._step_description:
+                    lines.append(f"   └─ {delayed_step.function._step_description.strip()}")
 
         lines.append("=" * 40)
         lines.append(f"Current data type: {type(self.data).__name__}")
@@ -803,9 +733,7 @@ class Pipeline:
         return self
 
     @classmethod
-    def load(
-        cls, filepath: str, format: str = "pickle", name: Optional[str] = None
-    ) -> "Pipeline":
+    def load(cls, filepath: str, format: str = "pickle", name: Optional[str] = None) -> "Pipeline":
         """Load data from file and create new pipeline"""
         if format == "pickle":
             with open(filepath, "rb") as f:
@@ -821,9 +749,7 @@ class Pipeline:
         return cls(data, name or f"Pipeline_from_{filepath}")
 
     @classmethod
-    def load_structured_data(
-        cls, filepath: str, format: str = "pickle", name: Optional[str] = None
-    ) -> "Pipeline":
+    def load_structured_data(cls, filepath: str, format: str = "pickle", name: Optional[str] = None) -> "Pipeline":
         """Load structured data from file and create new pipeline"""
         if format == "pickle":
             with open(filepath, "rb") as f:
@@ -842,11 +768,7 @@ class Pipeline:
             with open(filepath, "r") as f:
                 data_dict = json.load(f)
 
-            if (
-                isinstance(data_dict, dict)
-                and "data" in data_dict
-                and "artifacts" in data_dict
-            ):
+            if isinstance(data_dict, dict) and "data" in data_dict and "artifacts" in data_dict:
                 pipeline = cls(data_dict["data"], name)
                 pipeline._artifacts = data_dict["artifacts"]
                 return pipeline
@@ -858,9 +780,7 @@ class Pipeline:
     def __str__(self) -> str:
         success_count = sum(1 for s in self.steps if s.success)
         artifacts_str = f", {len(self.artifacts)} artifacts" if self.artifacts else ""
-        delayed_str = (
-            f", {len(self.delayed_steps)} delayed" if self.delayed_steps else ""
-        )
+        delayed_str = f", {len(self.delayed_steps)} delayed" if self.delayed_steps else ""
         return f"Pipeline('{self.name}'): {success_count}/{len(self.steps)} steps executed{artifacts_str}{delayed_str}"
 
     def __repr__(self) -> str:
@@ -879,14 +799,10 @@ R = TypeVar("R")
 @overload
 def pipeline_step(_func: Callable[P, R]) -> Callable[P, R]: ...
 @overload
-def pipeline_step(
-    *, name: Optional[str] = ...
-) -> Callable[[Callable[P, R]], Callable[P, R]]: ...
+def pipeline_step(*, name: Optional[str] = ...) -> Callable[[Callable[P, R]], Callable[P, R]]: ...
 
 
-def pipeline_step(
-    _func: Optional[Callable[P, R]] = None, *, name: Optional[str] = None
-) -> Union[Callable[P, R], Callable[[Callable[P, R]], Callable[P, R]]]:
+def pipeline_step(_func: Optional[Callable[P, R]] = None, *, name: Optional[str] = None) -> Union[Callable[P, R], Callable[[Callable[P, R]], Callable[P, R]]]:
     """
     Decorator for single-output pipeline functions.
 
@@ -963,10 +879,7 @@ def multiout_step(
     ...     return processed, stats_dict, plot_obj
     """
     if not outputs:
-        raise TypeError(
-            "@multiout_step requires at least one named output; "
-            "for single-output functions, use @pipeline_step."
-        )
+        raise TypeError("@multiout_step requires at least one named output; " "for single-output functions, use @pipeline_step.")
 
     has_explicit_main = "main" in outputs
     side_output_items = [(k, v) for k, v in outputs.items() if k != "main"]
@@ -983,21 +896,13 @@ def multiout_step(
             # When multiple outputs are declared, a tuple of that length is required.
             if not isinstance(results, tuple):
                 if expected_count > 1:
-                    raise ValueError(
-                        f"Function {func.__name__} decorated with @multiout_step "
-                        f"expected {expected_count} return values but got 1 non-tuple value. "
-                        f"For single outputs, use @pipeline_step instead."
-                    )
+                    raise ValueError(f"Function {func.__name__} decorated with @multiout_step " f"expected {expected_count} return values but got 1 non-tuple value. " f"For single outputs, use @pipeline_step instead.")
                 # This branch should be rare because we require at least one side OR explicit main,
                 # but keep it for completeness when expected_count == 1.
                 return MultiOutput(main=results, side={})
 
             if len(results) != expected_count:
-                raise ValueError(
-                    f"Function {func.__name__} decorated with @multiout_step "
-                    f"expected {expected_count} return values but got {len(results)}. "
-                    f"Declared outputs: {list(outputs.keys())}"
-                )
+                raise ValueError(f"Function {func.__name__} decorated with @multiout_step " f"expected {expected_count} return values but got {len(results)}. " f"Declared outputs: {list(outputs.keys())}")
 
             # Map tuple -> (main, side)
             if has_explicit_main:
@@ -1010,10 +915,7 @@ def multiout_step(
                     side[side_name] = results[actual_index]
             else:
                 main = results[0]
-                side = {
-                    side_name: results[i + 1]
-                    for i, (_, side_name) in enumerate(side_output_items)
-                }
+                side = {side_name: results[i + 1] for i, (_, side_name) in enumerate(side_output_items)}
 
             return MultiOutput(main=main, side=side)
 

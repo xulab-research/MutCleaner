@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="512" height="512" viewBox="0 0 512 512"
+     fill="none" role="img" aria-labelledby="title description">
+  <title id="title">Procedurally drawn protein icon</title>
+  <desc id="description">A folded protein chain drawn from a cubic Bezier path with twenty-two equal-arc-length shaded amino-acid residues.</desc>
+  <defs>
+    <linearGradient id="protein-link" x1="80" y1="70"
+                    x2="435" y2="445" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7650AE"/>
+      <stop offset="0.52" stop-color="#4D2487"/>
+      <stop offset="1" stop-color="#6941A0"/>
+    </linearGradient>
+    <filter id="protein-shadow" x="-15%" y="-15%" width="135%" height="135%">
+      <feDropShadow dx="0.8" dy="1.2" stdDeviation="1.2"
+                    flood-color="#2B0D5C" flood-opacity="0.18"/>
+    </filter>
+    <radialGradient id="residue-0" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#E2D7F4"/>
+      <stop offset="0.42" stop-color="#CAB5EB"/>
+      <stop offset="1" stop-color="#7F64AB"/>
+    </radialGradient>
+    <radialGradient id="residue-1" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#CCB9E3"/>
+      <stop offset="0.42" stop-color="#A17ECB"/>
+      <stop offset="1" stop-color="#6A489B"/>
+    </radialGradient>
+    <radialGradient id="residue-2" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D2BFE7"/>
+      <stop offset="0.42" stop-color="#AB89D2"/>
+      <stop offset="1" stop-color="#6F4D9F"/>
+    </radialGradient>
+    <radialGradient id="residue-3" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D8C8EC"/>
+      <stop offset="0.42" stop-color="#B79ADB"/>
+      <stop offset="1" stop-color="#7556A3"/>
+    </radialGradient>
+    <radialGradient id="residue-4" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#DBCCEE"/>
+      <stop offset="0.42" stop-color="#BDA1DF"/>
+      <stop offset="1" stop-color="#7859A5"/>
+    </radialGradient>
+    <radialGradient id="residue-5" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#E3D8F4"/>
+      <stop offset="0.42" stop-color="#CBB6EB"/>
+      <stop offset="1" stop-color="#7F64AB"/>
+    </radialGradient>
+    <radialGradient id="residue-6" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#C8B4E0"/>
+      <stop offset="0.42" stop-color="#9A75C6"/>
+      <stop offset="1" stop-color="#664398"/>
+    </radialGradient>
+    <radialGradient id="residue-7" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D3C1E8"/>
+      <stop offset="0.42" stop-color="#AE8CD4"/>
+      <stop offset="1" stop-color="#704FA0"/>
+    </radialGradient>
+    <radialGradient id="residue-8" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D4C3E8"/>
+      <stop offset="0.42" stop-color="#B08FD5"/>
+      <stop offset="1" stop-color="#7150A0"/>
+    </radialGradient>
+    <radialGradient id="residue-9" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D9C8EC"/>
+      <stop offset="0.42" stop-color="#B89ADB"/>
+      <stop offset="1" stop-color="#7556A3"/>
+    </radialGradient>
+    <radialGradient id="residue-10" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#E1D5F3"/>
+      <stop offset="0.42" stop-color="#C7B2E9"/>
+      <stop offset="1" stop-color="#7D62AA"/>
+    </radialGradient>
+    <radialGradient id="residue-11" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#CCB9E3"/>
+      <stop offset="0.42" stop-color="#A17DCB"/>
+      <stop offset="1" stop-color="#6A479B"/>
+    </radialGradient>
+    <radialGradient id="residue-12" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#CBB7E2"/>
+      <stop offset="0.42" stop-color="#9E79C9"/>
+      <stop offset="1" stop-color="#68459A"/>
+    </radialGradient>
+    <radialGradient id="residue-13" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D1BEE6"/>
+      <stop offset="0.42" stop-color="#A987D0"/>
+      <stop offset="1" stop-color="#6E4C9E"/>
+    </radialGradient>
+    <radialGradient id="residue-14" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#DBCCEE"/>
+      <stop offset="0.42" stop-color="#BCA0DF"/>
+      <stop offset="1" stop-color="#7759A5"/>
+    </radialGradient>
+    <radialGradient id="residue-15" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#E3D8F5"/>
+      <stop offset="0.42" stop-color="#CBB7EC"/>
+      <stop offset="1" stop-color="#7F65AC"/>
+    </radialGradient>
+    <radialGradient id="residue-16" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#E0D4F2"/>
+      <stop offset="0.42" stop-color="#C5B0E7"/>
+      <stop offset="1" stop-color="#7C61A9"/>
+    </radialGradient>
+    <radialGradient id="residue-17" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#CAB6E1"/>
+      <stop offset="0.42" stop-color="#9D78C8"/>
+      <stop offset="1" stop-color="#684599"/>
+    </radialGradient>
+    <radialGradient id="residue-18" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D4C3E9"/>
+      <stop offset="0.42" stop-color="#B08FD6"/>
+      <stop offset="1" stop-color="#7150A1"/>
+    </radialGradient>
+    <radialGradient id="residue-19" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#DACAED"/>
+      <stop offset="0.42" stop-color="#BA9DDD"/>
+      <stop offset="1" stop-color="#7657A4"/>
+    </radialGradient>
+    <radialGradient id="residue-20" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#D8C8EB"/>
+      <stop offset="0.42" stop-color="#B799DA"/>
+      <stop offset="1" stop-color="#7555A3"/>
+    </radialGradient>
+    <radialGradient id="residue-21" cx="31%" cy="24%" r="82%">
+      <stop offset="0" stop-color="#E3D8F4"/>
+      <stop offset="0.42" stop-color="#CBB7EB"/>
+      <stop offset="1" stop-color="#7F65AB"/>
+    </radialGradient>
+  </defs>
+  <g filter="url(#protein-shadow)">
+    <path d="M 224 87 C 307 52, 397 83, 397 165 C 397 238, 326 265, 252 263 C 173 261, 107 251, 82 319 C 58 383, 108 441, 174 437 C 242 433, 272 359, 350 369 C 411 377, 440 410, 430 439" stroke="url(#protein-link)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="224" cy="87" r="25.31" fill="url(#residue-0)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="216.16" cy="78.4" rx="5.57" ry="4.3" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="275.05" cy="73.67" r="26.87" fill="url(#residue-1)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="266.72" cy="64.53" rx="5.91" ry="4.57" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="327.57" cy="77.36" r="25.6" fill="url(#residue-2)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="319.63" cy="68.65" rx="5.63" ry="4.35" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="373.14" cy="103.06" r="24.33" fill="url(#residue-3)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="365.6" cy="94.79" rx="5.35" ry="4.14" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="395.92" cy="149.88" r="25.09" fill="url(#residue-4)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="388.14" cy="141.35" rx="5.52" ry="4.27" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="389.75" cy="201.8" r="26.67" fill="url(#residue-5)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="381.49" cy="192.73" rx="5.87" ry="4.53" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="354.9" cy="240.55" r="26.54" fill="url(#residue-6)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="346.67" cy="231.52" rx="5.84" ry="4.51" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="305.52" cy="258.87" r="24.9" fill="url(#residue-7)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="297.8" cy="250.4" rx="5.48" ry="4.23" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="252.83" cy="263.02" r="24.39" fill="url(#residue-8)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="245.28" cy="254.73" rx="5.36" ry="4.15" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="199.91" cy="261.4" r="25.81" fill="url(#residue-9)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="191.91" cy="252.62" rx="5.68" ry="4.39" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="147.16" cy="264.67" r="26.9" fill="url(#residue-10)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="138.82" cy="255.53" rx="5.92" ry="4.57" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="100.6" cy="287.99" r="25.91" fill="url(#residue-11)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="92.57" cy="279.19" rx="5.7" ry="4.4" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="77.5" cy="334.89" r="24.42" fill="url(#residue-12)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="69.93" cy="326.58" rx="5.37" ry="4.15" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="83.66" cy="386.59" r="24.82" fill="url(#residue-13)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="75.96" cy="378.15" rx="5.46" ry="4.22" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="119.24" cy="424.67" r="26.47" fill="url(#residue-14)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="111.04" cy="415.68" rx="5.82" ry="4.5" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="170.03" cy="437.17" r="26.72" fill="url(#residue-15)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="161.74" cy="428.08" rx="5.88" ry="4.54" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="220.38" cy="422.65" r="25.18" fill="url(#residue-16)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="212.58" cy="414.09" rx="5.54" ry="4.28" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="264.54" cy="393.48" r="24.31" fill="url(#residue-17)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="257.01" cy="385.21" rx="5.35" ry="4.13" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="312.1" cy="370.85" r="25.51" fill="url(#residue-18)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="304.19" cy="362.18" rx="5.61" ry="4.34" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="364.57" cy="371.5" r="26.85" fill="url(#residue-19)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="356.25" cy="362.37" rx="5.91" ry="4.56" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="412.61" cy="392.62" r="26.19" fill="url(#residue-20)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="404.49" cy="383.71" rx="5.76" ry="4.45" fill="#FFFFFF" opacity="0.84"/>
+    <circle cx="430" cy="439" r="23.79" fill="url(#residue-21)" stroke="#32106F" stroke-width="4.6"/>
+    <ellipse cx="422.63" cy="430.91" rx="5.23" ry="4.04" fill="#FFFFFF" opacity="0.84"/>
+  </g>
+</svg>

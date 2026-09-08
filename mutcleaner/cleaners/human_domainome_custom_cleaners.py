@@ -11,7 +11,7 @@ from .basic_cleaners import split_columns, merge_columns
 from ..core.pipeline import multiout_step, pipeline_step
 
 if TYPE_CHECKING:
-    from typing import Dict, List, Optional, Tuple
+    from typing import List, Optional, Tuple
 
 __all__ = [
     "generate_mutation_strings",
@@ -108,15 +108,9 @@ def generate_mutation_strings(
         separator="_",
     )
     # Convert columns to appropriate data types
-    dataset.loc[:, ["sequence_offset", aa_pos_column]] = (
-        dataset.loc[:, ["sequence_offset", aa_pos_column]]
-        .apply(pd.to_numeric, errors="coerce")
-        .astype("Int64")
-    )
+    dataset.loc[:, ["sequence_offset", aa_pos_column]] = dataset.loc[:, ["sequence_offset", aa_pos_column]].apply(pd.to_numeric, errors="coerce").astype("Int64")
     # Generate mutation strings
-    dataset["aa_pos"] = (dataset[aa_pos_column] - dataset["sequence_offset"]).astype(
-        str
-    )
+    dataset["aa_pos"] = (dataset[aa_pos_column] - dataset["sequence_offset"]).astype(str)
     dataset = merge_columns(
         dataset,
         columns_to_merge=[wt_aa_column, "aa_pos", mut_aa_column],
@@ -124,9 +118,7 @@ def generate_mutation_strings(
         separator="",
     )
 
-    dataset = dataset.drop(
-        columns=["Uniprot_ID", "Pfam_ID", "sequence_offset", "aa_pos"]
-    )
+    dataset = dataset.drop(columns=["Uniprot_ID", "Pfam_ID", "sequence_offset", "aa_pos"])
     return dataset
 
 
@@ -179,40 +171,23 @@ def process_domain_positions(
 
         # Track which entries failed to parse
         parse_failed = position_info.isnull().any(axis=1)
-        result_dataset.loc[parse_failed, "error_message"] = (
-            "Failed to parse PFAM_entry position information"
-        )
+        result_dataset.loc[parse_failed, "error_message"] = "Failed to parse PFAM_entry position information"
 
         # Process successful entries
         success_mask = ~parse_failed
 
         if success_mask.any():
-            result_dataset.loc[success_mask, "start_pos"] = (
-                position_info.loc[success_mask, 0].astype(int) - 1
-            )  # Convert to 0-based
-            result_dataset.loc[success_mask, "end_pos"] = position_info.loc[
-                success_mask, 1
-            ].astype(int)
+            result_dataset.loc[success_mask, "start_pos"] = position_info.loc[success_mask, 0].astype(int) - 1
+            result_dataset.loc[success_mask, "end_pos"] = position_info.loc[success_mask, 1].astype(int)
 
             # Convert absolute position to 0-based
-            result_dataset.loc[success_mask, "pos"] = (
-                result_dataset.loc[success_mask, "pos"] - 1
-            )
+            result_dataset.loc[success_mask, "pos"] = result_dataset.loc[success_mask, "pos"] - 1
 
             # Calculate relative position within the domain
-            result_dataset.loc[success_mask, "mut_rel_pos"] = (
-                result_dataset.loc[success_mask, "pos"]
-                - result_dataset.loc[success_mask, "start_pos"]
-            )
+            result_dataset.loc[success_mask, "mut_rel_pos"] = result_dataset.loc[success_mask, "pos"] - result_dataset.loc[success_mask, "start_pos"]
 
             # Generate mutation info using relative position
-            result_dataset.loc[success_mask, "mut_info"] = (
-                result_dataset.loc[success_mask, "wt_aa"]
-                + result_dataset.loc[success_mask, "mut_rel_pos"]
-                .astype(int)
-                .astype(str)
-                + result_dataset.loc[success_mask, "mut_aa"]
-            )
+            result_dataset.loc[success_mask, "mut_info"] = result_dataset.loc[success_mask, "wt_aa"] + result_dataset.loc[success_mask, "mut_rel_pos"].astype(int).astype(str) + result_dataset.loc[success_mask, "mut_aa"]
 
     except Exception as e:
         # If something goes wrong, mark all as failed
@@ -223,13 +198,9 @@ def process_domain_positions(
     successful_dataset = result_dataset[success_mask].drop(columns=["error_message"])
     failed_dataset = result_dataset[~success_mask]
 
-    successful_dataset[["start_pos", "end_pos"]] = successful_dataset[
-        ["start_pos", "end_pos"]
-    ].astype(int)
+    successful_dataset[["start_pos", "end_pos"]] = successful_dataset[["start_pos", "end_pos"]].astype(int)
 
-    tqdm.write(
-        f"Position processing: {len(successful_dataset)} successful, {len(failed_dataset)} failed"
-    )
+    tqdm.write(f"Position processing: {len(successful_dataset)} successful, {len(failed_dataset)} failed")
 
     return successful_dataset, failed_dataset
 
@@ -302,10 +273,7 @@ def extract_domain_sequences(
 
     # Parallel processing
     rows = dataset.itertuples(index=False, name=None)
-    results = Parallel(n_jobs=num_workers, backend="loky")(
-        delayed(_extract_domain)(row)
-        for row in tqdm(rows, total=len(dataset), desc="Extracting domains")
-    )
+    results = Parallel(n_jobs=num_workers, backend="loky")(delayed(_extract_domain)(row) for row in tqdm(rows, total=len(dataset), desc="Extracting domains"))
 
     # Separate domain sequences and error messages
     domain_sequences, error_messages = map(list, zip(*results))
@@ -317,19 +285,13 @@ def extract_domain_sequences(
     success_mask = pd.notnull(result_dataset["domain_sequence"])
 
     # For successful extractions, replace the original sequence with the domain sequence
-    result_dataset.loc[success_mask, sequence_column] = result_dataset.loc[
-        success_mask, "domain_sequence"
-    ]
+    result_dataset.loc[success_mask, sequence_column] = result_dataset.loc[success_mask, "domain_sequence"]
 
     # Separate successful and failed datasets
-    successful_dataset = result_dataset[success_mask].drop(
-        columns=["error_message", "domain_sequence", start_pos_column, end_pos_column]
-    )
+    successful_dataset = result_dataset[success_mask].drop(columns=["error_message", "domain_sequence", start_pos_column, end_pos_column])
     failed_dataset = result_dataset[~success_mask].drop(columns=["domain_sequence"])
 
-    tqdm.write(
-        f"Domain extraction: {len(successful_dataset)} successful, {len(failed_dataset)} failed"
-    )
+    tqdm.write(f"Domain extraction: {len(successful_dataset)} successful, {len(failed_dataset)} failed")
 
     return successful_dataset, failed_dataset
 

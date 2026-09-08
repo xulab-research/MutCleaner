@@ -92,13 +92,9 @@ class RBDAntibodyCleanerConfig(BaseCleanerConfig):
         Pipeline name.
     """
 
-    reference_sequences: Dict[str, str] = field(
-        default_factory=lambda: deepcopy(DEFAULT_RBD_REFERENCE_SEQUENCES)
-    )
+    reference_sequences: Dict[str, str] = field(default_factory=lambda: deepcopy(DEFAULT_RBD_REFERENCE_SEQUENCES))
 
-    target_name_aliases: Dict[str, str] = field(
-        default_factory=lambda: deepcopy(DEFAULT_RBD_TARGET_NAME_ALIASES)
-    )
+    target_name_aliases: Dict[str, str] = field(default_factory=lambda: deepcopy(DEFAULT_RBD_TARGET_NAME_ALIASES))
 
     column_mapping: Dict[str, str] = field(
         default_factory=lambda: {
@@ -120,9 +116,7 @@ class RBDAntibodyCleanerConfig(BaseCleanerConfig):
         }
     )
 
-    drop_na_columns: List[str] = field(
-        default_factory=lambda: ["reference_id", "label"]
-    )
+    drop_na_columns: List[str] = field(default_factory=lambda: ["reference_id", "label"])
 
     type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float"})
 
@@ -144,24 +138,13 @@ class RBDAntibodyCleanerConfig(BaseCleanerConfig):
         super().validate()
 
         if self.require_known_reference_sequence and not self.reference_sequences:
-            raise ValueError(
-                "reference_sequences cannot be empty when "
-                "require_known_reference_sequence=True"
-            )
-        if (
-            not self.require_known_reference_sequence
-            and not self.reference_sequences
-            and self.fallback_reference_sequence is None
-        ):
-            raise ValueError(
-                "Provide reference_sequences or fallback_reference_sequence"
-            )
+            raise ValueError("reference_sequences cannot be empty when " "require_known_reference_sequence=True")
+        if not self.require_known_reference_sequence and not self.reference_sequences and self.fallback_reference_sequence is None:
+            raise ValueError("Provide reference_sequences or fallback_reference_sequence")
         if not self.label_columns:
             raise ValueError("label_columns cannot be empty")
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         required_standard_columns = {
             "antibody_name",
@@ -170,28 +153,16 @@ class RBDAntibodyCleanerConfig(BaseCleanerConfig):
             "mut_info",
             "variant_class",
         }
-        missing_standard_columns = required_standard_columns - set(
-            self.column_mapping.values()
-        )
+        missing_standard_columns = required_standard_columns - set(self.column_mapping.values())
         if missing_standard_columns:
-            raise ValueError(
-                "column_mapping must provide standardized columns "
-                f"{sorted(required_standard_columns)}, missing {sorted(missing_standard_columns)}"
-            )
+            raise ValueError("column_mapping must provide standardized columns " f"{sorted(required_standard_columns)}, missing {sorted(missing_standard_columns)}")
 
         for target_name, sequence in self.reference_sequences.items():
             if len(str(sequence).strip()) <= 0:
-                raise ValueError(
-                    f"Reference sequence for target '{target_name}' cannot be empty"
-                )
+                raise ValueError(f"Reference sequence for target '{target_name}' cannot be empty")
 
-        if (
-            self.fallback_reference_sequence is not None
-            and len(str(self.fallback_reference_sequence).strip()) <= 0
-        ):
-            raise ValueError(
-                "fallback_reference_sequence cannot be empty when provided"
-            )
+        if self.fallback_reference_sequence is not None and len(str(self.fallback_reference_sequence).strip()) <= 0:
+            raise ValueError("fallback_reference_sequence cannot be empty when provided")
 
 
 def create_rbd_antibody_cleaner(
@@ -210,18 +181,12 @@ def create_rbd_antibody_cleaner(
     elif isinstance(config, (str, Path)):
         final_config = RBDAntibodyCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be RBDAntibodyCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be RBDAntibodyCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     antibody_name_column = final_config.column_mapping.get("name", "name")
     reference_name_column = final_config.column_mapping.get("target", "target")
-    mutation_column = final_config.column_mapping.get(
-        "aa_substitutions", "aa_substitutions"
-    )
-    variant_class_column = final_config.column_mapping.get(
-        "variant_class", "variant_class"
-    )
+    mutation_column = final_config.column_mapping.get("aa_substitutions", "aa_substitutions")
+    variant_class_column = final_config.column_mapping.get("variant_class", "variant_class")
 
     logger.info(
         "RBD antibody dataset will be cleaned with pipeline: %s",
@@ -320,9 +285,7 @@ def create_rbd_antibody_cleaner(
     if isinstance(dataset_or_path, (str, Path)):
         pipeline.add_delayed_step(read_dataset, 0, file_format="csv")
     elif dataset_or_path is not None and not isinstance(dataset_or_path, pd.DataFrame):
-        raise TypeError(
-            f"dataset_or_path must be pd.DataFrame, str, Path, or None, got {type(dataset_or_path)}"
-        )
+        raise TypeError(f"dataset_or_path must be pd.DataFrame, str, Path, or None, got {type(dataset_or_path)}")
 
     return pipeline
 

@@ -85,9 +85,7 @@ class HumanDomainomeSup2CleanerConfig(BaseCleanerConfig):
     )
 
     # Exclude nonsense mutations by default
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {"mut_aa": lambda x: x != "*"}
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"mut_aa": lambda x: x != "*"})
 
     # columns to perfrom dropping NA
     drop_na_columns: List = field(
@@ -102,9 +100,7 @@ class HumanDomainomeSup2CleanerConfig(BaseCleanerConfig):
     )
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"label_humanDomainome": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label_humanDomainome": "float"})
 
     # Mutation validation parameters
     validation_workers: int = 16
@@ -140,9 +136,7 @@ class HumanDomainomeSup2CleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = set(self.column_mapping.keys())
@@ -153,9 +147,7 @@ class HumanDomainomeSup2CleanerConfig(BaseCleanerConfig):
 
 def create_human_domainome_sup2_cleaner(
     dataset_or_path: Union[str, Path, pd.DataFrame],
-    config: Optional[
-        Union[HumanDomainomeSup2CleanerConfig, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[HumanDomainomeSup2CleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create HumanDomainome ledataset cleaning pipeline - SupplementaryTable2
 
@@ -226,14 +218,10 @@ def create_human_domainome_sup2_cleaner(
         # Load from file
         final_config = HumanDomainomeSup2CleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be HumanDomainomeSup2CleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be HumanDomainomeSup2CleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"HumanDomainome dataset (SupplementaryTable2) will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"HumanDomainome dataset (SupplementaryTable2) will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -265,7 +253,7 @@ def create_human_domainome_sup2_cleaner(
             .delayed_then(
                 validate_mutations,
                 mutation_column="mut_info",
-                format_mutations=False,  # Formatting is not needed after generate_mutation_strings
+                format_mutations=False,
                 is_zero_based=True,
                 num_workers=final_config.validation_workers,
             )
@@ -276,16 +264,14 @@ def create_human_domainome_sup2_cleaner(
                 sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_columns=final_config.label_columns,
                 handle_multiple_wt=final_config.handle_multiple_wt,
-                is_zero_based=True,  # Always True after validate_mutations
+                is_zero_based=True,
                 num_workers=final_config.infer_wt_workers,
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,
                 name_column=final_config.column_mapping.get("domain_ID", "domain_ID"),
                 mutation_column="mut_info",
-                mutated_sequence_column=final_config.column_mapping.get(
-                    "aa_seq", "aa_seq"
-                ),
+                mutated_sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -295,17 +281,13 @@ def create_human_domainome_sup2_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0, file_format="tsv")
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
     except Exception as e:
         logger.error(f"Error in creating HumanDomainome cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in creating HumanDomainome cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in creating HumanDomainome cleaning pipeline: {str(e)}")
 
 
 def clean_human_domainome_sup2_dataset(
@@ -335,18 +317,12 @@ def clean_human_domainome_sup2_dataset(
 
         # Extract results
         dataset_df, ref_sequences = pipeline.data
-        human_domainome_dataset = MutationDataset.from_dataframe(
-            dataset_df, ref_sequences
-        )
+        human_domainome_dataset = MutationDataset.from_dataframe(dataset_df, ref_sequences)
 
-        logger.info(
-            f"Successfully cleaned HumanDomainome dataset: {len(dataset_df)} mutations from {len(ref_sequences)} proteins"
-        )
+        logger.info(f"Successfully cleaned HumanDomainome dataset: {len(dataset_df)} mutations from {len(ref_sequences)} proteins")
 
         return pipeline, human_domainome_dataset
 
     except Exception as e:
         logger.error(f"Error in running HumanDomainome cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in running HumanDomainome cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in running HumanDomainome cleaning pipeline: {str(e)}")

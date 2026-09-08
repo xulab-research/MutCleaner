@@ -12,29 +12,17 @@ from .pipeline import (
 )
 from .sequence import DNASequence, RNASequence, ProteinSequence
 
-# fmt: off
 __all__ = [
-    # Alphabets
     "DNAAlphabet",
     "RNAAlphabet",
     "ProteinAlphabet",
-
-    # Codon Tables
     "CodonTable",
-
-    # Mutations
     "AminoAcidMutationSet",
     "CodonMutationSet",
-
-    # Sequences
     "DNASequence",
     "RNASequence",
     "ProteinSequence",
-
-    # Datasets
     "MutationDataset",
-    
-    # Pipelines
     "Pipeline",
     "pipeline_step",
     "multiout_step",

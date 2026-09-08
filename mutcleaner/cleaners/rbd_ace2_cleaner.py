@@ -107,13 +107,9 @@ class RBDACE2CleanerConfig(BaseCleanerConfig):
     """
 
     # Target/reference sequence configuration
-    reference_sequences: Dict[str, str] = field(
-        default_factory=lambda: deepcopy(DEFAULT_RBD_REFERENCE_SEQUENCES)
-    )
+    reference_sequences: Dict[str, str] = field(default_factory=lambda: deepcopy(DEFAULT_RBD_REFERENCE_SEQUENCES))
 
-    target_name_aliases: Dict[str, str] = field(
-        default_factory=lambda: deepcopy(DEFAULT_RBD_TARGET_NAME_ALIASES)
-    )
+    target_name_aliases: Dict[str, str] = field(default_factory=lambda: deepcopy(DEFAULT_RBD_TARGET_NAME_ALIASES))
 
     # Column preparation configuration
     column_mapping: Dict[str, str] = field(
@@ -158,31 +154,21 @@ class RBDACE2CleanerConfig(BaseCleanerConfig):
         if not self.label_columns:
             raise ValueError("label_columns cannot be empty")
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' "
-                f"must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' " f"must be in label_columns {self.label_columns}")
         required_standard_columns = {
             "name",
             "mut_info",
             "label",
             "variant_class",
         }
-        missing_standard_columns = required_standard_columns - set(
-            self.column_mapping.values()
-        )
+        missing_standard_columns = required_standard_columns - set(self.column_mapping.values())
         if missing_standard_columns:
-            raise ValueError(
-                "column_mapping must provide standardized columns "
-                f"{sorted(required_standard_columns)}, missing {sorted(missing_standard_columns)}"
-            )
+            raise ValueError("column_mapping must provide standardized columns " f"{sorted(required_standard_columns)}, missing {sorted(missing_standard_columns)}")
 
         for target_name, sequence in self.reference_sequences.items():
             sequence_length = len(str(sequence).strip())
             if sequence_length <= 0:
-                raise ValueError(
-                    f"Reference sequence for target '{target_name}' cannot be empty"
-                )
+                raise ValueError(f"Reference sequence for target '{target_name}' cannot be empty")
 
 
 def create_rbd_ace2_cleaner(
@@ -220,17 +206,11 @@ def create_rbd_ace2_cleaner(
     elif isinstance(config, (str, Path)):
         final_config = RBDACE2CleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be RBDACE2CleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be RBDACE2CleanerConfig, dict, str, Path or None, got {type(config)}")
 
     target_name_column = final_config.column_mapping.get("target", "target")
-    mutation_column = final_config.column_mapping.get(
-        "aa_substitutions", "aa_substitutions"
-    )
-    variant_class_column = final_config.column_mapping.get(
-        "variant_class", "variant_class"
-    )
+    mutation_column = final_config.column_mapping.get("aa_substitutions", "aa_substitutions")
+    variant_class_column = final_config.column_mapping.get("variant_class", "variant_class")
 
     logger.info(
         "RBD ACE2 dataset will be cleaned with pipeline: %s",
@@ -317,9 +297,7 @@ def create_rbd_ace2_cleaner(
     if isinstance(dataset_or_path, (str, Path)):
         pipeline.add_delayed_step(read_dataset, 0, file_format="csv")
     elif dataset_or_path is not None and not isinstance(dataset_or_path, pd.DataFrame):
-        raise TypeError(
-            f"dataset_or_path must be pd.DataFrame, str, Path, or None, got {type(dataset_or_path)}"
-        )
+        raise TypeError(f"dataset_or_path must be pd.DataFrame, str, Path, or None, got {type(dataset_or_path)}")
 
     return pipeline
 

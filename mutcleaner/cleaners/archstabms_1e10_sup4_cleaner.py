@@ -76,14 +76,10 @@ class ArchStabMS1E10CleanerSup4Config(BaseCleanerConfig):
     )
 
     # Data filtering configuration
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {"name": lambda x: x != "1_Abundance"}
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"name": lambda x: x != "1_Abundance"})
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"fitness": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"fitness": "float"})
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["fitness"])
@@ -108,9 +104,7 @@ class ArchStabMS1E10CleanerSup4Config(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"name", "full_aa_seq", "fitness", "WT"}
@@ -121,9 +115,7 @@ class ArchStabMS1E10CleanerSup4Config(BaseCleanerConfig):
 
 def create_archstabms_1e10_sup4_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
-    config: Optional[
-        Union[ArchStabMS1E10CleanerSup4Config, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[ArchStabMS1E10CleanerSup4Config, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create ArchStabMS1E10 dataset cleaning piipeline
 
@@ -162,14 +154,10 @@ def create_archstabms_1e10_sup4_cleaner(
         # Load from file
         final_config = ArchStabMS1E10CleanerSup4Config.from_json(config)
     else:
-        raise TypeError(
-            f"config must be ArchStabMS1E10CleanerSup4Config, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be ArchStabMS1E10CleanerSup4Config, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"archstabms 1e10 dataset will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"archstabms 1e10 dataset will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -198,9 +186,7 @@ def create_archstabms_1e10_sup4_cleaner(
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,
-                mutated_sequence_column=final_config.column_mapping.get(
-                    "full_aa_seq", "full_aa_seq"
-                ),
+                mutated_sequence_column=final_config.column_mapping.get("full_aa_seq", "full_aa_seq"),
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -210,9 +196,7 @@ def create_archstabms_1e10_sup4_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0)
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
@@ -264,19 +248,11 @@ def clean_archstabms_1e10_sup4_dataset(
 
         # Extract results
         archstabms_1e10_dataset_df, archstabms_1e10_ref_seq = pipeline.data
-        archstabms_1e10_dataset = MutationDataset.from_dataframe(
-            archstabms_1e10_dataset_df, archstabms_1e10_ref_seq
-        )
+        archstabms_1e10_dataset = MutationDataset.from_dataframe(archstabms_1e10_dataset_df, archstabms_1e10_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned archstabms1e10 dataset: {len(archstabms_1e10_dataset_df)} mutations from {len(archstabms_1e10_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned archstabms1e10 dataset: {len(archstabms_1e10_dataset_df)} mutations from {len(archstabms_1e10_ref_seq)} proteins")
 
         return pipeline, archstabms_1e10_dataset
     except Exception as e:
-        logger.error(
-            f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}"
-        )
-        raise RuntimeError(
-            f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}"
-        )
+        logger.error(f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}")
+        raise RuntimeError(f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}")

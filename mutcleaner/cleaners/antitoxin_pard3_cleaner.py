@@ -88,11 +88,7 @@ class AntitoxinParD3CleanerConfig(BaseCleanerConfig):
     )
 
     # Data filtering configuration
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {
-            "label": lambda s: pd.to_numeric(s, errors="coerce").notna()
-        }
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"label": lambda s: pd.to_numeric(s, errors="coerce").notna()})
 
     # obtained from the article
     wt_sequence = "MANVEKMSVAVTPQQAAVMREAVEAGEYATASEIVREAVRDWLAKRELRHDDIRRLRQLWDEGKASGRPEPVDFDALRKEARQKLTEVPPNGR"
@@ -129,9 +125,7 @@ class AntitoxinParD3CleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"mutation"}
@@ -142,9 +136,7 @@ class AntitoxinParD3CleanerConfig(BaseCleanerConfig):
 
 def create_antitoxin_pard3_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
-    config: Optional[
-        Union[AntitoxinParD3CleanerConfig, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[AntitoxinParD3CleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create Antitoxin dataset cleaning pipeline
 
@@ -184,14 +176,10 @@ def create_antitoxin_pard3_cleaner(
         # Load from file
         final_config = AntitoxinParD3CleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be AntitoxinParD3CleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be AntitoxinParD3CleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"Antitoxin dataset will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"Antitoxin dataset will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -271,9 +259,7 @@ def create_antitoxin_pard3_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0, file_format="csv")
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
@@ -321,17 +307,11 @@ def clean_antitoxin_pard3_dataset(
 
         # Extract results
         antitoxin_dataset_df, antitoxin_ref_seq = pipeline.data
-        antitoxin_dataset = MutationDataset.from_dataframe(
-            antitoxin_dataset_df, antitoxin_ref_seq
-        )
+        antitoxin_dataset = MutationDataset.from_dataframe(antitoxin_dataset_df, antitoxin_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned antitoxin dataset: {len(antitoxin_dataset_df)} mutations from {len(antitoxin_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned antitoxin dataset: {len(antitoxin_dataset_df)} mutations from {len(antitoxin_ref_seq)} proteins")
 
         return pipeline, antitoxin_dataset
     except Exception as e:
         logger.error(f"Error in running antitoxin dataset cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in running antitoxin dataset cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in running antitoxin dataset cleaning pipeline: {str(e)}")

@@ -48,9 +48,7 @@ def infer_wt_sequence(
     wt_sequence_list = []
 
     try:
-        mut_matrix = (
-            np.array(mutation_seqs, dtype="U").view("U1").reshape(len(dataset), -1)
-        )
+        mut_matrix = np.array(mutation_seqs, dtype="U").view("U1").reshape(len(dataset), -1)
         seq_matrix = np.array(sequences, dtype="U").view("U1").reshape(len(dataset), -1)
     except ValueError:
         raise ValueError("Sequences in the DataFrame are not of equal length.")
@@ -63,9 +61,7 @@ def infer_wt_sequence(
             original_char = seq_matrix[idx, i]
             wt_sequence_list.append(original_char)
         else:
-            print(
-                f"Warning: Position {i} is mutated in All sequences. Cannot recover wild-type sequence."
-            )
+            print(f"Warning: Position {i} is mutated in All sequences. Cannot recover wild-type sequence.")
             wt_sequence_list.append("X")
 
     wt_seq = "".join(wt_sequence_list)

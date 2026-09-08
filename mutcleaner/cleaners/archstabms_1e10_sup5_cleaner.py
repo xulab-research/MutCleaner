@@ -48,17 +48,7 @@ logger = logging.getLogger(__name__)
 
 GRB2_SH3_WT_SEQUENCE = "TYVQALFDFDPQEDGELGFRRGDFIHVMDNSDPNWWKGACHGQTGMFPRNYVTPVN"
 
-SRC_WT_SEQUENCE = (
-    "MGSNKSKPKDASQRRRSLEPAENVHGAGGGAFPASQTPSKPASADGHRGPSAAFAPAAAEPK"
-    "LFGGFNSSDTVTSPQRAGPLAGGVTTFVALYDYESRTETDLSFKKGERLQIVNNTEGDWWLA"
-    "HSLSTGQTGYIPSNYVAPSDSIQAEEWYFGKITRRESERLLLNAENPRGTFLVRESETTKGAY"
-    "CLSVSDFDNAKGLNVKHYKIRKLDSGGFYITSRTQFNSLQQLVAYYSKHADGLCHRLTTVCPT"
-    "SKPQTQGLAKDAWEIPRESLRLEVKLGQGCFGEVWMGTWNGTTRVAIKTLKPGTMSPEAFLQ"
-    "EAQVMKKLRHEKLVQLYAVVSEEPIYIVTEYMSKGSLLDFLKGETGKYLRLPQLVDMAAQIAS"
-    "GMAYVERMNYVHRDLRAANILVGENLVCKVADFGLARLIEDNEYTARQGAKFPIKWTAPEAAL"
-    "YGRFTIKSDVWSFGILLTELTTKGRVPYPGMVNREVLDQVERGYRMPCPPECPESLHDLMCQC"
-    "WRKEPEERPTFEYLQAFLEDYFTSTEPQYQPGENL"
-)
+SRC_WT_SEQUENCE = "MGSNKSKPKDASQRRRSLEPAENVHGAGGGAFPASQTPSKPASADGHRGPSAAFAPAAAEPK" "LFGGFNSSDTVTSPQRAGPLAGGVTTFVALYDYESRTETDLSFKKGERLQIVNNTEGDWWLA" "HSLSTGQTGYIPSNYVAPSDSIQAEEWYFGKITRRESERLLLNAENPRGTFLVRESETTKGAY" "CLSVSDFDNAKGLNVKHYKIRKLDSGGFYITSRTQFNSLQQLVAYYSKHADGLCHRLTTVCPT" "SKPQTQGLAKDAWEIPRESLRLEVKLGQGCFGEVWMGTWNGTTRVAIKTLKPGTMSPEAFLQ" "EAQVMKKLRHEKLVQLYAVVSEEPIYIVTEYMSKGSLLDFLKGETGKYLRLPQLVDMAAQIAS" "GMAYVERMNYVHRDLRAANILVGENLVCKVADFGLARLIEDNEYTARQGAKFPIKWTAPEAAL" "YGRFTIKSDVWSFGILLTELTTKGRVPYPGMVNREVLDQVERGYRMPCPPECPESLHDLMCQC" "WRKEPEERPTFEYLQAFLEDYFTSTEPQYQPGENL"
 
 
 @dataclass
@@ -98,9 +88,7 @@ class ArchStabMS1E10CleanerSup5Config(BaseCleanerConfig):
     )
 
     # Data filtering configuration
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {"conf": lambda x: x == True}
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"conf": lambda x: x == True})
 
     library_sequences: Dict[int, str] = field(
         default_factory=lambda: {
@@ -137,9 +125,7 @@ class ArchStabMS1E10CleanerSup5Config(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"name", "mean_kcal/mol", "id_ref"}
@@ -150,9 +136,7 @@ class ArchStabMS1E10CleanerSup5Config(BaseCleanerConfig):
 
 def create_archstabms_1e10_sup5_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
-    config: Optional[
-        Union[ArchStabMS1E10CleanerSup5Config, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[ArchStabMS1E10CleanerSup5Config, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create ArchStabMS1E10 dataset cleaning piipeline
 
@@ -191,14 +175,10 @@ def create_archstabms_1e10_sup5_cleaner(
         # Load from file
         final_config = ArchStabMS1E10CleanerSup5Config.from_json(config)
     else:
-        raise TypeError(
-            f"config must be ArchStabMS1E10CleanerSup5Config, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be ArchStabMS1E10CleanerSup5Config, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"archstabms 1e10 dataset will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"archstabms 1e10 dataset will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -243,9 +223,7 @@ def create_archstabms_1e10_sup5_cleaner(
                 convert_pairwise_couplings_to_ddg,
                 group_columns=[final_config.column_mapping.get("name", "name")],
                 mutation_column=final_config.column_mapping.get("id_ref", "id_ref"),
-                label_column=final_config.column_mapping.get(
-                    "mean_kcal/mol", "mean_kcal/mol"
-                ),
+                label_column=final_config.column_mapping.get("mean_kcal/mol", "mean_kcal/mol"),
             )
             .delayed_then(
                 apply_mutations_to_sequences,
@@ -256,15 +234,9 @@ def create_archstabms_1e10_sup5_cleaner(
                 convert_to_mutation_dataset_format,
                 name_column=final_config.column_mapping.get("name", "name"),
                 mutation_column=final_config.column_mapping.get("id_ref", "id_ref"),
-                sequence_column=final_config.column_mapping.get(
-                    "wt_sequence", "wt_sequence"
-                ),
-                mutated_sequence_column=final_config.column_mapping.get(
-                    "mut_seq", "mut_seq"
-                ),
-                label_column=final_config.column_mapping.get(
-                    "mean_kcal/mol", "mean_kcal/mol"
-                ),
+                sequence_column=final_config.column_mapping.get("wt_sequence", "wt_sequence"),
+                mutated_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
+                label_column=final_config.column_mapping.get("mean_kcal/mol", "mean_kcal/mol"),
                 is_zero_based=True,
             )
         )
@@ -273,9 +245,7 @@ def create_archstabms_1e10_sup5_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0)
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
@@ -326,19 +296,11 @@ def clean_archstabms_1e10_sup5_dataset(
 
         # Extract results
         archstabms_1e10_dataset_df, archstabms_1e10_ref_seq = pipeline.data
-        archstabms_1e10_dataset = MutationDataset.from_dataframe(
-            archstabms_1e10_dataset_df, archstabms_1e10_ref_seq
-        )
+        archstabms_1e10_dataset = MutationDataset.from_dataframe(archstabms_1e10_dataset_df, archstabms_1e10_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned archstabms1e10 dataset: {len(archstabms_1e10_dataset_df)} mutations from {len(archstabms_1e10_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned archstabms1e10 dataset: {len(archstabms_1e10_dataset_df)} mutations from {len(archstabms_1e10_ref_seq)} proteins")
 
         return pipeline, archstabms_1e10_dataset
     except Exception as e:
-        logger.error(
-            f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}"
-        )
-        raise RuntimeError(
-            f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}"
-        )
+        logger.error(f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}")
+        raise RuntimeError(f"Error in running archstabms1e10 dataset cleaning pipeline: {str(e)}")

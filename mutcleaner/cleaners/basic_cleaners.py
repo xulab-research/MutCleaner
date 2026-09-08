@@ -73,9 +73,7 @@ def __dir__() -> List[str]:
 
 
 @pipeline_step
-def read_dataset(
-    file_path: Union[str, Path], file_format: Optional[str] = None, **kwargs
-) -> pd.DataFrame:
+def read_dataset(file_path: Union[str, Path], file_format: Optional[str] = None, **kwargs) -> pd.DataFrame:
     """
     Read dataset from specified file format and return as a pandas DataFrame.
 
@@ -122,9 +120,7 @@ def read_dataset(
         if file_format in {"csv", "txt"} and df.shape[1] == 1:
             col0 = df.columns[0]
             if isinstance(col0, str) and "," in col0:
-                tqdm.write(
-                    "Warning: Dataset loaded as single column but ',' detected. Trying fallback to explicit comma separator..."
-                )
+                tqdm.write("Warning: Dataset loaded as single column but ',' detected. Trying fallback to explicit comma separator...")
                 df = pd.read_csv(file_path, sep=",", **kwargs)
         if "Unnamed: 0" in df.columns:
             if pd.api.types.is_integer_dtype(df["Unnamed: 0"]):
@@ -136,9 +132,7 @@ def read_dataset(
     except pd.errors.EmptyDataError:
         raise ValueError(f"The file {file_path} is empty.")
     except pd.errors.ParserError as e:
-        raise ValueError(
-            f"Error parsing file {file_path}. Check the delimiter or file integrity. Details: {e}"
-        )
+        raise ValueError(f"Error parsing file {file_path}. Check the delimiter or file integrity. Details: {e}")
     except Exception as e:
         raise RuntimeError(f"Unexpected error reading {file_path}: {e}")
 
@@ -256,7 +250,7 @@ def merge_columns(
         # Use custom formatter
         tqdm.write("Using custom formatter...")
         tqdm.pandas()
-        result[new_column_name] = result.progress_apply(custom_formatter, axis=1)  # type: ignore
+        result[new_column_name] = result.progress_apply(custom_formatter, axis=1)
     else:
         # Standard merging with separator
         df_to_merge = result[columns_to_merge].copy()
@@ -497,33 +491,22 @@ def split_columns(
         split_data = col_series.progress_apply(apply_custom_splitter)
 
         # Convert to DataFrame
-        split_df = pd.DataFrame(
-            split_data.tolist(), columns=new_column_names, index=result.index
-        )
+        split_df = pd.DataFrame(split_data.tolist(), columns=new_column_names, index=result.index)
 
     else:
         # Standard splitting with separator
-        tqdm.write(
-            f"Splitting using separator: '{separator}'" + (" (regex)" if regex else "")
-        )
+        tqdm.write(f"Splitting using separator: '{separator}'" + (" (regex)" if regex else ""))
 
         # Handle NaN values
         non_na_mask = col_series.notna()
 
         # Initialize result arrays
-        split_df = pd.DataFrame(
-            {
-                col: pd.Series("NaN", index=result.index, dtype=object)
-                for col in new_column_names
-            }
-        )
+        split_df = pd.DataFrame({col: pd.Series("NaN", index=result.index, dtype=object) for col in new_column_names})
 
         if non_na_mask.any():
             # Convert to string and split
             str_series = col_series[non_na_mask].astype(str)
-            temp_df = str_series.str.split(
-                separator, n=(max_splits or -1), expand=True, regex=bool(regex)
-            )
+            temp_df = str_series.str.split(separator, n=(max_splits or -1), expand=True, regex=bool(regex))
             if strip_whitespace:
                 temp_df = temp_df.apply(lambda s: s.str.strip())
 
@@ -536,9 +519,7 @@ def split_columns(
             # Assign each split column back into the result DataFrame
             # Alignment is preserved because we use .loc with the original index
             for i, col_name in enumerate(new_column_names):
-                split_df.loc[str_series.index, col_name] = temp_df.iloc[:, i].astype(
-                    object
-                )
+                split_df.loc[str_series.index, col_name] = temp_df.iloc[:, i].astype(object)
 
         # Post-process rows where the original value was missing:
         #   - first split column -> None;
@@ -627,11 +608,7 @@ def extract_and_rename_columns(
     # Extract and rename columns
     if required_columns:
         # Only extract specified columns
-        extract_cols = [
-            col
-            for col in column_mapping.keys()
-            if column_mapping[col] in required_columns
-        ]
+        extract_cols = [col for col in column_mapping.keys() if column_mapping[col] in required_columns]
         extracted_dataset = dataset[extract_cols].copy()
     else:
         # Extract all mapped columns
@@ -640,9 +617,7 @@ def extract_and_rename_columns(
     # Rename columns
     extracted_dataset = extracted_dataset.rename(columns=column_mapping)
 
-    tqdm.write(
-        f"Extracted {len(extracted_dataset.columns)} columns: {list(extracted_dataset.columns)}"
-    )
+    tqdm.write(f"Extracted {len(extracted_dataset.columns)} columns: {list(extracted_dataset.columns)}")
     return extracted_dataset
 
 
@@ -758,11 +733,7 @@ def filter_and_clean_data(
     successful_dataset = dataset.loc[combined_mask].copy()
     failed_dataset = dataset.loc[~combined_mask].copy()
 
-    tqdm.write(
-        f"Filtered data: {original_len} -> {len(successful_dataset)} rows "
-        f"({len(successful_dataset)/original_len*100:.1f}% retained), "
-        f"{len(failed_dataset)} rows failed"
-    )
+    tqdm.write(f"Filtered data: {original_len} -> {len(successful_dataset)} rows " f"({len(successful_dataset)/original_len*100:.1f}% retained), " f"{len(failed_dataset)} rows failed")
 
     return successful_dataset, failed_dataset
 
@@ -828,13 +799,9 @@ def convert_data_types(
     tqdm.write("Converting data types...")
 
     if use_batch_processing:
-        return _convert_data_types_batch(
-            dataset, type_conversions, handle_errors, optimize_memory, chunk_size
-        )
+        return _convert_data_types_batch(dataset, type_conversions, handle_errors, optimize_memory, chunk_size)
     else:
-        return _convert_data_types(
-            dataset, type_conversions, handle_errors, optimize_memory
-        )
+        return _convert_data_types(dataset, type_conversions, handle_errors, optimize_memory)
 
 
 @multiout_step(main="success", failed="failed")
@@ -983,7 +950,7 @@ def validate_mutations(
                 if isinstance(pattern, str):
                     if pattern.startswith("regex:"):
                         # Handle explicit regex patterns
-                        regex_pattern = pattern[6:]  # Remove 'regex:' prefix
+                        regex_pattern = pattern[6:]
                         try:
                             if re.search(regex_pattern, str_value):
                                 return True
@@ -1009,10 +976,7 @@ def validate_mutations(
 
     if len(validation_dataset) == 0:
         # All rows were excluded, return all as successful
-        tqdm.write(
-            f"Mutation validation: {len(excluded_dataset)} excluded (treated as successful), "
-            f"0 validated, 0 failed (out of {original_len} total)"
-        )
+        tqdm.write(f"Mutation validation: {len(excluded_dataset)} excluded (treated as successful), " f"0 validated, 0 failed (out of {original_len} total)")
         return excluded_dataset, pd.DataFrame(columns=result.columns)
 
     # Prepare mutation values
@@ -1048,10 +1012,7 @@ def validate_mutations(
 
     # Avoid joblib overhead for sequential execution.
     if num_workers == 1:
-        processed_results = [
-            valid_single_mutation(args)
-            for args in tqdm(args_list, desc="Processing mutations")
-        ]
+        processed_results = [valid_single_mutation(args) for args in tqdm(args_list, desc="Processing mutations")]
     elif sys.platform.startswith("linux"):
         chunksize = max(
             1,
@@ -1087,9 +1048,7 @@ def validate_mutations(
     # Restore results to the original row order.
     if cache_results:
         missing_result = (None, "Missing mutation information")
-        results = [
-            missing_result if code == -1 else processed_results[code] for code in codes
-        ]
+        results = [missing_result if code == -1 else processed_results[code] for code in codes]
     else:
         results = processed_results
 
@@ -1108,26 +1067,16 @@ def validate_mutations(
     successful_dataset = validation_dataset[success_mask].copy()
     if format_mutations:
         # Replace original mutation column with formatted version
-        successful_dataset[mutation_column] = successful_dataset[
-            "formatted_" + mutation_column
-        ]
-    successful_dataset = successful_dataset.drop(
-        columns=["formatted_" + mutation_column, "error_message"]
-    )
+        successful_dataset[mutation_column] = successful_dataset["formatted_" + mutation_column]
+    successful_dataset = successful_dataset.drop(columns=["formatted_" + mutation_column, "error_message"])
     # Combine excluded rows with successful validated rows
-    successful_dataset = pd.concat(
-        [excluded_dataset, successful_dataset], ignore_index=True
-    )
+    successful_dataset = pd.concat([excluded_dataset, successful_dataset], ignore_index=True)
 
     # Create failed dataset
     failed_dataset = validation_dataset[~success_mask].copy()
     failed_dataset = failed_dataset.drop(columns=["formatted_" + mutation_column])
 
-    tqdm.write(
-        f"Mutation validation: {len(excluded_dataset)} excluded (treated as successful), "
-        f"{len(successful_dataset)} successful, {len(failed_dataset)} failed "
-        f"(out of {original_len} total, {len(successful_dataset)/original_len*100:.1f}% valid)"
-    )
+    tqdm.write(f"Mutation validation: {len(excluded_dataset)} excluded (treated as successful), " f"{len(successful_dataset)} successful, {len(failed_dataset)} failed " f"(out of {original_len} total, {len(successful_dataset)/original_len*100:.1f}% valid)")
 
     return successful_dataset, failed_dataset
 
@@ -1212,9 +1161,7 @@ def apply_mutations_to_sequences(
     elif sequence_type == "rna":
         SequenceClass = RNASequence
     else:
-        raise ValueError(
-            f"Unsupported sequence type: {sequence_type}. Must be 'protein', 'dna', or 'rna'"
-        )
+        raise ValueError(f"Unsupported sequence type: {sequence_type}. Must be 'protein', 'dna', or 'rna'")
 
     _apply_single_mutation = partial(
         apply_single_mutation,
@@ -1232,10 +1179,7 @@ def apply_mutations_to_sequences(
 
     # Parallel processing
     rows = dataset.itertuples(index=False, name=None)
-    results = Parallel(n_jobs=num_workers, backend="loky")(
-        delayed(_apply_single_mutation)(row)
-        for row in tqdm(rows, total=len(dataset), desc="Applying mutations")
-    )
+    results = Parallel(n_jobs=num_workers, backend="loky")(delayed(_apply_single_mutation)(row) for row in tqdm(rows, total=len(dataset), desc="Applying mutations"))
 
     # Separate successful and failed results
     mutated_seqs, error_messages = map(list, zip(*results))
@@ -1248,9 +1192,7 @@ def apply_mutations_to_sequences(
     successful_dataset = result_dataset[success_mask].drop(columns=["error_message"])
     failed_dataset = result_dataset[~success_mask].drop(columns=["mut_seq"])
 
-    tqdm.write(
-        f"Mutation application: {len(successful_dataset)} successful, {len(failed_dataset)} failed"
-    )
+    tqdm.write(f"Mutation application: {len(successful_dataset)} successful, {len(failed_dataset)} failed")
     return successful_dataset, failed_dataset
 
 
@@ -1320,9 +1262,7 @@ def infer_mutations_from_sequences(
     elif sequence_type == "rna":
         SequenceClass = RNASequence
     else:
-        raise ValueError(
-            f"Unsupported sequence type: {sequence_type}. Must be 'protein', 'dna', or 'rna'"
-        )
+        raise ValueError(f"Unsupported sequence type: {sequence_type}. Must be 'protein', 'dna', or 'rna'")
 
     # Create partial function for single row processing
     _infer_single_mutationset = partial(
@@ -1336,10 +1276,7 @@ def infer_mutations_from_sequences(
 
     # Parallel processing
     rows = dataset.itertuples(index=False, name=None)
-    results = Parallel(n_jobs=num_workers, backend="loky")(
-        delayed(_infer_single_mutationset)(row)
-        for row in tqdm(rows, desc="Processing sequences")
-    )
+    results = Parallel(n_jobs=num_workers, backend="loky")(delayed(_infer_single_mutationset)(row) for row in tqdm(rows, desc="Processing sequences"))
 
     # Separate successful and failed results
     mutations, error_messages = map(list, zip(*results))
@@ -1352,9 +1289,7 @@ def infer_mutations_from_sequences(
     successful_dataset = result_dataset[success_mask].drop(columns=["error_message"])
     failed_dataset = result_dataset[~success_mask].drop(columns=["inferred_mutations"])
 
-    tqdm.write(
-        f"Mutation application: {len(successful_dataset)} successful, {len(failed_dataset)} failed"
-    )
+    tqdm.write(f"Mutation application: {len(successful_dataset)} successful, {len(failed_dataset)} failed")
     return successful_dataset, failed_dataset
 
 
@@ -1439,9 +1374,7 @@ def infer_wildtype_sequences(
         SequenceClass = RNASequence
         AlphabetClass = RNAAlphabet
     else:
-        raise ValueError(
-            f"Unsupported sequence type: {sequence_type.lower()}. Must be 'protein', 'dna', or 'rna'"
-        )
+        raise ValueError(f"Unsupported sequence type: {sequence_type.lower()}. Must be 'protein', 'dna', or 'rna'")
 
     _process_protein_group = partial(
         infer_wt_sequence_grouped,
@@ -1461,14 +1394,9 @@ def infer_wildtype_sequences(
     grouped = list(dataset.groupby(name_column, sort=False))
 
     try:
-        results = Parallel(n_jobs=num_workers, backend="loky")(
-            delayed(_process_protein_group)(group_data)
-            for group_data in tqdm(grouped, desc="Processing proteins")
-        )
+        results = Parallel(n_jobs=num_workers, backend="loky")(delayed(_process_protein_group)(group_data) for group_data in tqdm(grouped, desc="Processing proteins"))
     except Exception as e:
-        tqdm.write(
-            f"Warning: Parallel processing failed, falling back to sequential: {e}"
-        )
+        tqdm.write(f"Warning: Parallel processing failed, falling back to sequential: {e}")
         # Fallback to sequential processing
         results = []
         for group_data in tqdm(grouped, desc="Processing proteins (sequential)"):
@@ -1502,9 +1430,7 @@ def infer_wildtype_sequences(
         rows_list, category = result
         if category not in ("success", "failed"):
             invalid_count += 1
-            tqdm.write(
-                f"Warning: Result {i} has invalid category '{category}', skipping"
-            )
+            tqdm.write(f"Warning: Result {i} has invalid category '{category}', skipping")
             continue
 
         if not isinstance(rows_list, list):
@@ -1531,12 +1457,8 @@ def infer_wildtype_sequences(
     successful_df = pd.DataFrame(successful_rows) if successful_rows else pd.DataFrame()
     failed_df = pd.DataFrame(failed_rows) if failed_rows else pd.DataFrame()
 
-    tqdm.write(
-        f"Wildtype inference: {len(successful_rows)} successful rows, {len(failed_rows)} failed rows"
-    )
-    tqdm.write(
-        f"Added WT rows for proteins. Success: {len(successful_df)}, Failed: {len(failed_df)}"
-    )
+    tqdm.write(f"Wildtype inference: {len(successful_rows)} successful rows, {len(failed_rows)} failed rows")
+    tqdm.write(f"Added WT rows for proteins. Success: {len(successful_df)}, Failed: {len(failed_df)}")
 
     return successful_df, failed_df
 
@@ -1550,9 +1472,7 @@ def aggregate_labels_by_name(
     strategy: Union[str, Callable[[pd.DataFrame, List[str]], pd.Series]] = "mean",
     *,
     nearest_by: Optional[Union[Sequence[Tuple[str, float]], Dict[str, float]]] = None,
-    nearest_weights: Optional[
-        Union[Sequence[Tuple[str, float]], Dict[str, float]]
-    ] = None,
+    nearest_weights: Optional[Union[Sequence[Tuple[str, float]], Dict[str, float]]] = None,
     output_suffix: Optional[str] = None,
 ) -> pd.DataFrame:
     """
@@ -1661,13 +1581,9 @@ def aggregate_labels_by_name(
     if not name_cols:
         raise KeyError("name_columns must be a non-empty string or sequence of strings")
 
-    label_cols = (
-        [label_columns] if isinstance(label_columns, str) else list(label_columns)
-    )
+    label_cols = [label_columns] if isinstance(label_columns, str) else list(label_columns)
     if not label_cols:
-        raise KeyError(
-            "label_columns must be a non-empty string or sequence of strings"
-        )
+        raise KeyError("label_columns must be a non-empty string or sequence of strings")
 
     # Existence checks
     missing_names = [c for c in name_cols if c not in dataset.columns]
@@ -1685,36 +1601,26 @@ def aggregate_labels_by_name(
             "first": "_first_by_name",
             "nearest": "_nearest_by_name",
         }
-        suffix = (
-            suffix_map.get(str(strategy).lower(), "_custom_by_name")
-            if isinstance(strategy, str)
-            else "_custom_by_name"
-        )
+        suffix = suffix_map.get(str(strategy).lower(), "_custom_by_name") if isinstance(strategy, str) else "_custom_by_name"
     else:
         suffix = output_suffix
 
     # Make resolver (string -> callable; pass nearest params through)
-    resolver = make_resolver(
-        strategy, nearest_by=nearest_by, nearest_weights=nearest_weights
-    )
+    resolver = make_resolver(strategy, nearest_by=nearest_by, nearest_weights=nearest_weights)
 
     # Compute per-group resolved labels
     g = dataset.groupby(name_cols, dropna=False)
-    agg = g.apply(lambda grp: resolver(grp, label_cols), include_groups=False)  # type: ignore
+    agg = g.apply(lambda grp: resolver(grp, label_cols), include_groups=False)
     if isinstance(agg, pd.Series):
         # single-label case or resolver returns Series -> ensure DataFrame
         agg = agg.to_frame().T if agg.name is None else agg.to_frame()
-    agg = agg.reset_index()  # bring name_cols back as columns
+    agg = agg.reset_index()
 
     # Merge to desired shape
     if remove_origin_columns:
         reps = dataset.drop_duplicates(subset=name_cols, keep="first")
         # Keep name cols + any non-label columns (to preserve metadata) from reps
-        keep_cols = list(
-            dict.fromkeys(
-                name_cols + [c for c in dataset.columns if c not in set(label_cols)]
-            )
-        )
+        keep_cols = list(dict.fromkeys(name_cols + [c for c in dataset.columns if c not in set(label_cols)]))
         reps = reps[keep_cols]
         out = pd.merge(
             reps,
@@ -1726,11 +1632,7 @@ def aggregate_labels_by_name(
         )
         return out
     else:
-        suffix_final = suffix or (
-            "_custom_by_name"
-            if not isinstance(strategy, str)
-            else f"_{strategy}_by_name"
-        )
+        suffix_final = suffix or ("_custom_by_name" if not isinstance(strategy, str) else f"_{strategy}_by_name")
         rename_map = {c: f"{c}{suffix_final}" for c in label_cols}
         to_merge = agg[name_cols + label_cols].rename(columns=rename_map)
         out = pd.merge(
@@ -1810,13 +1712,9 @@ def average_labels_by_name(
     name_cols = [name_columns] if isinstance(name_columns, str) else list(name_columns)
     if not name_cols:
         raise KeyError("name_columns must be a non-empty string or sequence of strings")
-    label_cols = (
-        [label_columns] if isinstance(label_columns, str) else list(label_columns)
-    )
+    label_cols = [label_columns] if isinstance(label_columns, str) else list(label_columns)
     if not label_cols:
-        raise KeyError(
-            "label_columns must be a non-empty string or sequence of strings"
-        )
+        raise KeyError("label_columns must be a non-empty string or sequence of strings")
 
     # Existence checks
     missing_names = [c for c in name_cols if c not in dataset.columns]
@@ -1839,9 +1737,7 @@ def average_labels_by_name(
         means = g[label_cols].mean().reset_index()
         non_label_cols = [c for c in dataset.columns if c not in set(label_cols)]
         # Keep original rows and add per-name mean columns named <label>_mean_by_name
-        reps = dataset.drop_duplicates(subset=name_cols, keep="first")[
-            list(dict.fromkeys(name_cols + non_label_cols))
-        ]
+        reps = dataset.drop_duplicates(subset=name_cols, keep="first")[list(dict.fromkeys(name_cols + non_label_cols))]
         out = pd.merge(
             reps,
             means,
@@ -1852,11 +1748,7 @@ def average_labels_by_name(
         )
     else:
         # Add <label>_mean_by_name columns to original rows (row count unchanged)
-        means = (
-            g[label_cols]
-            .transform("mean")
-            .rename(columns={c: f"{c}_mean_by_name" for c in label_cols})
-        )
+        means = g[label_cols].transform("mean").rename(columns={c: f"{c}_mean_by_name" for c in label_cols})
         out = pd.concat([dataset, means], axis=1)
     return out
 
@@ -2009,23 +1901,16 @@ def convert_to_mutation_dataset_format(
         alphabet = RNAAlphabet()
 
     else:
-        raise ValueError(
-            f"Unsupported sequence type: {sequence_type!r}. "
-            "Must be 'protein', 'dna', or 'rna'"
-        )
+        raise ValueError(f"Unsupported sequence type: {sequence_type!r}. " "Must be 'protein', 'dna', or 'rna'")
 
     # Intelligently determine input format based on actual data content
     has_sequence_column = sequence_column is not None and sequence_column in df.columns
-    has_wt_rows = (
-        mutation_column in df.columns and df[mutation_column].str.contains("WT").any()
-    )
+    has_wt_rows = mutation_column in df.columns and df[mutation_column].str.contains("WT").any()
 
     # Decision logic for format detection
     if has_sequence_column and not has_wt_rows:
         # Clearly Format 2: has sequence column, no WT rows
-        tqdm.write(
-            f"Detected Format 2: Found sequence column '{sequence_column}', no WT rows"
-        )
+        tqdm.write(f"Detected Format 2: Found sequence column '{sequence_column}', no WT rows")
         sequence_column = cast(str, sequence_column)
         return convert_format_2(
             df,
@@ -2061,10 +1946,7 @@ def convert_to_mutation_dataset_format(
         # Ambiguous: has both sequence column and WT rows
         # Prefer Format 2 if sequence column was explicitly specified
         if sequence_column is not None:
-            tqdm.write(
-                f"Warning: Found both sequence column '{sequence_column}' and WT rows. "
-                f"Using Format 2 as sequence_column was specified."
-            )
+            tqdm.write(f"Warning: Found both sequence column '{sequence_column}' and WT rows. " f"Using Format 2 as sequence_column was specified.")
             return convert_format_2(
                 df,
                 name_column,
@@ -2079,9 +1961,7 @@ def convert_to_mutation_dataset_format(
                 alphabet,
             )
         else:
-            tqdm.write(
-                "Warning: Found WT rows but sequence column exists. Using Format 1."
-            )
+            tqdm.write("Warning: Found WT rows but sequence column exists. Using Format 1.")
             return convert_format_1(
                 df,
                 name_column,
@@ -2102,9 +1982,7 @@ def convert_to_mutation_dataset_format(
         if sequence_column is not None:
             error_msg += f"  - Sequence column '{sequence_column}' specified but not found in DataFrame\n"
         error_msg += f"  - No 'WT' entries found in '{mutation_column}' column\n"
-        error_msg += (
-            "Please ensure your DataFrame matches one of the supported formats:\n"
-        )
+        error_msg += "Please ensure your DataFrame matches one of the supported formats:\n"
         error_msg += "  Format 1: Include 'WT' rows with wild-type sequences\n"
         error_msg += "  Format 2: Include a sequence column with wild-type sequences"
         raise ValueError(error_msg)
@@ -2185,9 +2063,7 @@ def replace_in_column(
 
     if name_column not in df.columns:
         cols_preview = ", ".join(map(str, df.columns[:20]))
-        raise KeyError(
-            f"Column {name_column!r} not found.Available columns (first 20): {cols_preview}"
-        )
+        raise KeyError(f"Column {name_column!r} not found.Available columns (first 20): {cols_preview}")
 
     if not isinstance(old, str):
         raise TypeError(f"'old' must be a str, got {type(old)}.")
@@ -2195,9 +2071,7 @@ def replace_in_column(
         raise ValueError("'old' must be a non-empty string.")
 
     out = df.copy()
-    out[name_column] = (
-        out[name_column].astype("string").str.replace(old, new, regex=False)
-    )
+    out[name_column] = out[name_column].astype("string").str.replace(old, new, regex=False)
     return out
 
 
@@ -2352,9 +2226,7 @@ def subtract_labels_by_wt(
     if missing_req:
         raise KeyError(f"required columns missing: {missing_req}")
 
-    label_cols = (
-        [label_columns] if isinstance(label_columns, str) else list(label_columns)
-    )
+    label_cols = [label_columns] if isinstance(label_columns, str) else list(label_columns)
     if not label_cols:
         raise KeyError("label_columns must be a non-empty str or sequence")
     missing_labels = [c for c in label_cols if c not in dataset.columns]
@@ -2365,16 +2237,12 @@ def subtract_labels_by_wt(
     failed_rows = []
 
     # Iterate groups preserving order
-    for _, grp in tqdm(
-        dataset.groupby(name_column, sort=False), desc="Processing groups"
-    ):
+    for _, grp in tqdm(dataset.groupby(name_column, sort=False), desc="Processing groups"):
         try:
             wt_rows = grp[grp[mutation_column] == wt_identifier]
             if wt_rows.empty:
                 err = grp.iloc[0].to_dict()
-                err["error_message"] = (
-                    f"No WT row (mutation_column == {wt_identifier!r})"
-                )
+                err["error_message"] = f"No WT row (mutation_column == {wt_identifier!r})"
                 failed_rows.append(err)
                 continue
             if len(wt_rows) > 1:
@@ -2387,9 +2255,7 @@ def subtract_labels_by_wt(
             wt_vals = wt_rows.iloc[0][label_cols]
             if wt_vals.isna().any():
                 err = wt_rows.iloc[0].to_dict()
-                err["error_message"] = (
-                    f"WT label has NaN in columns: {list(wt_vals[wt_vals.isna()].index)}"
-                )
+                err["error_message"] = f"WT label has NaN in columns: {list(wt_vals[wt_vals.isna()].index)}"
                 failed_rows.append(err)
                 continue
 
@@ -2402,9 +2268,7 @@ def subtract_labels_by_wt(
                 block.loc[:, label_cols] = deltas.values
             else:
                 new_names = {c: f"{c}{suffix}" for c in label_cols}
-                block.loc[:, list(new_names.values())] = deltas.rename(
-                    columns=new_names
-                ).values
+                block.loc[:, list(new_names.values())] = deltas.rename(columns=new_names).values
 
             if drop_wt_row:
                 block = block[block[mutation_column] != wt_identifier]
@@ -2517,9 +2381,7 @@ def remap_mutation_positions_by_name(
         raise ValueError(f"Columns not found in dataset: {sorted(missing_columns)}")
 
     if position_offsets is None and position_maps is None:
-        raise ValueError(
-            "At least one of position_offsets or position_maps must be provided"
-        )
+        raise ValueError("At least one of position_offsets or position_maps must be provided")
 
     result = dataset.copy()
     position_offsets = position_offsets or {}
@@ -2549,9 +2411,7 @@ def remap_mutation_positions_by_name(
 
             if match is None:
                 if strict:
-                    raise ValueError(
-                        f"Invalid mutation {token!r} for " f"{name_column}={name!r}"
-                    )
+                    raise ValueError(f"Invalid mutation {token!r} for " f"{name_column}={name!r}")
                 remapped_mutations.append(token)
                 continue
 
@@ -2563,18 +2423,12 @@ def remap_mutation_positions_by_name(
             elif offset is not None:
                 new_position = old_position + offset
             elif strict:
-                raise ValueError(
-                    f"No position mapping for position {old_position} "
-                    f"when {name_column}={name!r}"
-                )
+                raise ValueError(f"No position mapping for position {old_position} " f"when {name_column}={name!r}")
             else:
                 new_position = old_position
 
             if new_position < 0:
-                raise ValueError(
-                    f"Remapped position cannot be negative: "
-                    f"{old_position} -> {new_position}"
-                )
+                raise ValueError(f"Remapped position cannot be negative: " f"{old_position} -> {new_position}")
 
             remapped_mutations.append(f"{wt}{new_position}{mutant}")
 
@@ -2650,10 +2504,7 @@ def add_sequences_to_dataset(
             header_parser=header_parser,
         )
     else:
-        raise TypeError(
-            "sequence_source must be a sequence dictionary or file path, "
-            f"got {type(sequence_source).__name__}"
-        )
+        raise TypeError("sequence_source must be a sequence dictionary or file path, " f"got {type(sequence_source).__name__}")
 
     tqdm.write(f"Loaded {len(sequence_dict)} reference sequences")
 
@@ -2667,9 +2518,7 @@ def add_sequences_to_dataset(
 
         # Mark missing sequences as errors
         missing_mask = result_dataset[sequence_column].isnull()
-        result_dataset.loc[missing_mask, "error_message"] = (
-            "Sequence not found in sequence dictionary"
-        )
+        result_dataset.loc[missing_mask, "error_message"] = "Sequence not found in sequence dictionary"
 
         # Success mask is where we have sequences
         success_mask = ~missing_mask
@@ -2677,10 +2526,7 @@ def add_sequences_to_dataset(
         # Log missing proteins
         if missing_mask.any():
             missing_proteins = result_dataset[missing_mask][name_column].unique()
-            tqdm.write(
-                f"Warning: Missing sequences for {len(missing_proteins)} proteins: {list(missing_proteins[:10])}"
-                + (" ..." if len(missing_proteins) > 10 else "")
-            )
+            tqdm.write(f"Warning: Missing sequences for {len(missing_proteins)} proteins: {list(missing_proteins[:10])}" + (" ..." if len(missing_proteins) > 10 else ""))
 
     except Exception as e:
         # If something goes wrong, mark all as failed
@@ -2694,9 +2540,7 @@ def add_sequences_to_dataset(
     total_proteins = dataset[name_column].nunique()
     successful_proteins = successful_dataset[name_column].nunique()
 
-    tqdm.write(
-        f"Sequence addition: {len(successful_dataset)} successful, {len(failed_dataset)} failed ({successful_proteins}/{total_proteins} proteins)"
-    )
+    tqdm.write(f"Sequence addition: {len(successful_dataset)} successful, {len(failed_dataset)} failed ({successful_proteins}/{total_proteins} proteins)")
 
     return successful_dataset, failed_dataset
 
@@ -2766,10 +2610,7 @@ def filter_stop_codon_mutations(
 
     total_count = len(dataset)
     stop_count = int(stop_mask.sum())
-    tqdm.write(
-        f"Filtering stop-codon mutations: {total_count} total records, "
-        f"{stop_count} records filtered"
-    )
+    tqdm.write(f"Filtering stop-codon mutations: {total_count} total records, " f"{stop_count} records filtered")
 
     successful = dataset.loc[~stop_mask].copy()
     failed = dataset.loc[stop_mask].copy()

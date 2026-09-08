@@ -37,9 +37,7 @@ class CodonTable:
 
         # auto detect stop codons
         if stop_codons is None:
-            self.stop_codons = [
-                codon for codon, aa in self.codon_map.items() if aa == "*"
-            ]
+            self.stop_codons = [codon for codon, aa in self.codon_map.items() if aa == "*"]
         else:
             self.stop_codons = set([c.upper() for c in stop_codons])
 
@@ -62,9 +60,7 @@ class CodonTable:
         return codon.upper() in self.start_codons
 
     @classmethod
-    def get_standard_table(
-        cls, seq_type: Literal["DNA", "RNA"] = "DNA"
-    ) -> "CodonTable":
+    def get_standard_table(cls, seq_type: Literal["DNA", "RNA"] = "DNA") -> "CodonTable":
         """get standard codon table (NCBI standard)"""
         if seq_type == "DNA":
             return cls("Standard", STANDARD_GENETIC_CODE_DNA, STANDARD_START_CODONS_DNA)
@@ -74,9 +70,7 @@ class CodonTable:
             raise ValueError("Invalid sequence type")
 
     @classmethod
-    def get_table_by_name(
-        cls, name: str, seq_type: Literal["DNA", "RNA"] = "DNA"
-    ) -> "CodonTable":
+    def get_table_by_name(cls, name: str, seq_type: Literal["DNA", "RNA"] = "DNA") -> "CodonTable":
         """get codon table by name"""
         return {
             "Standard": cls.get_standard_table(seq_type),

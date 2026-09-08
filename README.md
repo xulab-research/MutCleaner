@@ -1,7 +1,7 @@
 # MutCleaner
 
 <p align="center">
-  <img src="assets/overview.svg" alt="MutCleaner overview" width="900">
+  <img src="plot/figures/overview.svg" alt="MutCleaner overview">
 </p>
 
 [![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=python&logoColor=white&color=orange)](https://pypi.org/project/mutcleaner/)

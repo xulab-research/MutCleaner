@@ -160,16 +160,14 @@ def nearest_resolver_factory(
     """
     # normalize criteria into ordered list
     if isinstance(criteria, Mapping):
-        crit_pairs = list(criteria.items())  # preserves insertion order (Py3.7+)
+        crit_pairs = list(criteria.items())
     else:
         crit_pairs = list(criteria)
 
     # normalize weights into dict
     weight_map: Dict[str, float] = {}
     if weights is not None:
-        weight_map = (
-            dict(weights.items()) if isinstance(weights, Mapping) else dict(weights)
-        )
+        weight_map = dict(weights.items()) if isinstance(weights, Mapping) else dict(weights)
 
     def _resolver(group: pd.DataFrame, label_cols: List[str]) -> pd.Series:
         # validate columns & numeric types
@@ -186,9 +184,7 @@ def nearest_resolver_factory(
             for col, target in crit_pairs:
                 w = float(weight_map.get(col, 1.0))
                 val = row[col]
-                parts.append(
-                    np.inf if pd.isna(val) else abs(float(val) - float(target)) * w
-                )
+                parts.append(np.inf if pd.isna(val) else abs(float(val) - float(target)) * w)
             return tuple(parts)
 
         distances = group.index.to_series().apply(dist_tuple)

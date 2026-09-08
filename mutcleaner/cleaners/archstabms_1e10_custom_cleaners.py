@@ -52,7 +52,7 @@ def compute_mutations(
         if len(wt_rows) == 0:
             return pd.Series([""] * len(group), index=group.index)
 
-        wt_seq = wt_rows[mut_seq].values[0]  # means wt_seq
+        wt_seq = wt_rows[mut_seq].values[0]
         wt_array = np.array(list(wt_seq))
 
         # convert sequence to character matrix
@@ -64,21 +64,15 @@ def compute_mutations(
         mut_info_list = []
         for i, row in enumerate(tqdm(aa_array, desc=desc)):
             positions = np.where(diff_mask[i])[0]
-            if len(positions) == 0:  # WT
+            if len(positions) == 0:
                 mut_info_list.append("WT")
                 continue
             muts = [f"{wt_array[pos]}{pos}{row[pos]}" for pos in positions]
             mut_str = ",".join(muts)
-            mut_info_list.append(
-                str(MutationSet.from_string(mut_str, is_zero_based=True))
-                if mut_str
-                else ""
-            )
+            mut_info_list.append(str(MutationSet.from_string(mut_str, is_zero_based=True)) if mut_str else "")
         return pd.Series(mut_info_list, index=group.index)
 
-    dataset["mut_info"] = dataset.groupby(name_column, group_keys=False).apply(
-        get_mut_info
-    )
+    dataset["mut_info"] = dataset.groupby(name_column, group_keys=False).apply(get_mut_info)
 
     dataset = dataset.drop(columns=WT_column)
     return dataset
@@ -117,15 +111,9 @@ def add_wild_type_sequences_by_library(
     result = dataset.copy()
     result[sequence_column] = result[library_column].map(library_sequences)
 
-    missing_libraries = (
-        result.loc[result[sequence_column].isna(), library_column]
-        .drop_duplicates()
-        .tolist()
-    )
+    missing_libraries = result.loc[result[sequence_column].isna(), library_column].drop_duplicates().tolist()
     if missing_libraries:
-        raise ValueError(
-            f"No wild-type sequence configured for libraries: {missing_libraries}"
-        )
+        raise ValueError(f"No wild-type sequence configured for libraries: {missing_libraries}")
 
     return result
 
@@ -210,18 +198,7 @@ def convert_pairwise_couplings_to_ddg(
     grouper = group_columns[0] if len(group_columns) == 1 else group_columns
 
     for group_name, group in result.groupby(grouper, sort=False, dropna=False):
-        mutation_parts = (
-            group[mutation_column]
-            .astype("string")
-            .str.split(mutation_separator)
-            .map(
-                lambda mutations: (
-                    [mutation.strip() for mutation in mutations]
-                    if isinstance(mutations, list)
-                    else mutations
-                )
-            )
-        )
+        mutation_parts = group[mutation_column].astype("string").str.split(mutation_separator).map(lambda mutations: ([mutation.strip() for mutation in mutations] if isinstance(mutations, list) else mutations))
         mutation_orders = mutation_parts.str.len()
 
         single_mask = mutation_orders.eq(1) & group[mutation_column].ne("WT")
@@ -229,10 +206,7 @@ def convert_pairwise_couplings_to_ddg(
 
         duplicated = single_mutations[single_mutations.duplicated()].unique()
         if len(duplicated):
-            raise ValueError(
-                f"Duplicated single-mutant labels in group {group_name!r}: "
-                f"{duplicated.tolist()}"
-            )
+            raise ValueError(f"Duplicated single-mutant labels in group {group_name!r}: " f"{duplicated.tolist()}")
 
         single_labels = pd.Series(
             group.loc[single_mask, label_column].to_numpy(),
@@ -240,17 +214,10 @@ def convert_pairwise_couplings_to_ddg(
         )
 
         for index, mutations in mutation_parts.loc[mutation_orders.eq(2)].items():
-            missing_mutations = [
-                mutation
-                for mutation in mutations
-                if mutation not in single_labels.index
-            ]
+            missing_mutations = [mutation for mutation in mutations if mutation not in single_labels.index]
 
             if missing_mutations:
-                failed_messages[index] = (
-                    "Missing constituent single-mutant label(s): "
-                    f"{', '.join(missing_mutations)}"
-                )
+                failed_messages[index] = "Missing constituent single-mutant label(s): " f"{', '.join(missing_mutations)}"
                 continue
 
             result.at[index, label_column] += single_labels.loc[mutations].sum()

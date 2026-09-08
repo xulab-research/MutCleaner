@@ -28,9 +28,7 @@ def __dir__() -> List[str]:
     return __all__
 
 
-def normalize_type_conversions(
-    type_conversions: Dict[str, Union[str, Type, np.dtype]], optimize_memory: bool
-) -> Dict[str, Tuple[str, Callable]]:
+def normalize_type_conversions(type_conversions: Dict[str, Union[str, Type, np.dtype]], optimize_memory: bool) -> Dict[str, Tuple[str, Callable]]:
     """
     Normalize type conversion mapping to standardized format.
 
@@ -42,17 +40,13 @@ def normalize_type_conversions(
     normalized = {}
 
     for col, target_type in type_conversions.items():
-        type_name, conversion_func = get_conversion_function(
-            target_type, optimize_memory
-        )
+        type_name, conversion_func = get_conversion_function(target_type, optimize_memory)
         normalized[col] = (type_name, conversion_func)
 
     return normalized
 
 
-def get_conversion_function(
-    target_type: Union[str, Type, np.dtype], optimize_memory: bool
-) -> Tuple[str, Callable]:
+def get_conversion_function(target_type: Union[str, Type, np.dtype], optimize_memory: bool) -> Tuple[str, Callable]:
     """
     Get appropriate conversion function for target type.
 
@@ -70,14 +64,10 @@ def get_conversion_function(
     """
     # Handle numpy types
     if isinstance(target_type, type) and issubclass(target_type, np.number):
-        return str(target_type), lambda series, errors: pd.to_numeric(
-            series, errors=errors
-        ).astype(target_type)
+        return str(target_type), lambda series, errors: pd.to_numeric(series, errors=errors).astype(target_type)
 
     if isinstance(target_type, np.dtype):
-        return str(target_type), lambda series, errors: pd.to_numeric(
-            series, errors=errors
-        ).astype(target_type)
+        return str(target_type), lambda series, errors: pd.to_numeric(series, errors=errors).astype(target_type)
 
     # Handle string type names
     if isinstance(target_type, str):
@@ -87,30 +77,20 @@ def get_conversion_function(
         if target_type_lower in ["float", "float64"]:
             dtype = np.float32 if optimize_memory else np.float64
             type_name = "float32" if optimize_memory else "float64"
-            return type_name, lambda series, errors: pd.to_numeric(
-                series, errors=errors
-            ).astype(dtype)
+            return type_name, lambda series, errors: pd.to_numeric(series, errors=errors).astype(dtype)
 
         elif target_type_lower in ["int", "int64"]:
-            return "Int64", lambda series, errors: pd.to_numeric(
-                series, errors=errors, downcast="integer" if optimize_memory else None
-            ).astype("Int64")
+            return "Int64", lambda series, errors: pd.to_numeric(series, errors=errors, downcast="integer" if optimize_memory else None).astype("Int64")
 
         elif target_type_lower == "int32":
-            return "Int32", lambda series, errors: pd.to_numeric(
-                series, errors=errors
-            ).astype("Int32")
+            return "Int32", lambda series, errors: pd.to_numeric(series, errors=errors).astype("Int32")
 
         # Pandas extension types
         elif target_type in ["Int64", "Int32", "Int16", "Int8"]:
-            return target_type, lambda series, errors: pd.to_numeric(
-                series, errors=errors
-            ).astype(target_type)
+            return target_type, lambda series, errors: pd.to_numeric(series, errors=errors).astype(target_type)
 
         elif target_type in ["Float64", "Float32"]:
-            return target_type, lambda series, errors: pd.to_numeric(
-                series, errors=errors
-            ).astype(target_type)
+            return target_type, lambda series, errors: pd.to_numeric(series, errors=errors).astype(target_type)
 
         elif target_type_lower in ["str", "string"]:
             return "string", lambda series, _: series.astype("string")
@@ -122,9 +102,7 @@ def get_conversion_function(
             return "category", lambda series, _: series.astype("category")
 
         elif target_type_lower == "datetime":
-            return "datetime64[ns]", lambda series, errors: pd.to_datetime(
-                series, errors=errors
-            )
+            return "datetime64[ns]", lambda series, errors: pd.to_datetime(series, errors=errors)
 
         # Direct pandas astype
         else:
@@ -134,14 +112,10 @@ def get_conversion_function(
     elif target_type == float:
         dtype = np.float32 if optimize_memory else np.float64
         type_name = "float32" if optimize_memory else "float64"
-        return type_name, lambda series, errors: pd.to_numeric(
-            series, errors=errors
-        ).astype(dtype)
+        return type_name, lambda series, errors: pd.to_numeric(series, errors=errors).astype(dtype)
 
     elif target_type == int:
-        return "Int64", lambda series, errors: pd.to_numeric(
-            series, errors=errors
-        ).astype("Int64")
+        return "Int64", lambda series, errors: pd.to_numeric(series, errors=errors).astype("Int64")
 
     elif target_type == str:
         return "string", lambda series, _: series.astype("string")
@@ -188,9 +162,7 @@ def convert_to_boolean(series: pd.Series, errors: str) -> pd.Series:
 
         # Handle numeric values
         numeric_mask = pd.to_numeric(series, errors="coerce").notna()
-        result.loc[numeric_mask] = pd.to_numeric(
-            series.loc[numeric_mask], errors="coerce"
-        ).astype(bool)
+        result.loc[numeric_mask] = pd.to_numeric(series.loc[numeric_mask], errors="coerce").astype(bool)
 
         return result.astype("boolean")
     else:
@@ -227,16 +199,12 @@ def convert_data_types(
     pd.DataFrame
         Dataset with converted data types
     """
-    normalized_conversions = normalize_type_conversions(
-        type_conversions, optimize_memory
-    )
+    normalized_conversions = normalize_type_conversions(type_conversions, optimize_memory)
 
     missing_columns = set(normalized_conversions.keys()) - set(dataset.columns)
     if missing_columns:
         tqdm.write(f"Warning: Columns not found: {missing_columns}")
-        normalized_conversions = {
-            k: v for k, v in normalized_conversions.items() if k not in missing_columns
-        }
+        normalized_conversions = {k: v for k, v in normalized_conversions.items() if k not in missing_columns}
 
     if not normalized_conversions:
         tqdm.write("No valid columns to convert")
@@ -252,13 +220,9 @@ def convert_data_types(
             tqdm.write(f"Converted '{col}' to {type_name}")
         except Exception as e:
             if handle_errors == "raise":
-                raise ValueError(
-                    f"Failed to convert column '{col}' to {type_name}: {e}"
-                )
+                raise ValueError(f"Failed to convert column '{col}' to {type_name}: {e}")
             else:
-                tqdm.write(
-                    f"Warning: Failed to convert column '{col}' to {type_name}: {e}"
-                )
+                tqdm.write(f"Warning: Failed to convert column '{col}' to {type_name}: {e}")
 
     for col, converted_series in conversion_results.items():
         result[col] = converted_series
@@ -295,18 +259,14 @@ def convert_data_types_batch(
         Dataset with converted data types
     """
     if len(dataset) <= chunk_size:
-        return convert_data_types(
-            dataset, type_conversions, handle_errors, optimize_memory
-        )
+        return convert_data_types(dataset, type_conversions, handle_errors, optimize_memory)
 
     tqdm.write(f"Converting data types in chunks of {chunk_size}...")
 
     chunks = []
     for i in range(0, len(dataset), chunk_size):
         chunk = dataset.iloc[i : i + chunk_size]
-        converted_chunk = convert_data_types(
-            chunk, type_conversions, handle_errors, optimize_memory
-        )
+        converted_chunk = convert_data_types(chunk, type_conversions, handle_errors, optimize_memory)
         chunks.append(converted_chunk)
 
     result = pd.concat(chunks, ignore_index=True)

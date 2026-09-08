@@ -42,10 +42,6 @@ htmlcov
 ###################
 dist/
 
-# Database files #
-##################
-tests/*.pkl
-
 # Doc files #
 #############
 doc/build/
@@ -64,15 +60,6 @@ validation/
 ########
 logs/
 
-# plot #
-########
-plot/
-
 # benchmark #
+#############
 benchmark/
-
-# test data #
-test_data/
-
-# summarize dataset #
-tools/summarize_dataset.py

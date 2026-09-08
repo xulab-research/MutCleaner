@@ -25,7 +25,6 @@ from .raw_data_downloader import (
     download_codon_human_myoglobin_source_file,
 )
 
-# fmt: off
 __all__ = [
     "list_datasets_with_built_in_cleaners", 
     "show_download_instructions", 

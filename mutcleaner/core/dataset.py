@@ -68,13 +68,9 @@ class MutationDataset:
             Use add_reference_sequence() first, then add_mutation_set() with reference_id.
         """
         self.name = name
-        self.reference_sequences: Dict[str, BaseSequence] = (
-            {}
-        )  # sequence_id -> sequence
+        self.reference_sequences: Dict[str, BaseSequence] = {}  # sequence_id -> sequence
         self.mutation_sets: List[MutationSet] = []
-        self.mutation_set_references: Dict[int, str] = (
-            {}
-        )  # mutation_set_index -> sequence_id
+        self.mutation_set_references: Dict[int, str] = {}  # mutation_set_index -> sequence_id
         self.mutation_set_labels: Dict[int, Any] = {}  # mutation_set_index -> label
         self.metadata: Dict[str, Any] = {}
         self._df: Optional[pd.DataFrame] = None
@@ -104,24 +100,14 @@ class MutationDataset:
     def __str__(self) -> str:
         stats = self.get_statistics()
         ref_count = stats["num_reference_sequences"]
-        ref_info = (
-            f" ({ref_count} reference sequences)"
-            if ref_count > 0
-            else " (no references)"
-        )
+        ref_info = f" ({ref_count} reference sequences)" if ref_count > 0 else " (no references)"
 
-        return (
-            f"MutationDataset({self.name}){ref_info}: "
-            f"{stats['total_mutation_sets']} mutation sets, "
-            f"{stats['total_mutations']} mutations"
-        )
+        return f"MutationDataset({self.name}){ref_info}: " f"{stats['total_mutation_sets']} mutation sets, " f"{stats['total_mutations']} mutations"
 
     def add_reference_sequence(self, sequence_id: str, sequence: BaseSequence):
         """Add a reference sequence with a unique identifier"""
         if sequence_id in self.reference_sequences:
-            raise ValueError(
-                f"Reference sequence with ID '{sequence_id}' already exists"
-            )
+            raise ValueError(f"Reference sequence with ID '{sequence_id}' already exists")
 
         self.reference_sequences[sequence_id] = sequence
         self._df = None  # Reset cached DataFrame
@@ -132,16 +118,9 @@ class MutationDataset:
             raise ValueError(f"Reference sequence with ID '{sequence_id}' not found")
 
         # Check if any mutation sets reference this sequence
-        referencing_sets = [
-            idx
-            for idx, ref_id in self.mutation_set_references.items()
-            if ref_id == sequence_id
-        ]
+        referencing_sets = [idx for idx, ref_id in self.mutation_set_references.items() if ref_id == sequence_id]
         if referencing_sets:
-            raise ValueError(
-                f"Cannot remove sequence '{sequence_id}' as it is referenced by "
-                f"{len(referencing_sets)} mutation sets. Remove the mutation sets first."
-            )
+            raise ValueError(f"Cannot remove sequence '{sequence_id}' as it is referenced by " f"{len(referencing_sets)} mutation sets. Remove the mutation sets first.")
 
         del self.reference_sequences[sequence_id]
         self._df = None
@@ -181,9 +160,7 @@ class MutationDataset:
     ):
         """Add multiple mutation sets to the dataset"""
         if len(reference_ids) != len(mutation_sets):
-            raise ValueError(
-                "Number of reference_ids must match number of mutation_sets"
-            )
+            raise ValueError("Number of reference_ids must match number of mutation_sets")
 
         if labels is not None and len(labels) != len(mutation_sets):
             raise ValueError("Number of labels must match number of mutation_sets")
@@ -289,9 +266,7 @@ class MutationDataset:
                         set_valid = False
                         continue
                 # Check if wild type matches reference for amino acid mutations
-                if isinstance(mutation, AminoAcidMutation) and isinstance(
-                    reference_sequence, ProteinSequence
-                ):
+                if isinstance(mutation, AminoAcidMutation) and isinstance(reference_sequence, ProteinSequence):
                     try:
                         ref_residue = reference_sequence.get_residue(mutation.position)
                         if ref_residue != mutation.wild_amino_acid:
@@ -319,16 +294,12 @@ class MutationDataset:
                         set_valid = False
 
                 # Check codon mutations for nucleotide sequences
-                elif isinstance(mutation, CodonMutation) and isinstance(
-                    reference_sequence, (DNASequence, RNASequence)
-                ):
+                elif isinstance(mutation, CodonMutation) and isinstance(reference_sequence, (DNASequence, RNASequence)):
                     try:
                         # Assuming position is codon position, get the codon at this position
                         start_pos = mutation.nucleotide_start
                         if start_pos + 3 <= len(reference_sequence):
-                            ref_codon = str(
-                                reference_sequence[start_pos : start_pos + 3]
-                            ).upper()
+                            ref_codon = str(reference_sequence[start_pos : start_pos + 3]).upper()
                             if ref_codon != mutation.wild_codon:
                                 validation_results["position_mismatches"].append(
                                     {
@@ -377,12 +348,8 @@ class MutationDataset:
         if self._df is None:
             data = []
 
-            for i, mutation_set in tqdm(
-                enumerate(self.mutation_sets), desc="Converting dataset to DataFrame: "
-            ):
-                reference_id = self.mutation_set_references[
-                    i
-                ]  # This should always exist
+            for i, mutation_set in tqdm(enumerate(self.mutation_sets), desc="Converting dataset to DataFrame: "):
+                reference_id = self.mutation_set_references[i]  # This should always exist
                 reference_sequence = self.reference_sequences[reference_id]
                 label = self.mutation_set_labels.get(i)
 
@@ -434,13 +401,9 @@ class MutationDataset:
                         # Add reference residue if available
                         if isinstance(reference_sequence, ProteinSequence):
                             try:
-                                ref_residue = reference_sequence.get_residue(
-                                    mutation.position
-                                )
+                                ref_residue = reference_sequence.get_residue(mutation.position)
                                 mutation_data["reference_residue"] = ref_residue
-                                mutation_data["wild_type_matches_reference"] = (
-                                    ref_residue == mutation.wild_amino_acid
-                                )
+                                mutation_data["wild_type_matches_reference"] = ref_residue == mutation.wild_amino_acid
                             except IndexError:
                                 mutation_data["reference_residue"] = None
                                 mutation_data["wild_type_matches_reference"] = False
@@ -461,18 +424,12 @@ class MutationDataset:
                                 # Get the codon at this position (assuming position is codon position)
                                 start_pos = mutation.nucleotide_start
                                 if start_pos + 3 <= len(reference_sequence):
-                                    ref_codon = str(
-                                        reference_sequence[start_pos : start_pos + 3]
-                                    )
+                                    ref_codon = str(reference_sequence[start_pos : start_pos + 3])
                                     mutation_data["reference_codon"] = ref_codon
-                                    mutation_data["wild_codon_matches_reference"] = (
-                                        ref_codon.upper() == mutation.wild_codon
-                                    )
+                                    mutation_data["wild_codon_matches_reference"] = ref_codon.upper() == mutation.wild_codon
                                 else:
                                     mutation_data["reference_codon"] = None
-                                    mutation_data["wild_codon_matches_reference"] = (
-                                        False
-                                    )
+                                    mutation_data["wild_codon_matches_reference"] = False
                             except Exception:
                                 mutation_data["reference_codon"] = None
                                 mutation_data["wild_codon_matches_reference"] = False
@@ -496,73 +453,47 @@ class MutationDataset:
         filtered_references = []
         filtered_labels = []
 
-        for i, mutation_set in tqdm(
-            enumerate(self.mutation_sets), desc="Filtering by reference: "
-        ):
+        for i, mutation_set in tqdm(enumerate(self.mutation_sets), desc="Filtering by reference: "):
             if self.mutation_set_references[i] == reference_id:
                 filtered_sets.append(mutation_set)
                 filtered_references.append(reference_id)
                 filtered_labels.append(self.mutation_set_labels.get(i))
 
-        filtered_dataset = MutationDataset(
-            name=f"{self.name}_{reference_id}" if self.name else reference_id
-        )
-        filtered_dataset.add_reference_sequence(
-            reference_id, self.reference_sequences[reference_id]
-        )
-        filtered_dataset.add_mutation_sets(
-            filtered_sets, filtered_references, filtered_labels
-        )
+        filtered_dataset = MutationDataset(name=f"{self.name}_{reference_id}" if self.name else reference_id)
+        filtered_dataset.add_reference_sequence(reference_id, self.reference_sequences[reference_id])
+        filtered_dataset.add_mutation_sets(filtered_sets, filtered_references, filtered_labels)
 
         return filtered_dataset
 
-    def filter_by_mutation_type(
-        self, mutation_type: Type[BaseMutation]
-    ) -> "MutationDataset":
+    def filter_by_mutation_type(self, mutation_type: Type[BaseMutation]) -> "MutationDataset":
         """Filter dataset by mutation type"""
         filtered_sets = []
         filtered_references = []
         filtered_labels = []
 
-        for i, mutation_set in tqdm(
-            enumerate(self.mutation_sets), desc="Filtering by mutation type: "
-        ):
+        for i, mutation_set in tqdm(enumerate(self.mutation_sets), desc="Filtering by mutation type: "):
             # Filter mutations by type
-            filtered_mutations = [
-                m for m in mutation_set.mutations if isinstance(m, mutation_type)
-            ]
+            filtered_mutations = [m for m in mutation_set.mutations if isinstance(m, mutation_type)]
 
             if filtered_mutations:
                 # Create new mutation set with filtered mutations
                 if mutation_type == AminoAcidMutation:
                     new_set = AminoAcidMutationSet(
-                        mutations=filtered_mutations,  # type: ignore
-                        name=(
-                            f"{mutation_set.name}_filtered"
-                            if mutation_set.name
-                            else "filtered"
-                        ),
+                        mutations=filtered_mutations,
+                        name=(f"{mutation_set.name}_filtered" if mutation_set.name else "filtered"),
                         metadata=mutation_set.metadata.copy(),
                     )
                 elif mutation_type == CodonMutation:
                     new_set = CodonMutationSet(
-                        mutations=filtered_mutations,  # type: ignore
-                        name=(
-                            f"{mutation_set.name}_filtered"
-                            if mutation_set.name
-                            else "filtered"
-                        ),
+                        mutations=filtered_mutations,
+                        name=(f"{mutation_set.name}_filtered" if mutation_set.name else "filtered"),
                         metadata=mutation_set.metadata.copy(),
                     )
                 else:
                     new_set = MutationSet(
                         mutations=filtered_mutations,
                         mutation_type=mutation_type,
-                        name=(
-                            f"{mutation_set.name}_filtered"
-                            if mutation_set.name
-                            else "filtered"
-                        ),
+                        name=(f"{mutation_set.name}_filtered" if mutation_set.name else "filtered"),
                         metadata=mutation_set.metadata.copy(),
                     )
 
@@ -571,20 +502,14 @@ class MutationDataset:
                 filtered_references.append(ref_id)
                 filtered_labels.append(self.mutation_set_labels.get(i))
 
-        filtered_dataset = MutationDataset(
-            name=f"{self.name}_filtered" if self.name else "filtered"
-        )
+        filtered_dataset = MutationDataset(name=f"{self.name}_filtered" if self.name else "filtered")
         # Copy all reference sequences that are still needed
         needed_refs = set(filtered_references)
         for ref_id in needed_refs:
             if ref_id is not None:
-                filtered_dataset.add_reference_sequence(
-                    ref_id, self.reference_sequences[ref_id]
-                )
+                filtered_dataset.add_reference_sequence(ref_id, self.reference_sequences[ref_id])
 
-        filtered_dataset.add_mutation_sets(
-            filtered_sets, filtered_references, filtered_labels
-        )
+        filtered_dataset.add_mutation_sets(filtered_sets, filtered_references, filtered_labels)
         return filtered_dataset
 
     def filter_by_effect_type(self, effect_type: str) -> "MutationDataset":
@@ -593,9 +518,7 @@ class MutationDataset:
         filtered_references = []
         filtered_labels = []
 
-        for i, mutation_set in tqdm(
-            enumerate(self.mutation_sets), desc="Filtering by effect type: "
-        ):
+        for i, mutation_set in tqdm(enumerate(self.mutation_sets), desc="Filtering by effect type: "):
             # Filter amino acid mutations by effect type
             filtered_mutations = []
             for mutation in mutation_set.mutations:
@@ -606,11 +529,7 @@ class MutationDataset:
             if filtered_mutations:
                 new_set = AminoAcidMutationSet(
                     mutations=filtered_mutations,
-                    name=(
-                        f"{mutation_set.name}_{effect_type}"
-                        if mutation_set.name
-                        else effect_type
-                    ),
+                    name=(f"{mutation_set.name}_{effect_type}" if mutation_set.name else effect_type),
                     metadata=mutation_set.metadata.copy(),
                 )
                 filtered_sets.append(new_set)
@@ -618,29 +537,21 @@ class MutationDataset:
                 filtered_references.append(ref_id)
                 filtered_labels.append(self.mutation_set_labels.get(i))
 
-        filtered_dataset = MutationDataset(
-            name=f"{self.name}_{effect_type}" if self.name else effect_type
-        )
+        filtered_dataset = MutationDataset(name=f"{self.name}_{effect_type}" if self.name else effect_type)
         # Copy all reference sequences that are still needed
         needed_refs = set(filtered_references)
         for ref_id in needed_refs:
             if ref_id is not None:
-                filtered_dataset.add_reference_sequence(
-                    ref_id, self.reference_sequences[ref_id]
-                )
+                filtered_dataset.add_reference_sequence(ref_id, self.reference_sequences[ref_id])
 
-        filtered_dataset.add_mutation_sets(
-            filtered_sets, filtered_references, filtered_labels
-        )
+        filtered_dataset.add_mutation_sets(filtered_sets, filtered_references, filtered_labels)
         return filtered_dataset
 
     def get_statistics(self) -> Dict[str, Any]:
         """Get basic statistics about the dataset"""
         total_sets = len(self.mutation_sets)
         total_mutations = sum(len(ms) for ms in self.mutation_sets)
-        single_mutation_sets = sum(
-            1 for ms in self.mutation_sets if ms.is_single_mutation()
-        )
+        single_mutation_sets = sum(1 for ms in self.mutation_sets if ms.is_single_mutation())
         multiple_mutation_sets = total_sets - single_mutation_sets
 
         mutation_types = {}
@@ -649,9 +560,7 @@ class MutationDataset:
         reference_stats = {}
 
         # Statistics by reference sequence
-        for ref_id, sequence in tqdm(
-            self.reference_sequences.items(), desc="Statistics - ref seq: "
-        ):
+        for ref_id, sequence in tqdm(self.reference_sequences.items(), desc="Statistics - ref seq: "):
             reference_stats[ref_id] = {
                 "sequence_name": sequence.name,
                 "sequence_length": len(sequence),
@@ -660,9 +569,7 @@ class MutationDataset:
                 "mutations": 0,
             }
 
-        for i, mutation_set in tqdm(
-            enumerate(self.mutation_sets), desc="Statistics - mutation sets: "
-        ):
+        for i, mutation_set in tqdm(enumerate(self.mutation_sets), desc="Statistics - mutation sets: "):
             ref_id = self.mutation_set_references[i]  # Always exists now
             if ref_id in reference_stats:
                 reference_stats[ref_id]["mutation_sets"] += 1
@@ -690,24 +597,18 @@ class MutationDataset:
             "mutation_types": mutation_types,
             "mutation_categories": mutation_categories,
             "effect_types": effect_types,
-            "average_mutations_per_set": (
-                total_mutations / total_sets if total_sets > 0 else 0
-            ),
+            "average_mutations_per_set": (total_mutations / total_sets if total_sets > 0 else 0),
             "reference_sequences": reference_stats,
             "num_reference_sequences": len(self.reference_sequences),
         }
 
         return stats
 
-    def get_position_coverage(
-        self, reference_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+    def get_position_coverage(self, reference_id: Optional[str] = None) -> Dict[str, Any]:
         """Get statistics about position coverage across reference sequences"""
         if reference_id is not None:
             if reference_id not in self.reference_sequences:
-                raise ValueError(
-                    f"Reference sequence with ID '{reference_id}' not found"
-                )
+                raise ValueError(f"Reference sequence with ID '{reference_id}' not found")
             return self._get_single_sequence_coverage(reference_id)
         else:
             # Get coverage for all sequences
@@ -720,54 +621,30 @@ class MutationDataset:
         """Get position coverage for a single reference sequence"""
         sequence = self.reference_sequences[reference_id]
 
-        mutations = [
-            mutation
-            for i, mutation_set in enumerate(self.mutation_sets)
-            if self.mutation_set_references[i] == reference_id
-            for mutation in mutation_set.mutations
-        ]
+        mutations = [mutation for i, mutation_set in enumerate(self.mutation_sets) if self.mutation_set_references[i] == reference_id for mutation in mutation_set.mutations]
 
         all_positions = {mutation.position for mutation in mutations}
 
-        if mutations and all(
-            isinstance(mutation, AminoAcidMutation) for mutation in mutations
-        ):
+        if mutations and all(isinstance(mutation, AminoAcidMutation) for mutation in mutations):
             if not isinstance(sequence, ProteinSequence):
-                raise ValueError(
-                    f"Amino-acid mutations require a ProteinSequence, "
-                    f"but reference {reference_id!r} is "
-                    f"{type(sequence).__name__}"
-                )
+                raise ValueError(f"Amino-acid mutations require a ProteinSequence, " f"but reference {reference_id!r} is " f"{type(sequence).__name__}")
 
             position_unit = "residue"
             position_space_length = len(sequence)
 
-        elif mutations and all(
-            isinstance(mutation, CodonMutation) for mutation in mutations
-        ):
+        elif mutations and all(isinstance(mutation, CodonMutation) for mutation in mutations):
             if not isinstance(sequence, (DNASequence, RNASequence)):
-                raise ValueError(
-                    f"Codon mutations require a DNASequence or RNASequence, "
-                    f"but reference {reference_id!r} is "
-                    f"{type(sequence).__name__}"
-                )
+                raise ValueError(f"Codon mutations require a DNASequence or RNASequence, " f"but reference {reference_id!r} is " f"{type(sequence).__name__}")
 
             if len(sequence) % 3 != 0:
-                raise ValueError(
-                    f"Reference sequence {reference_id!r} has length "
-                    f"{len(sequence)}, which is not divisible by 3"
-                )
+                raise ValueError(f"Reference sequence {reference_id!r} has length " f"{len(sequence)}, which is not divisible by 3")
 
             position_unit = "codon"
             position_space_length = len(sequence) // 3
 
         elif mutations:
             mutation_types = {type(mutation).__name__ for mutation in mutations}
-            raise ValueError(
-                f"Cannot calculate position coverage for reference "
-                f"{reference_id!r} with mixed mutation types: "
-                f"{sorted(mutation_types)}"
-            )
+            raise ValueError(f"Cannot calculate position coverage for reference " f"{reference_id!r} with mixed mutation types: " f"{sorted(mutation_types)}")
 
         else:
             # No mutation sets are associated with this reference.
@@ -776,39 +653,22 @@ class MutationDataset:
                 position_space_length = len(sequence)
             elif isinstance(sequence, (DNASequence, RNASequence)):
                 if len(sequence) % 3 != 0:
-                    raise ValueError(
-                        f"Reference sequence {reference_id!r} has length "
-                        f"{len(sequence)}, which is not divisible by 3"
-                    )
+                    raise ValueError(f"Reference sequence {reference_id!r} has length " f"{len(sequence)}, which is not divisible by 3")
 
                 position_unit = "codon"
                 position_space_length = len(sequence) // 3
             else:
-                raise TypeError(
-                    f"Unsupported reference sequence type: "
-                    f"{type(sequence).__name__}"
-                )
+                raise TypeError(f"Unsupported reference sequence type: " f"{type(sequence).__name__}")
 
-        invalid_positions = sorted(
-            position
-            for position in all_positions
-            if position < 0 or position >= position_space_length
-        )
+        invalid_positions = sorted(position for position in all_positions if position < 0 or position >= position_space_length)
 
         if invalid_positions:
-            raise ValueError(
-                f"Reference {reference_id!r} contains out-of-range "
-                f"{position_unit} positions: {invalid_positions[:10]}"
-            )
+            raise ValueError(f"Reference {reference_id!r} contains out-of-range " f"{position_unit} positions: {invalid_positions[:10]}")
 
         covered_positions = len(all_positions)
         uncovered_positions = position_space_length - covered_positions
 
-        coverage_percentage = (
-            covered_positions / position_space_length * 100
-            if position_space_length > 0
-            else 0.0
-        )
+        coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
         return {
             "reference_id": reference_id,
@@ -823,9 +683,7 @@ class MutationDataset:
             "position_list": sorted(all_positions),
         }
 
-    def convert_codon_to_amino_acid_sets(
-        self, convert_labels: bool = False
-    ) -> "MutationDataset":
+    def convert_codon_to_amino_acid_sets(self, convert_labels: bool = False) -> "MutationDataset":
         """
         Convert all codon mutation sets to amino acid mutation sets
 
@@ -849,9 +707,7 @@ class MutationDataset:
             converted_references.append(ref_id)
             converted_labels.append(self.get_mutation_set_label(i))
 
-        converted_dataset = MutationDataset(
-            name=f"{self.name}_aa_converted" if self.name else "aa_converted"
-        )
+        converted_dataset = MutationDataset(name=f"{self.name}_aa_converted" if self.name else "aa_converted")
 
         for ref_id, sequence in self.reference_sequences.items():
             if isinstance(sequence, (DNASequence, RNASequence)):
@@ -869,9 +725,7 @@ class MutationDataset:
         if not convert_labels:
             converted_dataset.add_mutation_sets(converted_sets, converted_references)
         else:
-            converted_dataset.add_mutation_sets(
-                converted_sets, converted_references, converted_labels
-            )
+            converted_dataset.add_mutation_sets(converted_sets, converted_references, converted_labels)
         return converted_dataset
 
     @staticmethod
@@ -935,9 +789,7 @@ class MutationDataset:
             data["mutation_sets"].append((i, mutation_set))
             data["total_mutations"] += len(mutation_set)
             data["covered_positions"].update(mutation_set.get_positions())
-            data["mutation_types"].update(
-                type(mutation) for mutation in mutation_set.mutations
-            )
+            data["mutation_types"].update(type(mutation) for mutation in mutation_set.mutations)
 
             label = self.mutation_set_labels.get(i)
 
@@ -962,11 +814,7 @@ class MutationDataset:
             # Determine the coordinate system and number of valid positions.
             if mutation_types == {AminoAcidMutation}:
                 if not isinstance(ref_sequence, ProteinSequence):
-                    raise ValueError(
-                        f"Amino-acid mutations for reference {ref_id!r} "
-                        f"require a ProteinSequence, but found "
-                        f"{type(ref_sequence).__name__}"
-                    )
+                    raise ValueError(f"Amino-acid mutations for reference {ref_id!r} " f"require a ProteinSequence, but found " f"{type(ref_sequence).__name__}")
 
                 position_unit = "residue"
                 position_space_length = len(ref_sequence)
@@ -976,56 +824,32 @@ class MutationDataset:
                     ref_sequence,
                     (DNASequence, RNASequence),
                 ):
-                    raise ValueError(
-                        f"Codon mutations for reference {ref_id!r} "
-                        f"require a DNASequence or RNASequence, but found "
-                        f"{type(ref_sequence).__name__}"
-                    )
+                    raise ValueError(f"Codon mutations for reference {ref_id!r} " f"require a DNASequence or RNASequence, but found " f"{type(ref_sequence).__name__}")
 
                 if len(ref_sequence) % 3 != 0:
-                    raise ValueError(
-                        f"Reference sequence {ref_id!r} has length "
-                        f"{len(ref_sequence)}, which is not divisible by 3"
-                    )
+                    raise ValueError(f"Reference sequence {ref_id!r} has length " f"{len(ref_sequence)}, which is not divisible by 3")
 
                 position_unit = "codon"
                 position_space_length = len(ref_sequence) // 3
 
             else:
-                mutation_type_names = sorted(
-                    mutation_type.__name__ for mutation_type in mutation_types
-                )
+                mutation_type_names = sorted(mutation_type.__name__ for mutation_type in mutation_types)
 
-                raise ValueError(
-                    f"Reference {ref_id!r} contains mixed or unsupported "
-                    f"mutation types: {mutation_type_names}"
-                )
+                raise ValueError(f"Reference {ref_id!r} contains mixed or unsupported " f"mutation types: {mutation_type_names}")
 
             # Validate that all positions are within the corresponding
             # residue or codon coordinate space.
             all_positions = data["covered_positions"]
 
-            invalid_positions = sorted(
-                position
-                for position in all_positions
-                if position < 0 or position >= position_space_length
-            )
+            invalid_positions = sorted(position for position in all_positions if position < 0 or position >= position_space_length)
 
             if invalid_positions:
-                raise ValueError(
-                    f"Reference {ref_id!r} contains out-of-range "
-                    f"{position_unit} positions: "
-                    f"{invalid_positions[:10]}"
-                )
+                raise ValueError(f"Reference {ref_id!r} contains out-of-range " f"{position_unit} positions: " f"{invalid_positions[:10]}")
 
             covered_positions = len(all_positions)
             uncovered_positions = position_space_length - covered_positions
 
-            coverage_percentage = (
-                covered_positions / position_space_length * 100
-                if position_space_length > 0
-                else 0.0
-            )
+            coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             successful_rows = []
             failed_rows = []
@@ -1060,11 +884,7 @@ class MutationDataset:
                         }
                     )
 
-                    tqdm.write(
-                        f"Warning: Could not apply mutation "
-                        f"{mutation_name!r} for reference {ref_id!r}: "
-                        f"{error_message}"
-                    )
+                    tqdm.write(f"Warning: Could not apply mutation " f"{mutation_name!r} for reference {ref_id!r}: " f"{error_message}")
 
             # Save only successfully generated sequences to data.csv.
             data_columns = [
@@ -1146,9 +966,7 @@ class MutationDataset:
     def save(
         self,
         filepath: str,
-        save_type: Optional[
-            Literal["mutcleaner", "pickle", "dataframe"]
-        ] = "mutcleaner",
+        save_type: Optional[Literal["mutcleaner", "pickle", "dataframe"]] = "mutcleaner",
     ):
         """
         Save the dataset to files.
@@ -1183,16 +1001,12 @@ class MutationDataset:
             df.to_csv(csv_path, index=False)
 
             # Save reference sequences as pickle
-            refs_path = base_path.with_suffix("").with_name(
-                f"{base_path.name}_refs.pkl"
-            )
+            refs_path = base_path.with_suffix("").with_name(f"{base_path.name}_refs.pkl")
             with open(refs_path, "wb") as f:
                 pickle.dump(self.reference_sequences, f)
 
             # Save dataset metadata as JSON
-            meta_path = base_path.with_suffix("").with_name(
-                f"{base_path.name}_meta.json"
-            )
+            meta_path = base_path.with_suffix("").with_name(f"{base_path.name}_meta.json")
             dataset_meta = {
                 "name": self.name,
                 "metadata": self.metadata,
@@ -1218,15 +1032,11 @@ class MutationDataset:
         elif save_type == "mutcleaner":
             # Save as Mutcleaner format
             if base_path.suffix != "":
-                raise ValueError(
-                    f"Invalid Mutcleaner save format. Expected folder but got {base_path.suffix}."
-                )
+                raise ValueError(f"Invalid Mutcleaner save format. Expected folder but got {base_path.suffix}.")
             self.save_by_reference(base_path)
 
         else:
-            raise ValueError(
-                f"Unsupported save_type: {save_type}. Use 'mutcleaner', 'dataframe' or 'pickle'"
-            )
+            raise ValueError(f"Unsupported save_type: {save_type}. Use 'mutcleaner', 'dataframe' or 'pickle'")
 
     # ====== load ======
     @classmethod
@@ -1299,9 +1109,7 @@ class MutationDataset:
                     missing_files.append("data.csv")
                 if not fasta_path.exists():
                     missing_files.append("wt.fasta")
-                skipped_dirs.append(
-                    f"{ref_dir.name} (missing: {', '.join(missing_files)})"
-                )
+                skipped_dirs.append(f"{ref_dir.name} (missing: {', '.join(missing_files)})")
                 continue
 
             # Load metadata to get original reference_id and sequence_type
@@ -1313,20 +1121,14 @@ class MutationDataset:
                     with open(metadata_path, "r") as f:
                         metadata = json.load(f)
                     original_ref_id = metadata.get("reference_id", ref_dir.name)
-                    sequence_type_name = metadata.get(
-                        "sequence_type", "ProteinSequence"
-                    )
-                    sequence_type = SEQUENCE_TYPE_MAP.get(
-                        sequence_type_name, ProteinSequence
-                    )
+                    sequence_type_name = metadata.get("sequence_type", "ProteinSequence")
+                    sequence_type = SEQUENCE_TYPE_MAP.get(sequence_type_name, ProteinSequence)
                 except Exception as e:
                     print(f"Warning: Could not load metadata for {ref_dir.name}: {e}")
 
             try:
                 # Load reference sequence from FASTA
-                sequences = load_sequences_from_fasta(
-                    fasta_path, sequence_type, header_func=lambda x: (x, "")
-                )
+                sequences = load_sequences_from_fasta(fasta_path, sequence_type, header_func=lambda x: (x, ""))
                 if not sequences:
                     skipped_dirs.append(f"{ref_dir.name} (empty FASTA)")
                     continue
@@ -1345,24 +1147,17 @@ class MutationDataset:
                     alphabet = RNAAlphabet()
 
                 else:
-                    raise TypeError(
-                        f"Unsupported reference sequence type: "
-                        f"{type(ref_sequence).__name__}"
-                    )
+                    raise TypeError(f"Unsupported reference sequence type: " f"{type(ref_sequence).__name__}")
 
                 dataset.add_reference_sequence(original_ref_id, ref_sequence)
 
                 # Load mutation data
                 df_ref = pd.read_csv(data_path)
                 required_cols = ["mutation_name", "mutated_sequence", "label"]
-                missing_cols = [
-                    col for col in required_cols if col not in df_ref.columns
-                ]
+                missing_cols = [col for col in required_cols if col not in df_ref.columns]
 
                 if missing_cols:
-                    skipped_dirs.append(
-                        f"{ref_dir.name} (missing columns: {', '.join(missing_cols)})"
-                    )
+                    skipped_dirs.append(f"{ref_dir.name} (missing columns: {', '.join(missing_cols)})")
                     continue
 
                 # Batch process mutations for this reference
@@ -1412,9 +1207,7 @@ class MutationDataset:
         if len(dataset) == 0:
             raise ValueError("No valid mutation sets were loaded")
 
-        tqdm.write(
-            f"Successfully loaded dataset with {len(dataset)} mutation sets from {len(dataset.reference_sequences)} references"
-        )
+        tqdm.write(f"Successfully loaded dataset with {len(dataset)} mutation sets from {len(dataset.reference_sequences)} references")
         return dataset
 
     @classmethod
@@ -1464,12 +1257,8 @@ class MutationDataset:
                 base_path = base_path.with_suffix("")
 
             csv_path = base_path.with_suffix(".csv")
-            refs_path = base_path.with_suffix("").with_name(
-                f"{base_path.name}_refs.pkl"
-            )
-            meta_path = base_path.with_suffix("").with_name(
-                f"{base_path.name}_meta.json"
-            )
+            refs_path = base_path.with_suffix("").with_name(f"{base_path.name}_refs.pkl")
+            meta_path = base_path.with_suffix("").with_name(f"{base_path.name}_meta.json")
 
             # Check if files exist
             if not csv_path.exists():
@@ -1520,9 +1309,7 @@ class MutationDataset:
             return cls.load_by_reference(base_path)
 
         else:
-            raise ValueError(
-                f"Unsupported load_type: {load_type}. Use 'dataframe', 'pickle' or 'mutcleaner'"
-            )
+            raise ValueError(f"Unsupported load_type: {load_type}. Use 'dataframe', 'pickle' or 'mutcleaner'")
 
     @classmethod
     def from_dataframe(
@@ -1648,18 +1435,12 @@ class MutationDataset:
         dataset = cls(name=name)
 
         # Add reference sequences
-        for ref_id, sequence in tqdm(
-            reference_sequences.items(), desc="Adding reference sequences"
-        ):
-            if ref_id in df_ref_ids:  # Only add sequences that are actually used
+        for ref_id, sequence in tqdm(reference_sequences.items(), desc="Adding reference sequences"):
+            if ref_id in df_ref_ids:
                 dataset.add_reference_sequence(ref_id, sequence)
 
         # Rocognize metadata columns
-        set_metadata_cols = [
-            col
-            for col in df.columns
-            if col.startswith("set_") and col != "set_metadata"
-        ]
+        set_metadata_cols = [col for col in df.columns if col.startswith("set_") and col != "set_metadata"]
         mutation_metadata_cols = [
             col
             for col in df.columns
@@ -1697,20 +1478,14 @@ class MutationDataset:
             label = set_info.get("label")
 
             # Extract set metadata
-            set_metadata = {
-                col[4:]: value
-                for col in set_metadata_cols
-                if pd.notna(value := set_info[col])
-            }
+            set_metadata = {col[4:]: value for col in set_metadata_cols if pd.notna(value := set_info[col])}
 
             # Create mutations from group
             mutations = []
             columns = list(group.columns)
             for values in group.values:
                 row_dict = dict(zip(columns, values))
-                mutation = cls._create_mutation_from_dict(
-                    row_dict, mutation_metadata_cols, specific_mutation_type
-                )
+                mutation = cls._create_mutation_from_dict(row_dict, mutation_metadata_cols, specific_mutation_type)
                 mutations.append(mutation)
 
             # Create appropriate mutation set type
@@ -1718,13 +1493,9 @@ class MutationDataset:
                 mutation_type = type(mutations[0])
 
                 if mutation_type == AminoAcidMutation:
-                    mutation_set = AminoAcidMutationSet(
-                        mutations=mutations, name=set_name, metadata=set_metadata  # type: ignore
-                    )
+                    mutation_set = AminoAcidMutationSet(mutations=mutations, name=set_name, metadata=set_metadata)
                 elif mutation_type == CodonMutation:
-                    mutation_set = CodonMutationSet(
-                        mutations=mutations, name=set_name, metadata=set_metadata  # type: ignore
-                    )
+                    mutation_set = CodonMutationSet(mutations=mutations, name=set_name, metadata=set_metadata)
                 else:
                     mutation_set = MutationSet(
                         mutations=mutations,
@@ -1764,12 +1535,8 @@ class MutationDataset:
         mutation_string_index = column_index["mutation_string"]
         position_index = column_index["position"]
 
-        set_metadata_indices = [
-            (column[4:], column_index[column]) for column in set_metadata_cols
-        ]
-        mutation_metadata_indices = [
-            (column[9:], column_index[column]) for column in mutation_metadata_cols
-        ]
+        set_metadata_indices = [(column[4:], column_index[column]) for column in set_metadata_cols]
+        mutation_metadata_indices = [(column[9:], column_index[column]) for column in mutation_metadata_cols]
 
         mutation_sets = []
         reference_ids = []
@@ -1781,16 +1548,8 @@ class MutationDataset:
             reference_id = values[reference_index]
             label = values[label_index] if label_index is not None else None
 
-            set_metadata = {
-                key: value
-                for key, index in set_metadata_indices
-                if pd.notna(value := values[index])
-            }
-            mutation_metadata = {
-                key: value
-                for key, index in mutation_metadata_indices
-                if pd.notna(value := values[index])
-            }
+            set_metadata = {key: value for key, index in set_metadata_indices if pd.notna(value := values[index])}
+            mutation_metadata = {key: value for key, index in mutation_metadata_indices if pd.notna(value := values[index])}
 
             mutation_type = values[mutation_type_index]
             position = int(values[position_index])
@@ -1823,10 +1582,7 @@ class MutationDataset:
 
             else:
                 if specific_mutation_type is None:
-                    raise ValueError(
-                        f"Unsupported mutation type: {mutation_type}, "
-                        "you must provide a specific mutation type"
-                    )
+                    raise ValueError(f"Unsupported mutation type: {mutation_type}, " "you must provide a specific mutation type")
 
                 mutation_string = values[mutation_string_index]
                 try:
@@ -1836,9 +1592,7 @@ class MutationDataset:
                         is_zero_based=True,
                     )
                 except Exception as error:
-                    raise ValueError(
-                        f"Cannot create mutation from row: {error}"
-                    ) from error
+                    raise ValueError(f"Cannot create mutation from row: {error}") from error
 
                 concrete_type = type(mutation)
                 if concrete_type == AminoAcidMutation:
@@ -1922,11 +1676,7 @@ class MutationDataset:
         position = int(row_dict["position"])
 
         # Filter metadata
-        mutation_metadata = {
-            key[9:]: row_dict[key]  # Remove "mutation_" prefix
-            for key in metadata_cols
-            if not pd.isna(row_dict[key])
-        }
+        mutation_metadata = {key[9:]: row_dict[key] for key in metadata_cols if not pd.isna(row_dict[key])}  # Remove "mutation_" prefix
 
         if mutation_type == "amino_acid":
             return AminoAcidMutation(
@@ -1948,10 +1698,7 @@ class MutationDataset:
             # FIXME: need to handle other mutation types
             # Try to parse from mutation string as fallback
             if specific_mutation_type is None:
-                raise ValueError(
-                    f"Unsupported mutation type: {mutation_type}, "
-                    f"you must provide a specific mutation type"
-                )
+                raise ValueError(f"Unsupported mutation type: {mutation_type}, " f"you must provide a specific mutation type")
             mutation_string = row_dict["mutation_string"]
             try:
                 return MutationSet._create_mutation(

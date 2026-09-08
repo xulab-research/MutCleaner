@@ -122,9 +122,7 @@ class DdgDtmCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"name", "wt_seq", "mut_seq"}
@@ -183,14 +181,10 @@ def create_ddg_dtm_cleaner(
         # Load from file
         final_config = DdgDtmCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be DdgDtmCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be DdgDtmCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"ddG-dTm dataset will cleaning with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"ddG-dTm dataset will cleaning with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     def _detect_label_columns(data: pd.DataFrame) -> str:
@@ -215,9 +209,7 @@ def create_ddg_dtm_cleaner(
         elif isinstance(dataset_or_path, pd.DataFrame):
             label_col = _detect_label_columns(dataset_or_path)
         else:
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
         final_config.column_mapping.update({label_col: "label"})
         if label_col == "ddG":
             # Add temp configuration for ddG
@@ -248,14 +240,10 @@ def create_ddg_dtm_cleaner(
             .delayed_then(
                 infer_mutations_from_sequences,
                 wt_sequence_column=final_config.column_mapping.get("wt_seq", "wt_seq"),
-                mut_sequence_column=final_config.column_mapping.get(
-                    "mut_seq", "mut_seq"
-                ),
+                mut_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
                 num_workers=final_config.infer_mut_workers,
             )
-            .delayed_then(
-                convert_data_types, type_conversions=final_config.type_conversions
-            )
+            .delayed_then(convert_data_types, type_conversions=final_config.type_conversions)
             .delayed_then(
                 aggregate_labels_by_name,
                 name_columns=[
@@ -272,9 +260,7 @@ def create_ddg_dtm_cleaner(
                 name_column=final_config.column_mapping.get("name", "name"),
                 mutation_column="inferred_mutations",
                 sequence_column=final_config.column_mapping.get("wt_seq", "wt_seq"),
-                mutated_sequence_column=final_config.column_mapping.get(
-                    "mut_seq", "mut_seq"
-                ),
+                mutated_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -327,17 +313,11 @@ def clean_ddg_dtm_dataset(
 
         # Extract results
         ddg_dtm_dataset_df, ddg_dtm_ref_seq = pipeline.data
-        ddg_dtm_dataset = MutationDataset.from_dataframe(
-            ddg_dtm_dataset_df, ddg_dtm_ref_seq
-        )
+        ddg_dtm_dataset = MutationDataset.from_dataframe(ddg_dtm_dataset_df, ddg_dtm_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned ddG-dTm dataset: {len(ddg_dtm_dataset_df)} mutations from {len(ddg_dtm_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned ddG-dTm dataset: {len(ddg_dtm_dataset_df)} mutations from {len(ddg_dtm_ref_seq)} proteins")
 
         return pipeline, ddg_dtm_dataset
     except Exception as e:
         logger.error(f"Error in running ddG-dTm dataset cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in running ddG-dTm dataset cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in running ddG-dTm dataset cleaning pipeline: {str(e)}")

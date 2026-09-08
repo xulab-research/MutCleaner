@@ -38,16 +38,8 @@ def expand_mutations(
         Long-format DataFrame with two columns named according to
         ``mutation_column`` and ``label_column``.
     """
-    single1 = (
-        dataset["WT_AA1"].astype(str)
-        + dataset["Pos1"].astype(str)
-        + dataset["Mut1"].astype(str)
-    )
-    single2 = (
-        dataset["WT_AA2"].astype(str)
-        + dataset["Pos2"].astype(str)
-        + dataset["Mut2"].astype(str)
-    )
+    single1 = dataset["WT_AA1"].astype(str) + dataset["Pos1"].astype(str) + dataset["Mut1"].astype(str)
+    single2 = dataset["WT_AA2"].astype(str) + dataset["Pos2"].astype(str) + dataset["Mut2"].astype(str)
     double = single1 + sep + single2
 
     part1 = pd.DataFrame({mutation_column: single1, label_column: dataset["fitness1"]})
@@ -94,9 +86,5 @@ def map_ambler_positions(
         The input DataFrame with ``mutation_column`` updated in place to use
         the remapped positions.
     """
-    dataset[mutation_column] = (
-        dataset[mutation_column]
-        .str.split(sep)
-        .apply(lambda muts: sep.join(mapping.get(m[:-1], m[:-1]) + m[-1] for m in muts))
-    )
+    dataset[mutation_column] = dataset[mutation_column].str.split(sep).apply(lambda muts: sep.join(mapping.get(m[:-1], m[:-1]) + m[-1] for m in muts))
     return dataset

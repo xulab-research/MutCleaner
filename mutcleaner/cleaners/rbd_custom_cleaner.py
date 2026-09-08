@@ -72,9 +72,7 @@ def mark_wild_type_in_mut_info(
     """
 
     result = dataset.copy()
-    variant_class = (
-        result[variant_class_column].astype("string").str.strip().str.lower()
-    )
+    variant_class = result[variant_class_column].astype("string").str.strip().str.lower()
     wt_mask = variant_class.eq("wildtype").fillna(False)
     result.loc[wt_mask, mutation_column] = "WT"
     return result.reset_index(drop=True)
@@ -113,7 +111,5 @@ def add_reference_sequences_by_target(
     result = dataset.copy()
     result[sequence_column] = result[name_column].map(reference_sequences)
     if fallback_reference_sequence is not None:
-        result[sequence_column] = result[sequence_column].fillna(
-            str(fallback_reference_sequence).strip()
-        )
+        result[sequence_column] = result[sequence_column].fillna(str(fallback_reference_sequence).strip())
     return result

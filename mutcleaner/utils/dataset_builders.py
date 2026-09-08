@@ -77,9 +77,7 @@ def convert_format_1(
     reference_sequences = {}
     for _, row in wt_rows.iterrows():
         name = row[name_column]
-        sequence = row[
-            mutated_sequence_column
-        ]  # For WT rows, this is the wild-type sequence
+        sequence = row[mutated_sequence_column]
         reference_sequences[name] = sequence_class(sequence)
 
     # Filter out wild-type entries if requested
@@ -110,9 +108,7 @@ def convert_format_1(
                 alphabet=alphabet,
             )
         except ValueError as error:
-            raise ValueError(
-                f"Cannot parse mutation {mut_info!r} in row {idx}: {error}"
-            ) from error
+            raise ValueError(f"Cannot parse mutation {mut_info!r} in row {idx}: {error}") from error
         # Create one output row per individual mutation within the set
         mutation_set_id = f"{mutation_set_prefix}_{idx + 1}"
         mutation_set_name = f"{name}_{mut_info}"
@@ -155,9 +151,7 @@ def convert_format_2(
     for name, group in tqdm(input_df.groupby(name_column)):
         sequences = group[sequence_column].unique()
         if len(sequences) > 1:
-            raise ValueError(
-                f"Multiple different sequences found for protein '{name}': {sequences}"
-            )
+            raise ValueError(f"Multiple different sequences found for protein '{name}': {sequences}")
         reference_sequences[name] = sequence_class(sequences[0])
 
     # Process mutations (now supporting multi-mutations)
@@ -242,9 +236,7 @@ def _create_output_row_from_mutation(
         raise TypeError(f"Unsupported mutation type: {type(mutation).__name__}")
 
     if additional_metadata:
-        output_row.update(
-            {f"set_{key}": value for key, value in additional_metadata.items()}
-        )
+        output_row.update({f"set_{key}": value for key, value in additional_metadata.items()})
 
     return output_row
 

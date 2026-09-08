@@ -87,9 +87,7 @@ class CTXMCleanerConfig(BaseCleanerConfig):
     )
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"fitness": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"fitness": "float"})
 
     # Wildtype sequence obtained from article
     wt_sequence = "RMMFAAAACIPLLLGSAPLYAQTSAVQQKLAALEKSSGGRLGVALIDTADNTQVLYRGDERFPMCSTSKVMAAAAVLKQSETQKQLLNQPVEIKPADLVNYNPIAEKHVNGTMTLAELSAAALQYSDNTAMNKLIAQLGGPGGVTAFARAIGDETFRLDRTEPTLNTAIPGDPRDTTTPRAMAQTLRQLTLGHALGETQRAQLVTWLKGNTTGAASIRAGLPTSWTVGDKTGSGDYGTTNDIAVIWPQGRAPLVLVTYFTQPQQNAESRRDVLASAARIIAEGL"
@@ -149,9 +147,7 @@ class CTXMCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"mut_info", "fitness"}
@@ -202,14 +198,10 @@ def create_ctxm_cleaner(
         # Load from file
         final_config = CTXMCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be CTXMCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be CTXMCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"CTXM dataset will cleaning with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"CTXM dataset will cleaning with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -230,9 +222,7 @@ def create_ctxm_cleaner(
                 extract_and_rename_columns,
                 column_mapping=final_config.column_mapping,
             )
-            .delayed_then(
-                convert_data_types, type_conversions=final_config.type_conversions
-            )
+            .delayed_then(convert_data_types, type_conversions=final_config.type_conversions)
             .delayed_then(
                 add_columns,
                 columns_to_add={
@@ -322,9 +312,7 @@ def clean_ctxm_dataset(
         CTXM_dataset_df, CTXM_ref_seq = pipeline.data
         CTXM_dataset = MutationDataset.from_dataframe(CTXM_dataset_df, CTXM_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned CTXM dataset: {len(CTXM_dataset_df)} mutations from {len(CTXM_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned CTXM dataset: {len(CTXM_dataset_df)} mutations from {len(CTXM_ref_seq)} proteins")
 
         return pipeline, CTXM_dataset
     except Exception as e:

@@ -63,9 +63,7 @@ class BaseCleanerConfig(ABC):
             raise ValueError(f"num_workers must be at least 1, got {self.num_workers}")
 
     @classmethod
-    def from_dict(
-        cls: Type[CleanerConfigType], config_dict: Dict[str, Any]
-    ) -> CleanerConfigType:
+    def from_dict(cls: Type[CleanerConfigType], config_dict: Dict[str, Any]) -> CleanerConfigType:
         """Create configuration object from dictionary
 
         Parameters
@@ -81,9 +79,7 @@ class BaseCleanerConfig(ABC):
         return cls(**config_dict)
 
     @classmethod
-    def from_json(
-        cls: Type[CleanerConfigType], json_path: Union[str, Path]
-    ) -> CleanerConfigType:
+    def from_json(cls: Type[CleanerConfigType], json_path: Union[str, Path]) -> CleanerConfigType:
         """Load configuration from JSON file
 
         Parameters
@@ -127,12 +123,7 @@ class BaseCleanerConfig(ABC):
 
         if exclude_callables:
             # Remove any callable values that can't be serialized
-            data = {
-                k: v
-                for k, v in data.items()
-                if not callable(v)
-                and not (isinstance(v, dict) and any(callable(vv) for vv in v.values()))
-            }
+            data = {k: v for k, v in data.items() if not callable(v) and not (isinstance(v, dict) and any(callable(vv) for vv in v.values()))}
 
         return data
 
@@ -154,9 +145,7 @@ class BaseCleanerConfig(ABC):
         with open(json_path, "w") as f:
             json.dump(config_dict, f, indent=2, **json_kwargs)
 
-    def merge(
-        self: CleanerConfigType, partial_config: Dict[str, Any]
-    ) -> CleanerConfigType:
+    def merge(self: CleanerConfigType, partial_config: Dict[str, Any]) -> CleanerConfigType:
         """Merge partial configuration with current configuration
 
         Parameters
@@ -175,11 +164,7 @@ class BaseCleanerConfig(ABC):
         def deep_merge(base: dict, update: dict) -> dict:
             result = base.copy()
             for key, value in update.items():
-                if (
-                    key in result
-                    and isinstance(result[key], dict)
-                    and isinstance(value, dict)
-                ):
+                if key in result and isinstance(result[key], dict) and isinstance(value, dict):
                     result[key] = deep_merge(result[key], value)
                 else:
                     result[key] = value

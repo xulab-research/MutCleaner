@@ -49,9 +49,7 @@ class BaseSequence(ABC):
             alphabet = type(self).default_alphabet()
         if alphabet is None:
             # No default provided by the subclass → raise in the base class
-            raise TypeError(
-                f"{type(self).__name__} requires 'alphabet' (no default provided)"
-            )
+            raise TypeError(f"{type(self).__name__} requires 'alphabet' (no default provided)")
         self.alphabet = alphabet
         self.sequence = self.alphabet.validate_sequence(sequence)
         self.name = name
@@ -68,11 +66,7 @@ class BaseSequence(ABC):
             return type(self)(
                 self.sequence[key],
                 self.alphabet,
-                (
-                    f"{self.name}_{key.start}_{key.stop if key.stop is not None else len(self.sequence)}"
-                    if self.name
-                    else None
-                ),
+                (f"{self.name}_{key.start}_{key.stop if key.stop is not None else len(self.sequence)}" if self.name else None),
                 self.metadata.copy(),
             )
         elif isinstance(key, int):
@@ -90,9 +84,7 @@ class BaseSequence(ABC):
             return self.sequence == other
         if not isinstance(other, BaseSequence):
             return False
-        return self.sequence == other.sequence and type(self.alphabet) == type(
-            other.alphabet
-        )
+        return self.sequence == other.sequence and type(self.alphabet) == type(other.alphabet)
 
     @classmethod
     def default_alphabet(cls) -> Optional[BaseAlphabet]:
@@ -102,9 +94,7 @@ class BaseSequence(ABC):
         and callers must pass `alphabet` explicitly."""
         raise NotImplementedError("Subclasses must implement this method.")
 
-    def get_subsequence(
-        self: SequenceType, start: int, end: Optional[int] = None
-    ) -> SequenceType:
+    def get_subsequence(self: SequenceType, start: int, end: Optional[int] = None) -> SequenceType:
         """get subsequence (0-indexed, inclusive)"""
         if start < 0:
             raise IndexError("Start position must be greater than or equal to 0")
@@ -141,9 +131,7 @@ class BaseSequence(ABC):
         # Handle mutation sets (multiple mutations)
         if isinstance(mutation, (AminoAcidMutationSet, CodonMutationSet)):
             # Apply mutations in reverse order of position to avoid index shifting
-            mutations = sorted(
-                mutation.mutations, key=lambda m: m.position, reverse=True
-            )
+            mutations = sorted(mutation.mutations, key=lambda m: m.position, reverse=True)
             result_sequence = self
 
             for single_mutation in mutations:
@@ -161,11 +149,7 @@ class BaseSequence(ABC):
 
                 # For codon mutations, check 3 bases starting at position
                 if start_pos < 0 or end_pos > len(self.sequence):
-                    raise ValueError(
-                        f"Codon position {codon_position} is out of bounds "
-                        f"for a sequence of length {len(self.sequence)} "
-                        f"({len(self.sequence) // 3} complete codons)"
-                    )
+                    raise ValueError(f"Codon position {codon_position} is out of bounds " f"for a sequence of length {len(self.sequence)} " f"({len(self.sequence) // 3} complete codons)")
 
                 # Check mutation subtypes (DNA or RNA)
                 valid_combinations = {
@@ -175,63 +159,38 @@ class BaseSequence(ABC):
                 }
                 expected_alphabet = valid_combinations.get(mutation.seq_type)
 
-                if expected_alphabet is None or not isinstance(
-                    self.alphabet, expected_alphabet
-                ):
-                    raise TypeError(
-                        f"Unmatching mutation subtype: {mutation.seq_type} with {mutation.seq_type} sequence"
-                    )
+                if expected_alphabet is None or not isinstance(self.alphabet, expected_alphabet):
+                    raise TypeError(f"Unmatching mutation subtype: {mutation.seq_type} with {mutation.seq_type} sequence")
 
                 # Validate original codon matches expected
                 actual_codon = self.sequence[start_pos:end_pos]
                 if actual_codon != mutation.wild_codon:
-                    raise ValueError(
-                        f"Expected codon '{mutation.wild_codon}' at position {mutation.position}, "
-                        f"but found '{actual_codon}'"
-                    )
+                    raise ValueError(f"Expected codon '{mutation.wild_codon}' at position {mutation.position}, " f"but found '{actual_codon}'")
 
                 # Apply codon mutation (replace 3 bases)
-                new_sequence = (
-                    self.sequence[:start_pos]
-                    + mutation.mutant_codon
-                    + self.sequence[end_pos:]
-                )
+                new_sequence = self.sequence[:start_pos] + mutation.mutant_codon + self.sequence[end_pos:]
 
             elif isinstance(mutation, AminoAcidMutation):
                 # For amino acid mutations, check single position
                 if mutation.position < 0 or mutation.position >= len(self.sequence):
-                    raise ValueError(
-                        f"Amino acid mutation position {mutation.position} is out of bounds for sequence of length {len(self.sequence)}"
-                    )
+                    raise ValueError(f"Amino acid mutation position {mutation.position} is out of bounds for sequence of length {len(self.sequence)}")
 
                 # Validate original amino acid matches expected
                 actual_aa = self.sequence[mutation.position]
                 if actual_aa != mutation.wild_amino_acid:
-                    raise ValueError(
-                        f"Expected amino acid '{mutation.wild_amino_acid}' at position {mutation.position}, "
-                        f"but found '{actual_aa}'"
-                    )
+                    raise ValueError(f"Expected amino acid '{mutation.wild_amino_acid}' at position {mutation.position}, " f"but found '{actual_aa}'")
 
                 # Apply amino acid mutation (replace single position)
-                new_sequence = (
-                    self.sequence[: mutation.position]
-                    + mutation.mutant_amino_acid
-                    + self.sequence[mutation.position + 1 :]
-                )
+                new_sequence = self.sequence[: mutation.position] + mutation.mutant_amino_acid + self.sequence[mutation.position + 1 :]
 
             else:
                 # Handle other BaseMutation subclasses generically
                 if mutation.position < 0 or mutation.position >= len(self.sequence):
-                    raise ValueError(
-                        f"Mutation position {mutation.position} is out of bounds for sequence of length {len(self.sequence)}"
-                    )
+                    raise ValueError(f"Mutation position {mutation.position} is out of bounds for sequence of length {len(self.sequence)}")
 
                 # For generic mutations, we can't validate original or determine replacement length
                 # This is a fallback for custom mutation types
-                raise TypeError(
-                    f"Unsupported mutation subtype: {type(mutation).__name__}. "
-                    f"Only CodonMutation and AminoAcidMutation are supported."
-                )
+                raise TypeError(f"Unsupported mutation subtype: {type(mutation).__name__}. " f"Only CodonMutation and AminoAcidMutation are supported.")
 
             # Update metadata to track mutation
             new_metadata = self.metadata.copy()
@@ -273,16 +232,10 @@ class BaseSequence(ABC):
     def infer_mutation(self: SequenceType, other: SequenceType) -> MutationSet:
         """Infer a mutation that leads to a specific sequence"""
         if type(self) is not type(other):
-            raise TypeError(
-                "Sequences must be of the same type, "
-                f"got {type(self).__name__} and {type(other).__name__}"
-            )
+            raise TypeError("Sequences must be of the same type, " f"got {type(self).__name__} and {type(other).__name__}")
 
         if len(self.sequence) != len(other.sequence):
-            raise ValueError(
-                "Sequences must have the same length, "
-                f"got {len(self.sequence)} and {len(other.sequence)}"
-            )
+            raise ValueError("Sequences must have the same length, " f"got {len(self.sequence)} and {len(other.sequence)}")
 
         if isinstance(self, ProteinSequence):
             mutations = [
@@ -292,9 +245,7 @@ class BaseSequence(ABC):
                     mutant_type=mutant_amino_acid,
                     alphabet=self.alphabet,
                 )
-                for position, (wild_amino_acid, mutant_amino_acid) in enumerate(
-                    zip(self.sequence, other.sequence)
-                )
+                for position, (wild_amino_acid, mutant_amino_acid) in enumerate(zip(self.sequence, other.sequence))
                 if wild_amino_acid != mutant_amino_acid
             ]
 
@@ -305,10 +256,7 @@ class BaseSequence(ABC):
 
         if isinstance(self, (DNASequence, RNASequence)):
             if len(self.sequence) % 3 != 0:
-                raise ValueError(
-                    f"{type(self).__name__} mutation inference requires sequence "
-                    f"lengths divisible by 3, got {len(self.sequence)}"
-                )
+                raise ValueError(f"{type(self).__name__} mutation inference requires sequence " f"lengths divisible by 3, got {len(self.sequence)}")
 
             mutations = []
 
@@ -334,9 +282,7 @@ class BaseSequence(ABC):
 
             return CodonMutationSet(mutations)
 
-        raise TypeError(
-            f"Mutation inference is not supported for " f"{type(self).__name__}"
-        )
+        raise TypeError(f"Mutation inference is not supported for " f"{type(self).__name__}")
 
 
 class ProteinSequence(BaseSequence):
@@ -358,9 +304,7 @@ class ProteinSequence(BaseSequence):
     def get_residue(self, position: int) -> str:
         """Get amino acid at specific position (0-indexed)"""
         if position < 0 or position >= len(self.sequence):
-            raise IndexError(
-                f"Position {position} out of range (0-{len(self.sequence)})"
-            )
+            raise IndexError(f"Position {position} out of range (0-{len(self.sequence)})")
         return self.sequence[position]
 
     def find_motif(self, motif: str) -> List[int]:
@@ -396,9 +340,7 @@ class RNASequence(BaseSequence):
     def reverse_complement(self) -> "RNASequence":
         """Get reverse complement of RNA sequence"""
         try:
-            rev_comp = "".join(
-                RNA_BASE_COMPLEMENTS[base] for base in self.sequence[::-1]
-            )
+            rev_comp = "".join(RNA_BASE_COMPLEMENTS[base] for base in self.sequence[::-1])
         except KeyError as e:
             raise ValueError(f"Invalid RNA base found: {e}")
         return RNASequence(
@@ -484,9 +426,7 @@ class DNASequence(BaseSequence):
     def reverse_complement(self) -> "DNASequence":
         """Get reverse complement of DNA sequence"""
         try:
-            rev_comp = "".join(
-                DNA_BASE_COMPLEMENTS[base] for base in self.sequence[::-1]
-            )
+            rev_comp = "".join(DNA_BASE_COMPLEMENTS[base] for base in self.sequence[::-1])
         except KeyError as e:
             raise ValueError(f"Invalid DNA base found: {e}")
         return DNASequence(
@@ -605,7 +545,7 @@ def translate(
                     start = i
                     break
             else:
-                return ""  # No start codon found
+                return ""
         else:
             start = 0
 
@@ -626,15 +566,9 @@ def translate(
     if len(sub_seq) % 3 != 0:
         remainder = len(sub_seq) % 3
         if require_mod3:
-            raise ValueError(
-                f"Sequence length from start={start} to end={end} is not divisible by 3 "
-                f"(remainder = {remainder})."
-            )
+            raise ValueError(f"Sequence length from start={start} to end={end} is not divisible by 3 " f"(remainder = {remainder}).")
         else:
-            warnings.warn(
-                f"Sequence length from start={start} to end={end} is not divisible by 3. "
-                f"Discarding {remainder} trailing nucleotide(s): {sub_seq[-remainder:]}"
-            )
+            warnings.warn(f"Sequence length from start={start} to end={end} is not divisible by 3. " f"Discarding {remainder} trailing nucleotide(s): {sub_seq[-remainder:]}")
             sub_seq = sub_seq[: len(sub_seq) - remainder]
 
     # Translate using this codon table
@@ -684,9 +618,7 @@ def load_sequences_from_fasta(
     """
     # Validate inputs
     if not issubclass(sequence_class, BaseSequence):
-        raise TypeError(
-            f"sequence_class must be a subclass of BaseSequence, got {sequence_class}"
-        )
+        raise TypeError(f"sequence_class must be a subclass of BaseSequence, got {sequence_class}")
 
     fasta_path = Path(fasta_path)
     if not fasta_path.exists():
@@ -716,10 +648,7 @@ def load_sequences_from_fasta(
             # TODO: For custom sequence classes, try to instantiate with None
             # and let the class handle default alphabet
             # but for easy, raise an error
-            raise TypeError(
-                f"sequence_class {sequence_class} does not have a default alphabet, "
-                f"please provide it with the alphabet parameter."
-            )
+            raise TypeError(f"sequence_class {sequence_class} does not have a default alphabet, " f"please provide it with the alphabet parameter.")
 
     sequences: Dict[str, BaseSequence] = {}
     current_id = None
@@ -755,17 +684,15 @@ def load_sequences_from_fasta(
                     try:
                         current_id, current_description = process_header(line[1:])
                     except Exception as e:
-                        raise ValueError(
-                            f"Error processing header at line {line_number}: '{line}'. {str(e)}"
-                        )
+                        raise ValueError(f"Error processing header at line {line_number}: '{line}'. {str(e)}")
 
                     current_seq_lines = []
 
                 else:
                     # Accumulate sequence lines
                     # Remove any whitespace and validate characters
-                    clean_line = "".join(line.split())  # Remove all whitespace
-                    if clean_line:  # Only add non-empty lines
+                    clean_line = "".join(line.split())
+                    if clean_line:
                         current_seq_lines.append(clean_line)
 
             # Save last entry
@@ -782,9 +709,7 @@ def load_sequences_from_fasta(
                 )
 
     except UnicodeDecodeError:
-        raise ValueError(
-            f"Unable to decode file {fasta_path}. Please ensure it's a valid text file."
-        )
+        raise ValueError(f"Unable to decode file {fasta_path}. Please ensure it's a valid text file.")
     except Exception as e:
         raise ValueError(f"Error reading FASTA file at line {line_number}: {str(e)}")
 
@@ -807,9 +732,7 @@ def _save_sequence(
     """Helper function to save a sequence to the dictionary"""
     # Check for duplicate IDs
     if seq_id in sequences and not allow_duplicates:
-        raise ValueError(
-            f"Duplicate sequence ID '{seq_id}' found near line {line_number}"
-        )
+        raise ValueError(f"Duplicate sequence ID '{seq_id}' found near line {line_number}")
 
     # Join sequence lines and convert to uppercase
     full_seq = "".join(seq_lines).upper()

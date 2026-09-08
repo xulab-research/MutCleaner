@@ -149,9 +149,7 @@ def read_proteingym_dms_substitutions_data(
 
                 # Reorder columns: put standard columns first
                 standard_columns = ["name", "mutant", "mutated_sequence", "DMS_score"]
-                other_columns = [
-                    col for col in df.columns if col not in standard_columns
-                ]
+                other_columns = [col for col in df.columns if col not in standard_columns]
                 final_columns = standard_columns + other_columns
                 df = df[final_columns]
 

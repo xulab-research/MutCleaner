@@ -85,19 +85,13 @@ class TrpBCleanerConfig(BaseCleanerConfig):
     )
 
     # Data filtering configuration - no specific filters needed for TrpB
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {
-            "label": lambda s: pd.to_numeric(s, errors="coerce").notna()
-        }
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"label": lambda s: pd.to_numeric(s, errors="coerce").notna()})
 
     # Type conversion configuration
     type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float"})
 
     # Obtained from article
-    wt_sequence: str = (
-        "MKGYFGPYGGQYVPEILMGALEELEAAYEGIMKDESFWKEFNDLLRDYAGRPTPLYFARRLSEKYGARVYLKREDLLHTGAHKINNAIGQVLLAKLMGKTRIIAETGAGQHGVATATAAALFGMECVIYMGEEDTIRQKLNVERMKLLGAKVVPVKSGSRTLKDAIDEALRDWITNLQTTYYVFGSVVGPHPYPIIVRNFQKVIGEETKKQIPEKEGRLPDYIVACVSGGSNAAGIFYPFIDSGVKLIGVEAGGEGLETGKHAASLLKGKIGYLHGSKTFVLQDDWGQVQVSHSVSAGLDYSGVGPEHAYWRETGKVLYDAVTDEEALDAFIELSRLEGIIPALESSHALAYLKKINIKGKVVVVNLSGRGDKDLESVLNHPYVRERIRLEHHHHHH"
-    )
+    wt_sequence: str = "MKGYFGPYGGQYVPEILMGALEELEAAYEGIMKDESFWKEFNDLLRDYAGRPTPLYFARRLSEKYGARVYLKREDLLHTGAHKINNAIGQVLLAKLMGKTRIIAETGAGQHGVATATAAALFGMECVIYMGEEDTIRQKLNVERMKLLGAKVVPVKSGSRTLKDAIDEALRDWITNLQTTYYVFGSVVGPHPYPIIVRNFQKVIGEETKKQIPEKEGRLPDYIVACVSGGSNAAGIFYPFIDSGVKLIGVEAGGEGLETGKHAASLLKGKIGYLHGSKTFVLQDDWGQVQVSHSVSAGLDYSGVGPEHAYWRETGKVLYDAVTDEEALDAFIELSRLEGIIPALESSHALAYLKKINIKGKVVVVNLSGRGDKDLESVLNHPYVRERIRLEHHHHHH"
 
     # workers configuration
     num_workers: int = 16
@@ -125,9 +119,7 @@ class TrpBCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"mutation_name", "fitness"}
@@ -179,14 +171,10 @@ def create_trpb_cleaner(
         # Load from file
         final_config = TrpBCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be TrpBCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be TrpBCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"TrpB dataset will cleaning with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"TrpB dataset will cleaning with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -203,54 +191,42 @@ def create_trpb_cleaner(
                 column_mapping=final_config.column_mapping,
             )
             .delayed_then(filter_and_clean_data, filters=final_config.filters)
-            .delayed_then(
-                convert_data_types, type_conversions=final_config.type_conversions
-            )
+            .delayed_then(convert_data_types, type_conversions=final_config.type_conversions)
             .delayed_then(
                 add_columns,
                 columns_to_add={"name": "TrpB", "wt_seq": final_config.wt_sequence},
             )
             .delayed_then(
                 validate_mutations,
-                mutation_column=final_config.column_mapping.get(
-                    "mutation_name", "mutation_name"
-                ),
+                mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
                 is_zero_based=True,
                 num_workers=final_config.num_workers,
                 exclude_patterns=["WT"],
             )
             .delayed_then(
                 average_labels_by_name,
-                name_columns=final_config.column_mapping.get(
-                    "mutation_name", "mutation_name"
-                ),
+                name_columns=final_config.column_mapping.get("mutation_name", "mutation_name"),
                 label_columns=final_config.label_columns,
             )
             .delayed_then(
                 subtract_labels_by_wt,
                 name_column="name",
                 label_columns=final_config.label_columns,
-                mutation_column=final_config.column_mapping.get(
-                    "mutation_name", "mutation_name"
-                ),
+                mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
                 wt_identifier="WT",
                 drop_wt_row=True,
             )
             .delayed_then(
                 apply_mutations_to_sequences,
                 sequence_column="wt_seq",
-                mutation_column=final_config.column_mapping.get(
-                    "mutation_name", "mutation_name"
-                ),
+                mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
                 is_zero_based=True,
                 num_workers=final_config.num_workers,
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,
                 name_column="name",
-                mutation_column=final_config.column_mapping.get(
-                    "mutation_name", "mutation_name"
-                ),
+                mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
                 sequence_column="wt_seq",
                 mutated_sequence_column="mut_seq",
                 label_column=final_config.primary_label_column,
@@ -262,9 +238,7 @@ def create_trpb_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0)
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
@@ -314,9 +288,7 @@ def clean_trpb_dataset(
         TrpB_dataset_df, TrpB_ref_seq = pipeline.data
         TrpB_dataset = MutationDataset.from_dataframe(TrpB_dataset_df, TrpB_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned TrpB dataset: {len(TrpB_dataset_df)} mutations from {len(TrpB_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned TrpB dataset: {len(TrpB_dataset_df)} mutations from {len(TrpB_ref_seq)} proteins")
 
         return pipeline, TrpB_dataset
     except Exception as e:

@@ -138,10 +138,7 @@ def convert_codon_to_amino_acid(
             mut_aa = table.translate_codon(mut_codon)
 
             if "X" in (wt_aa, mut_aa):
-                message = (
-                    f"Unknown codon translation: {token} "
-                    f"(wild_type={wt_aa}, mutant={mut_aa})"
-                )
+                message = f"Unknown codon translation: {token} " f"(wild_type={wt_aa}, mutant={mut_aa})"
                 if strict:
                     raise ValueError(message)
                 return pd.NA, message
@@ -159,21 +156,14 @@ def convert_codon_to_amino_acid(
     successful = dataset.loc[~failed_mask].copy()
     failed = dataset.loc[failed_mask].copy()
 
-    successful[amino_acid_column] = converted.loc[~failed_mask].map(
-        lambda result: result[0]
-    )
+    successful[amino_acid_column] = converted.loc[~failed_mask].map(lambda result: result[0])
 
     if not failed.empty:
-        failed["error_message"] = converted.loc[failed_mask].map(
-            lambda result: result[1]
-        )
+        failed["error_message"] = converted.loc[failed_mask].map(lambda result: result[1])
 
     if drop_codon_column:
         successful = successful.drop(columns=[codon_column])
 
-    tqdm.write(
-        f"Codon-to-amino-acid conversion completed: "
-        f"{len(successful)} records retained, {len(failed)} records filtered."
-    )
+    tqdm.write(f"Codon-to-amino-acid conversion completed: " f"{len(successful)} records retained, {len(failed)} records filtered.")
 
     return successful, failed

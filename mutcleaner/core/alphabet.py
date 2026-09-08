@@ -99,7 +99,7 @@ class ProteinAlphabet(BaseAlphabet):
         letters = standard.copy()
 
         if include_stop:
-            letters.add("*")  # Stop codon
+            letters.add("*")
 
         if include_ambiguous:
             # Ambiguous amino acids

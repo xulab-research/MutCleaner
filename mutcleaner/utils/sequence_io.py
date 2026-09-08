@@ -146,9 +146,7 @@ def parse_simple_header(header: str) -> Tuple[str, Dict[str, str]]:
         return header, {}
 
 
-def parse_custom_delimiter_header(
-    delimiter: str = "|", id_position: int = 0
-) -> Callable:
+def parse_custom_delimiter_header(delimiter: str = "|", id_position: int = 0) -> Callable:
     """Create a header parser for custom delimiter-based formats
 
     Parameters
@@ -176,9 +174,7 @@ def parse_custom_delimiter_header(
             seq_id = parts[id_position]
             # Store other parts in metadata
             other_parts_idx = [i for i in range(len(parts)) if i != id_position]
-            return seq_id, dict(
-                zip([f"parts{i}" for i in other_parts_idx], parts[other_parts_idx:])
-            )
+            return seq_id, dict(zip([f"parts{i}" for i in other_parts_idx], parts[other_parts_idx:]))
         else:
             return header, {}
 
@@ -248,13 +244,11 @@ def parse_fasta(
                     }
 
                 # Parse new header
-                header = line[1:].strip()  # Remove '>' and strip
+                header = line[1:].strip()
                 try:
                     current_id, current_metadata = header_parser(header)
                 except Exception as e:
-                    warnings.warn(
-                        f"Failed to parse header '{header}': {e}. Using full header as ID."
-                    )
+                    warnings.warn(f"Failed to parse header '{header}': {e}. Using full header as ID.")
                     current_id = header
                     current_metadata = {}
 
@@ -331,7 +325,7 @@ def load_sequences(
         "fa": "fasta",
         "faa": "fasta",
         "fas": "fasta",
-        "txt": "fasta",  # Often FASTA files have .txt extension
+        "txt": "fasta",
     }
     format = format_map.get(format, format)
 
@@ -358,11 +352,7 @@ def load_sequences(
                 sequence_column = seq_col
 
         if id_column is None or sequence_column is None:
-            raise ValueError(
-                f"Could not detect ID and sequence columns. "
-                f"Please specify id_column and sequence_column. "
-                f"Available columns: {list(df.columns)}"
-            )
+            raise ValueError(f"Could not detect ID and sequence columns. " f"Please specify id_column and sequence_column. " f"Available columns: {list(df.columns)}")
 
         # Create dictionary
         seq_dict = {}
@@ -383,10 +373,7 @@ def load_sequences(
             return {str(k): str(v) for k, v in data.items()}
 
     else:
-        raise ValueError(
-            f"Unsupported format: {format}. "
-            f"Supported formats: fasta, csv, tsv, json"
-        )
+        raise ValueError(f"Unsupported format: {format}. " f"Supported formats: fasta, csv, tsv, json")
 
 
 def _detect_sequence_columns(columns: pd.Index) -> Tuple[Optional[str], Optional[str]]:
@@ -441,10 +428,7 @@ def _detect_sequence_columns(columns: pd.Index) -> Tuple[Optional[str], Optional
 
     # Fallback: if only 2 columns, assume first is ID, second is sequence
     if (id_col is None or seq_col is None) and len(columns) == 2:
-        warnings.warn(
-            f"Could not identify columns by name. "
-            f"Assuming {columns[0]} is ID and {columns[1]} is sequence."
-        )
+        warnings.warn(f"Could not identify columns by name. " f"Assuming {columns[0]} is ID and {columns[1]} is sequence.")
         id_col = columns[0]
         seq_col = columns[1]
 

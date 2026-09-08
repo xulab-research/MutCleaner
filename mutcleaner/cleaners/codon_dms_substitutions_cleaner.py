@@ -78,15 +78,9 @@ class CodonDMSSubstitutionsCleanerConfig(BaseCleanerConfig):
         }
     )
 
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {
-            "label": lambda s: pd.to_numeric(s, errors="coerce").notna()
-        }
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"label": lambda s: pd.to_numeric(s, errors="coerce").notna()})
 
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"label": "float64"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float64"})
 
     mutation_sep: str = ","
     is_zero_based: bool = True
@@ -107,10 +101,7 @@ class CodonDMSSubstitutionsCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' "
-                f"must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' " f"must be in label_columns {self.label_columns}")
 
         required_columns = {"name", "codon_mutation", "label", "wt_sequence"}
         missing = required_columns - set(self.column_mapping)
@@ -120,9 +111,7 @@ class CodonDMSSubstitutionsCleanerConfig(BaseCleanerConfig):
 
 def create_codon_dms_substitutions_cleaner(
     data_path: Union[str, Path],
-    config: Optional[
-        Union[CodonDMSSubstitutionsCleanerConfig, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[CodonDMSSubstitutionsCleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """
     Create the Codon DMS Substitutions Dataset cleaning pipeline.
@@ -152,9 +141,7 @@ def create_codon_dms_substitutions_cleaner(
 
     if not data_path.exists():
         raise FileNotFoundError(f"Data path does not exist: {data_path}")
-    if not data_path.is_dir() and not (
-        data_path.is_file() and data_path.suffix.lower() == ".zip"
-    ):
+    if not data_path.is_dir() and not (data_path.is_file() and data_path.suffix.lower() == ".zip"):
         raise TypeError(f"Data path must be a directory or ZIP file: {data_path}")
 
     if config is None:
@@ -166,15 +153,9 @@ def create_codon_dms_substitutions_cleaner(
     elif isinstance(config, (str, Path)):
         final_config = CodonDMSSubstitutionsCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            "config must be CodonDMSSubstitutionsCleanerConfig, "
-            f"dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError("config must be CodonDMSSubstitutionsCleanerConfig, " f"dict, str, Path or None, got {type(config)}")
 
-    logger.info(
-        f"Codon DMS Substitutions Dataset will be cleaned with pipeline: "
-        f"{final_config.pipeline_name}"
-    )
+    logger.info(f"Codon DMS Substitutions Dataset will be cleaned with pipeline: " f"{final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -239,12 +220,8 @@ def create_codon_dms_substitutions_cleaner(
         return pipeline
 
     except Exception as e:
-        logger.error(
-            f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}"
-        )
-        raise RuntimeError(
-            f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}"
-        ) from e
+        logger.error(f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}")
+        raise RuntimeError(f"Error in creating Codon DMS Substitutions cleaning pipeline: {e}") from e
 
 
 def clean_codon_dms_substitutions_dataset(
@@ -269,15 +246,10 @@ def clean_codon_dms_substitutions_dataset(
         dataset_df, reference_sequences = pipeline.data
         dataset = MutationDataset.from_dataframe(dataset_df, reference_sequences)
 
-        logger.info(
-            f"Successfully cleaned Codon DMS Substitutions Dataset: "
-            f"{len(dataset_df)} mutations from {len(reference_sequences)} sequences"
-        )
+        logger.info(f"Successfully cleaned Codon DMS Substitutions Dataset: " f"{len(dataset_df)} mutations from {len(reference_sequences)} sequences")
 
         return pipeline, dataset
 
     except Exception as e:
         logger.error(f"Error in running Codon DMS Substitutions cleaning pipeline: {e}")
-        raise RuntimeError(
-            f"Error in running Codon DMS Substitutions cleaning pipeline: {e}"
-        ) from e
+        raise RuntimeError(f"Error in running Codon DMS Substitutions cleaning pipeline: {e}") from e

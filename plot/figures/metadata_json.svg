@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="200" height="240" viewBox="0 0 200 240"
+     role="img" aria-label="metadata.json file icon">
+  <title>JSON 文件图标</title>
+  <defs>
+    <clipPath id="json-paper-clip">
+      <path d="M 39 14 H 126 L 172 60 V 211 Q 172 222 161 222 H 39 Q 28 222 28 211 V 25 Q 28 14 39 14 Z"/>
+    </clipPath>
+  </defs>
+  <path d="M 39 14 H 126 L 172 60 V 211 Q 172 222 161 222 H 39 Q 28 222 28 211 V 25 Q 28 14 39 14 Z"
+        fill="#FFFFFF" stroke="#2A8490" stroke-width="2.6"
+        stroke-linejoin="round"/>
+  <path d="M 126 14 V 60 H 172 Z"
+        fill="#F4FAFA" stroke="#2A8490" stroke-width="2.2"
+        stroke-linejoin="round"/>
+  <path d="M 77 79
+        C 67 79 66 87 66 98 V 106
+        C 66 116 62 121 55 123
+        C 62 125 66 130 66 140 V 148
+        C 66 159 67 167 77 167"
+        fill="none" stroke="#438D96" stroke-width="4"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="100" cy="111" r="3" fill="#438D96"/>
+  <circle cx="100" cy="137" r="3" fill="#438D96"/>
+  <path d="M 123 79
+        C 133 79 134 87 134 98 V 106
+        C 134 116 138 121 145 123
+        C 138 125 134 130 134 140 V 148
+        C 134 159 133 167 123 167"
+        fill="none" stroke="#438D96" stroke-width="4"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

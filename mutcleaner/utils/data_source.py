@@ -3,17 +3,13 @@ DATASETS = {
     "Protein cDNA Proteolysis Dataset": {
         "paper_title": "Mega-scale experimental analysis of protein folding stability in biology and design",
         "official_doi": "https://doi.org/10.1038/s41586-023-06328-6",
-        "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv?download=true"
-        ],
+        "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv?download=true"],
         "file_name": ["Tsuboyama2023_Dataset2_Dataset3_20230416.csv"],
     },
     "ProteinGym DMS Substitutions Dataset": {
         "paper_title": "ProteinGym: Large-Scale Benchmarks for Protein Design and Fitness Prediction",
         "official_doi": "https://doi.org/10.1101/2023.12.07.570727",
-        "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/ProteinGym_DMS_Substitutions_Dataset/DMS_ProteinGym_substitutions.zip?download=true"
-        ],
+        "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ProteinGym_DMS_Substitutions_Dataset/DMS_ProteinGym_substitutions.zip?download=true"],
         "file_name": ["ProteinGym_DMS_substitutions.zip"],
     },
     "Human Domainome Dataset": {
@@ -67,33 +63,23 @@ DATASETS = {
         ],
         "sub_datasets": {
             "M1261": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/M1261.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/M1261.csv?download=true"],
                 "file_name": ["M1261.csv"],
             },
             "S461": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S461.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S461.csv?download=true"],
                 "file_name": ["S461.csv"],
             },
             "S669": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S669.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S669.csv?download=true"],
                 "file_name": ["S669.csv"],
             },
             "S783": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S783.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S783.csv?download=true"],
                 "file_name": ["S783.csv"],
             },
             "S8754": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S8754.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ddG_Dataset/S8754.csv?download=true"],
                 "file_name": ["S8754.csv"],
             },
         },
@@ -111,15 +97,11 @@ DATASETS = {
         ],
         "sub_datasets": {
             "S4346": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/dTm_Dataset/S4346.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/dTm_Dataset/S4346.csv?download=true"],
                 "file_name": ["S4346.csv"],
             },
             "S557": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/dTm_Dataset/S557.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/dTm_Dataset/S557.csv?download=true"],
                 "file_name": ["S557.csv"],
             },
         },
@@ -137,15 +119,11 @@ DATASETS = {
         ],
         "sub_datasets": {
             "ArchStabMS1E10_Epistasis_Sup4_Dataset": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset.csv?download=true"],
                 "file_name": ["ArchStabMS1E10_Epistasis_Sup4_Dataset.csv"],
             },
             "ArchStabMS1E10_Epistasis_Sup5_Dataset": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv?download=true"],
                 "file_name": ["ArchStabMS1E10_Epistasis_Sup5_Dataset.csv"],
             },
         },
@@ -153,9 +131,7 @@ DATASETS = {
     "Protein Human Myoglobin Epistasis Dataset": {
         "paper_title": "Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning",
         "official_doi": "https://doi.org/10.1101/2024.02.24.581358",
-        "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv?download=true"
-        ],
+        "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv?download=true"],
         "file_name": ["Protein_Human_Myoglobin_Epistasis_Dataset.csv"],
     },
     "CTXM Epistasis Dataset": {
@@ -171,15 +147,11 @@ DATASETS = {
         ],
         "sub_datasets": {
             "CTXM_Ampicillin_Epistasis_Dataset": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/CTXM_Epistasis_Dataset/Doubles_A3_processed.txt?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/CTXM_Epistasis_Dataset/Doubles_A3_processed.txt?download=true"],
                 "file_name": ["Doubles_A3_processed.txt"],
             },
             "CTXM_Cefotaxime_Epistasis_Dataset": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/CTXM_Epistasis_Dataset/Doubles_C2_processed.txt?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/CTXM_Epistasis_Dataset/Doubles_C2_processed.txt?download=true"],
                 "file_name": ["Doubles_C2_processed.txt"],
             },
         },
@@ -187,17 +159,13 @@ DATASETS = {
     "TrpB Epistasis Dataset": {
         "paper_title": "A combinatorially complete epistatic fitness landscape in an enzyme active site",
         "official_doi": "https://doi.org/10.1073/pnas.2400439121",
-        "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/TrpB_Epistasis_Dataset/TrpB_Epistasis_Dataset.csv?download=true"
-        ],
+        "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/TrpB_Epistasis_Dataset/TrpB_Epistasis_Dataset.csv?download=true"],
         "file_name": ["TrpB_Epistasis_Dataset.csv"],
     },
     "Antitoxin ParD3 Epistasis Dataset": {
         "paper_title": "Antitoxin_ParD3_datasets",
         "official_doi": "https://doi.org/10.1038/s41467-024-45621-4",
-        "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/Antitoxin_ParD3_Epistasis_Dataset/Antitoxin_ParD3_Epistasis_Dataset.csv?download=true"
-        ],
+        "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/Antitoxin_ParD3_Epistasis_Dataset/Antitoxin_ParD3_Epistasis_Dataset.csv?download=true"],
         "file_name": ["Antitoxin_ParD3_Epistasis_Dataset.csv"],
     },
     "RBD Antibody Dataset": {
@@ -215,21 +183,15 @@ DATASETS = {
         ],
         "sub_datasets": {
             "Moderna": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_Antibody_Dataset/SARS-CoV-2-RBD_MAP_Moderna.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_Antibody_Dataset/SARS-CoV-2-RBD_MAP_Moderna.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_MAP_Moderna.csv"],
             },
             "Rockefeller": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_Antibody_Dataset/SARS-CoV-2-RBD_MAP_Rockefeller.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_Antibody_Dataset/SARS-CoV-2-RBD_MAP_Rockefeller.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_MAP_Rockefeller.csv"],
             },
             "Vir_mAbs": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_Antibody_Dataset/SARS-CoV-2-RBD_MAP_Vir_mAbs.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_Antibody_Dataset/SARS-CoV-2-RBD_MAP_Vir_mAbs.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_MAP_Vir_mAbs.csv"],
             },
         },
@@ -253,35 +215,23 @@ DATASETS = {
         ],
         "sub_datasets": {
             "Omicron_EG5_FLip_BA286": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv?download=true"
-                ],
-                "file_name": [
-                    "SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv?download=true"],
+                "file_name": ["SARS-CoV-2-RBD_DMS_Omicron-EG5-FLip-BA286_bc_binding.csv"],
             },
             "Omicron_XBB_BQ": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron-XBB-BQ_bc_binding.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron-XBB-BQ_bc_binding.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_DMS_Omicron-XBB-BQ_bc_binding.csv"],
             },
             "Omicron": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron_bc_binding.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_Omicron_bc_binding.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_DMS_Omicron_bc_binding.csv"],
             },
             "DMS_variants": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_variants_bc_binding.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_DMS_variants_bc_binding.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_DMS_variants_bc_binding.csv"],
             },
             "Delta": {
-                "huggingface_repos": [
-                    "datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_Delta_bc_binding.csv?download=true"
-                ],
+                "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/RBD_ACE2_Dataset/SARS-CoV-2-RBD_Delta_bc_binding.csv?download=true"],
                 "file_name": ["SARS-CoV-2-RBD_Delta_bc_binding.csv"],
             },
         },
@@ -322,9 +272,7 @@ DATASETS = {
     "Codon Human Myoglobin Epistasis Dataset": {
         "paper_title": "Decoding Stability and Epistasis in Human Myoglobin by Deep Mutational Scanning and Codon-level Machine Learning",
         "official_doi": "https://doi.org/10.1101/2024.02.24.581358",
-        "huggingface_repos": [
-            "datasets/xulab-research/MutCleaner/resolve/main/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv?download=true"
-        ],
+        "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv?download=true"],
         "file_name": ["Codon_Human_Myoglobin_Epistasis_Dataset.csv"],
     },
 }
@@ -364,9 +312,7 @@ def list_datasets_with_built_in_cleaners() -> None:
     for key, info in DATASETS.items():
         print(f"- {key}: {info['paper_title']}")
         print(f"  - Official DOI: {info['official_doi']}")
-    print(
-        "\nUse the `show_download_instructions` function to see detailed download instructions."
-    )
+    print("\nUse the `show_download_instructions` function to see detailed download instructions.")
 
 
 def show_download_instructions(dataset_key: str) -> None:

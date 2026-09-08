@@ -244,7 +244,7 @@ def infer_wt_sequence_grouped(
             wt_row = first_row.copy()
 
             # Update WT-specific fields
-            wt_row[mutation_column] = "WT"  # or empty string if preferred
+            wt_row[mutation_column] = "WT"
             wt_row[sequence_column] = wt_seq_str
 
             # Set labels to `wt_label` for WT
@@ -294,29 +294,21 @@ def infer_wt_sequence_grouped(
 
                 return result_rows, "failed"
 
-            else:  # handle_multiple_wt == "error"
+            else:
                 # Add error information to the first row
                 error_row = group.iloc[0].to_dict()
-                error_row["error_message"] = (
-                    f"Multiple wildtype sequences inferred for {protein_name}: {len(inferred_wt_seqs)}"
-                )
+                error_row["error_message"] = f"Multiple wildtype sequences inferred for {protein_name}: {len(inferred_wt_seqs)}"
                 return [error_row], "failed"
 
         else:
             # No wild-type sequences inferred
             error_row = group.iloc[0].to_dict()
-            error_row["error_message"] = (
-                f"No wildtype sequences could be inferred for {protein_name}"
-            )
+            error_row["error_message"] = f"No wildtype sequences could be inferred for {protein_name}"
             return [error_row], "failed"
 
     except Exception as e:
         # Save error information in first row
-        error_row = (
-            group.iloc[0].to_dict()
-            if len(group) > 0
-            else {name_column: str(protein_name)}
-        )
+        error_row = group.iloc[0].to_dict() if len(group) > 0 else {name_column: str(protein_name)}
         error_row["error_message"] = f"{type(e).__name__}: {str(e)}"
         return [error_row], "failed"
 
@@ -363,11 +355,9 @@ def infer_single_mutationset(
 
         # Check sequence lengths are equal
         if len(wt_seq) != len(mut_seq):
-            raise ValueError(
-                f"Sequence length mismatch: WT={len(wt_seq)}, MUT={len(mut_seq)}"
-            )
+            raise ValueError(f"Sequence length mismatch: WT={len(wt_seq)}, MUT={len(mut_seq)}")
 
-        mutations = wt_seq.infer_mutation(mut_seq)  # type: ignore[arg-type]
+        mutations = wt_seq.infer_mutation(mut_seq)
         inferred_mutations = mutation_sep.join(tuple(map(str, mutations.mutations)))
         return inferred_mutations, None
     except Exception as e:
@@ -401,9 +391,7 @@ def validate_single_mutation_and_sequence(
             return None, f"Missing wildtype sequence or mutant sequence for {name}"
 
         wt_sequence = sequence_class(wt_sequence_str, name=name)
-        mutation_set = MutationSet.from_string(
-            mut_info, sep=mutation_sep, is_zero_based=is_zero_based
-        )
+        mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, is_zero_based=is_zero_based)
         mut_sequence = sequence_class(mut_sequence_str, name=name)
         inferred_mutated_sequence = wt_sequence.apply_mutation(mutation_set)
         if str(inferred_mutated_sequence) != str(mut_sequence):

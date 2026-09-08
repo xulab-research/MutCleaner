@@ -93,17 +93,13 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
     )
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"label_humanDomainome": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"label_humanDomainome": "float"})
 
     # columns to perfrom dropping NA
-    drop_na_columns: List = field(
-        default_factory=lambda: ["name", "PFAM_entry", "pos", "wt_aa", "mut_aa"]
-    )
+    drop_na_columns: List = field(default_factory=lambda: ["name", "PFAM_entry", "pos", "wt_aa", "mut_aa"])
 
     # Processing parameters
-    is_zero_based: bool = False  # Human Domainome uses 1-based positions
+    is_zero_based: bool = False
     process_workers: int = 16
 
     # Score columns configuration
@@ -132,19 +128,14 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
         if self.sequence_source is not None:
             seq_path = Path(self.sequence_source)
             if not seq_path.exists():
-                raise ValueError(
-                    f"Sequence dictionary file not found: {self.sequence_source}"
-                )
+                raise ValueError(f"Sequence dictionary file not found: {self.sequence_source}")
 
         # Validate score columns
         if not self.label_columns:
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' "
-                f"must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' " f"must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = set(self.column_mapping.keys())
@@ -156,9 +147,7 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
 def create_human_domainome_sup4_cleaner(
     dataset_or_path: Union[str, Path, pd.DataFrame],
     sequence_source: Union[Dict[str, str], str, Path],
-    config: Optional[
-        Union[HumanDomainomeSup4CleanerConfig, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[HumanDomainomeSup4CleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create HumanDomainome dataset cleaning pipeline - SupplementaryTable4
 
@@ -223,9 +212,7 @@ def create_human_domainome_sup4_cleaner(
     """
     seq_path_obj = Path(sequence_source)
     if not seq_path_obj.exists():
-        raise FileNotFoundError(
-            f"Sequence dictionary file does not exist: {sequence_source}"
-        )
+        raise FileNotFoundError(f"Sequence dictionary file does not exist: {sequence_source}")
 
     # Handle configuration parameter
     if config is None:
@@ -237,9 +224,7 @@ def create_human_domainome_sup4_cleaner(
             final_config.sequence_source = sequence_source
     elif isinstance(config, dict):
         # Partial configuration - merge with defaults
-        default_config = HumanDomainomeSup4CleanerConfig(
-            sequence_source=sequence_source
-        )
+        default_config = HumanDomainomeSup4CleanerConfig(sequence_source=sequence_source)
         final_config = default_config.merge(config)
     elif isinstance(config, (str, Path)):
         # Load from file
@@ -248,15 +233,10 @@ def create_human_domainome_sup4_cleaner(
         if final_config.sequence_source is None:
             final_config.sequence_source = sequence_source
     else:
-        raise TypeError(
-            f"config must be HumanDomainomeSup4CleanerConfig, dict, str, Path or None, "
-            f"got {type(config)}"
-        )
+        raise TypeError(f"config must be HumanDomainomeSup4CleanerConfig, dict, str, Path or None, " f"got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"HumanDomainome dataset (SupplementaryTable4) will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"HumanDomainome dataset (SupplementaryTable4) will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -307,7 +287,7 @@ def create_human_domainome_sup4_cleaner(
                 name_column=final_config.column_mapping.get("uniprot_ID", "uniprot_ID"),
                 mutation_column="mut_info",
                 mutation_sep=",",
-                is_zero_based=True,  # After process_domain_positions, positions are 0-based
+                is_zero_based=True,
                 sequence_type="protein",
                 num_workers=final_config.process_workers,
             )
@@ -325,18 +305,13 @@ def create_human_domainome_sup4_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0, file_format="tsv")
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, "
-                f"got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, " f"got {type(dataset_or_path)}")
 
         return pipeline
 
     except Exception as e:
         logger.error(f"Error in creating HumanDomainome cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in creating HumanDomainome cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in creating HumanDomainome cleaning pipeline: {str(e)}")
 
 
 def clean_human_domainome_sup4_dataset(
@@ -366,19 +341,12 @@ def clean_human_domainome_sup4_dataset(
 
         # Extract results
         dataset_df, ref_sequences = pipeline.data
-        human_domainome_dataset = MutationDataset.from_dataframe(
-            dataset_df, ref_sequences
-        )
+        human_domainome_dataset = MutationDataset.from_dataframe(dataset_df, ref_sequences)
 
-        logger.info(
-            f"Successfully cleaned HumanDomainome dataset: "
-            f"{len(dataset_df)} mutations from {len(ref_sequences)} proteins"
-        )
+        logger.info(f"Successfully cleaned HumanDomainome dataset: " f"{len(dataset_df)} mutations from {len(ref_sequences)} proteins")
 
         return pipeline, human_domainome_dataset
 
     except Exception as e:
         logger.error(f"Error in running HumanDomainome cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in running HumanDomainome cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in running HumanDomainome cleaning pipeline: {str(e)}")

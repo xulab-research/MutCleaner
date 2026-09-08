@@ -82,24 +82,13 @@ class CodonHumanMyoglobinCleanerConfig(BaseCleanerConfig):
     )
 
     # Data filtering configuration
-    filters: Dict[str, Callable] = field(
-        default_factory=lambda: {
-            "label": lambda s: pd.to_numeric(s, errors="coerce").notna()
-        }
-    )
+    filters: Dict[str, Callable] = field(default_factory=lambda: {"label": lambda s: pd.to_numeric(s, errors="coerce").notna()})
 
     # Type conversion configuration
     type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float"})
 
     # obtained from the article
-    wt_sequence = (
-        "ATGGGTTTATCGGATGGAGAATGGCAGTTGGTACTTAATGTATGGGGTAAAGTTGAGGCAGACATCCCAGGACATGGCCA"
-        "GGAAGTATTAATCCGTTTATTTAAAGGACACCCAGAGACGCTAGAGAAATTCGATAAATTTAAGCATCTTAAATCCGAAG"
-        "ACGAGATGAAGGCTTCTGAGGACTTAAAGAAACACGGGGCTACTGTGTTGACTGCATTAGGTGGTATTCTAAAGAAGAAA"
-        "GGTCACCACGAGGCCGAAATAAAGCCACTAGCCCAGTCCCATGCTACAAAACACAAAATTCCCGTAAAATATCTAGAGTT"
-        "TATTTCAGAGTGCATAATTCAGGTTTTGCAATCTAAACACCCAGGCGACTTCGGAGCCGACGCTCAGGGTGCGATGAACA"
-        "AAGCTTTAGAATTGTTTAGGAAGGACATGGCCTCTAATTACAAGGAGCTAGGCTTCCAGGGC"
-    )
+    wt_sequence = "ATGGGTTTATCGGATGGAGAATGGCAGTTGGTACTTAATGTATGGGGTAAAGTTGAGGCAGACATCCCAGGACATGGCCA" "GGAAGTATTAATCCGTTTATTTAAAGGACACCCAGAGACGCTAGAGAAATTCGATAAATTTAAGCATCTTAAATCCGAAG" "ACGAGATGAAGGCTTCTGAGGACTTAAAGAAACACGGGGCTACTGTGTTGACTGCATTAGGTGGTATTCTAAAGAAGAAA" "GGTCACCACGAGGCCGAAATAAAGCCACTAGCCCAGTCCCATGCTACAAAACACAAAATTCCCGTAAAATATCTAGAGTT" "TATTTCAGAGTGCATAATTCAGGTTTTGCAATCTAAACACCCAGGCGACTTCGGAGCCGACGCTCAGGGTGCGATGAACA" "AAGCTTTAGAATTGTTTAGGAAGGACATGGCCTCTAATTACAAGGAGCTAGGCTTCCAGGGC"
 
     # Mutation validation parameters
     validate_mut_workers: int = 16
@@ -130,9 +119,7 @@ class CodonHumanMyoglobinCleanerConfig(BaseCleanerConfig):
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"COD", "fitness"}
@@ -143,9 +130,7 @@ class CodonHumanMyoglobinCleanerConfig(BaseCleanerConfig):
 
 def create_codon_human_myoglobin_cleaner(
     dataset_or_path: Optional[Union[pd.DataFrame, str, Path]] = None,
-    config: Optional[
-        Union[CodonHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]
-    ] = None,
+    config: Optional[Union[CodonHumanMyoglobinCleanerConfig, Dict[str, Any], str, Path]] = None,
 ) -> Pipeline:
     """Create codon human myoglobin dataset cleaning pipeline
 
@@ -185,14 +170,10 @@ def create_codon_human_myoglobin_cleaner(
         # Load from file
         final_config = CodonHumanMyoglobinCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be CodonHumanMyoglobinCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be CodonHumanMyoglobinCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"Human myoglobin dataset will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"Human myoglobin dataset will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -265,17 +246,13 @@ def create_codon_human_myoglobin_cleaner(
         if isinstance(dataset_or_path, (str, Path)):
             pipeline.add_delayed_step(read_dataset, 0, file_format="csv")
         elif not isinstance(dataset_or_path, pd.DataFrame):
-            raise TypeError(
-                f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}"
-            )
+            raise TypeError(f"dataset_or_path must be pd.DataFrame or str/Path, got {type(dataset_or_path)}")
 
         return pipeline
 
     except Exception as e:
         logger.error(f"Error in creating human myoglobin cleaning pipeline: {str(e)}")
-        raise RuntimeError(
-            f"Error in creating human myoglobin cleaning pipeline: {str(e)}"
-        )
+        raise RuntimeError(f"Error in creating human myoglobin cleaning pipeline: {str(e)}")
 
 
 def clean_codon_human_myoglobin_dataset(
@@ -317,19 +294,11 @@ def clean_codon_human_myoglobin_dataset(
 
         # Extract results
         human_myoglobin_dataset_df, human_myoglobin_ref_seq = pipeline.data
-        human_myoglobin_dataset = MutationDataset.from_dataframe(
-            human_myoglobin_dataset_df, human_myoglobin_ref_seq
-        )
+        human_myoglobin_dataset = MutationDataset.from_dataframe(human_myoglobin_dataset_df, human_myoglobin_ref_seq)
 
-        logger.info(
-            f"Successfully cleaned human myoglobin dataset: {len(human_myoglobin_dataset_df)} mutations from {len(human_myoglobin_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned human myoglobin dataset: {len(human_myoglobin_dataset_df)} mutations from {len(human_myoglobin_ref_seq)} proteins")
 
         return pipeline, human_myoglobin_dataset
     except Exception as e:
-        logger.error(
-            f"Error in running human myoglobin dataset cleaning pipeline: {str(e)}"
-        )
-        raise RuntimeError(
-            f"Error in running human myoglobin dataset cleaning pipeline: {str(e)}"
-        )
+        logger.error(f"Error in running human myoglobin dataset cleaning pipeline: {str(e)}")
+        raise RuntimeError(f"Error in running human myoglobin dataset cleaning pipeline: {str(e)}")

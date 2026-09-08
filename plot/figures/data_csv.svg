@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="200" height="240" viewBox="0 0 200 240"
+     role="img" aria-label="data.csv file icon">
+  <title>CSV 文件图标</title>
+  <defs>
+    <clipPath id="csv-paper-clip">
+      <path d="M 39 14 H 126 L 172 60 V 211 Q 172 222 161 222 H 39 Q 28 222 28 211 V 25 Q 28 14 39 14 Z"/>
+    </clipPath>
+  </defs>
+  <path d="M 39 14 H 126 L 172 60 V 211 Q 172 222 161 222 H 39 Q 28 222 28 211 V 25 Q 28 14 39 14 Z"
+        fill="#FFFFFF" stroke="#2A8490" stroke-width="2.6"
+        stroke-linejoin="round"/>
+  <path d="M 126 14 V 60 H 172 Z"
+        fill="#F4FAFA" stroke="#2A8490" stroke-width="2.2"
+        stroke-linejoin="round"/>
+  <rect x="53" y="82" width="70" height="64" rx="2"
+        fill="#FFFFFF" stroke="#438D96" stroke-width="2"/>
+  <rect x="53" y="82" width="70" height="14" rx="1.5"
+        fill="#66A7A6"/>
+  <line x1="76.3" y1="96" x2="76.3" y2="146"
+        stroke="#438D96" stroke-width="1.4"/>
+  <line x1="99.7" y1="96" x2="99.7" y2="146"
+        stroke="#438D96" stroke-width="1.4"/>
+  <line x1="53" y1="113" x2="123" y2="113"
+        stroke="#438D96" stroke-width="1.4"/>
+  <line x1="53" y1="130" x2="123" y2="130"
+        stroke="#438D96" stroke-width="1.4"/>
+  <rect x="28" y="164" width="144" height="58"
+        fill="#40969A" clip-path="url(#csv-paper-clip)"/>
+  <line x1="29.3" y1="164" x2="170.7" y2="164"
+        stroke="#2A8490" stroke-width="1.6"/>
+  <text x="100" y="201" fill="#FFFFFF"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="36" font-weight="700"
+        text-anchor="middle">CSV</text>
+</svg>

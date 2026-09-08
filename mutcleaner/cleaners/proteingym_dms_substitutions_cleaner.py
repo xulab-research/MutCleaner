@@ -87,18 +87,14 @@ class ProteinGymCleanerConfig(BaseCleanerConfig):
     filters: Dict[str, Any] = field(default_factory=dict)
 
     # Type conversion configuration
-    type_conversions: Dict[str, str] = field(
-        default_factory=lambda: {"DMS_score": "float"}
-    )
+    type_conversions: Dict[str, str] = field(default_factory=lambda: {"DMS_score": "float"})
 
     # Mutation validation parameters
     validation_workers: int = 16
 
     # Wildtype inference parameters
     infer_wt_workers: int = 16
-    handle_multiple_wt: Literal["error", "first", "separate"] = (
-        "error"  # ProteinGym default
-    )
+    handle_multiple_wt: Literal["error", "first", "separate"] = "error"
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["DMS_score"])
@@ -121,18 +117,14 @@ class ProteinGymCleanerConfig(BaseCleanerConfig):
         # Validate handle_multiple_wt parameter
         valid_strategies = ["error", "first", "separate"]
         if self.handle_multiple_wt not in valid_strategies:
-            raise ValueError(
-                f"handle_multiple_wt must be one of {valid_strategies}, got {self.handle_multiple_wt}"
-            )
+            raise ValueError(f"handle_multiple_wt must be one of {valid_strategies}, got {self.handle_multiple_wt}")
 
         # Validate score columns
         if not self.label_columns:
             raise ValueError("label_columns cannot be empty")
 
         if self.primary_label_column not in self.label_columns:
-            raise ValueError(
-                f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}"
-            )
+            raise ValueError(f"primary_label_column '{self.primary_label_column}' must be in label_columns {self.label_columns}")
 
         # Validate column mapping
         required_mappings = {"name", "mutated_sequence", "mutant", "DMS_score"}
@@ -203,9 +195,7 @@ def create_proteingym_dms_substitutions_cleaner(
 
     # ProteinGym only supports directory or zip file input
     if not (path_obj.is_dir() or path_obj.suffix.lower() == ".zip"):
-        raise TypeError(
-            f"ProteinGym cleaner only supports directory or zip file input, got: {data_path}"
-        )
+        raise TypeError(f"ProteinGym cleaner only supports directory or zip file input, got: {data_path}")
 
     # Handle configuration parameter
     if config is None:
@@ -220,14 +210,10 @@ def create_proteingym_dms_substitutions_cleaner(
         # Load from file
         final_config = ProteinGymCleanerConfig.from_json(config)
     else:
-        raise TypeError(
-            f"config must be ProteinGymCleanerConfig, dict, str, Path or None, got {type(config)}"
-        )
+        raise TypeError(f"config must be ProteinGymCleanerConfig, dict, str, Path or None, got {type(config)}")
 
     # Log configuration summary
-    logger.info(
-        f"ProteinGym dataset will be cleaned with pipeline: {final_config.pipeline_name}"
-    )
+    logger.info(f"ProteinGym dataset will be cleaned with pipeline: {final_config.pipeline_name}")
     logger.debug(f"Configuration:\n{final_config.get_summary()}")
 
     try:
@@ -262,12 +248,10 @@ def create_proteingym_dms_substitutions_cleaner(
                 infer_wildtype_sequences,
                 name_column=final_config.column_mapping.get("name", "name"),
                 mutation_column=final_config.column_mapping.get("mutant", "mutant"),
-                sequence_column=final_config.column_mapping.get(
-                    "mutated_sequence", "mutated_sequence"
-                ),
+                sequence_column=final_config.column_mapping.get("mutated_sequence", "mutated_sequence"),
                 label_columns=final_config.label_columns,
                 mutation_sep=",",
-                is_zero_based=True,  # Always True after validate_mutations
+                is_zero_based=True,
                 handle_multiple_wt=final_config.handle_multiple_wt,
                 num_workers=final_config.infer_wt_workers,
             )
@@ -275,9 +259,7 @@ def create_proteingym_dms_substitutions_cleaner(
                 convert_to_mutation_dataset_format,
                 name_column=final_config.column_mapping.get("name", "name"),
                 mutation_column=final_config.column_mapping.get("mutant", "mutant"),
-                mutated_sequence_column=final_config.column_mapping.get(
-                    "mutated_sequence", "mutated_sequence"
-                ),
+                mutated_sequence_column=final_config.column_mapping.get("mutated_sequence", "mutated_sequence"),
                 label_column=final_config.primary_label_column,
                 is_zero_based=True,
             )
@@ -320,9 +302,7 @@ def clean_proteingym_dms_substitutions_dataset(
             proteingym_dms_substitutions_ref_seq,
         )
 
-        logger.info(
-            f"Successfully cleaned ProteinGym dataset: {len(proteingym_dms_substitutions_dataset_df)} mutations from {len(proteingym_dms_substitutions_ref_seq)} proteins"
-        )
+        logger.info(f"Successfully cleaned ProteinGym dataset: {len(proteingym_dms_substitutions_dataset_df)} mutations from {len(proteingym_dms_substitutions_ref_seq)} proteins")
 
         return pipeline, proteingym_dms_substitutions_dataset
 
