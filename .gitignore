@@ -1,65 +1,27 @@
-# Editor temporary/working/backup files #
-#########################################
-.#*
-*\#*\#
-[#]*#
-*~
-*$
-*.bak
-*flymake*
-*.iml
-*.kdev4
-*.log
-*.swp
-*.pdb
-*.zip
-.project
-.pydevproject
-.settings
-.idea
-.vagrant
-.noseids
-.ipynb_checkpoints
-.tags
-.cache/
-.vscode/
-
-# Python files #
-################
+# Python
 __pycache__/
-# pytest
-/.pytest_cache
-# egg metadata
+.pytest_cache/
 *.egg-info
-*.eggs
-# coverage
 .coverage
 coverage.xml
-coverage_html_report
 htmlcov
 
-# Build artifacts #
-###################
+# Build
 dist/
 
-# Doc files #
-#############
+# Documentation
 doc/build/
-**/.doctrees/
 doc/source/api/generated/
-doc/source/generated/
 
-# Datasets and outputs #
-########################
+# Local data and outputs
 dataset/
 clean_dataset/
 outputs/
 validation/
-
-# Logs #
-########
 logs/
 
-# benchmark #
-#############
-benchmark/
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
