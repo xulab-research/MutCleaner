@@ -13,11 +13,7 @@ BAND = "#40969A"
 PAPER = "#FFFFFF"
 FOLD = "#F4FAFA"
 
-PAPER_PATH = (
-    "M 39 14 H 126 L 172 60 V 211 "
-    "Q 172 222 161 222 H 39 Q 28 222 28 211 "
-    "V 25 Q 28 14 39 14 Z"
-)
+PAPER_PATH = "M 39 14 H 126 L 172 60 V 211 " "Q 172 222 161 222 H 39 Q 28 222 28 211 " "V 25 Q 28 14 39 14 Z"
 
 
 def _svg_document(
@@ -72,7 +68,7 @@ def generate_fasta_svg() -> str:
         stroke="{CONTENT}" stroke-width="2.8" stroke-linecap="round"/>
 {_waist_band(clip_id=clip_id, label="FASTA", font_size=35)}"""
     return _svg_document(
-        title="FASTA 文件图标",
+        title="FASTA file icon",
         aria_label="wt.fasta file icon",
         clip_id=clip_id,
         contents=contents,
@@ -97,7 +93,7 @@ def generate_json_svg() -> str:
         fill="none" stroke="{CONTENT}" stroke-width="4"
         stroke-linecap="round" stroke-linejoin="round"/>"""
     return _svg_document(
-        title="JSON 文件图标",
+        title="JSON file icon",
         aria_label="metadata.json file icon",
         clip_id="json-paper-clip",
         contents=contents,
@@ -120,7 +116,7 @@ def generate_csv_svg() -> str:
         stroke="{CONTENT}" stroke-width="1.4"/>
 {_waist_band(clip_id=clip_id, label="CSV", font_size=36)}"""
     return _svg_document(
-        title="CSV 文件图标",
+        title="CSV file icon",
         aria_label="data.csv file icon",
         clip_id=clip_id,
         contents=contents,
