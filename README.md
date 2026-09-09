@@ -9,9 +9,11 @@
 [![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
 [![Hugging Face](https://img.shields.io/badge/HuggingFace-datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
 [![Docs](https://github.com/xulab-research/MutCleaner/actions/workflows/docs.yml/badge.svg)](https://xulab-research.github.io/MutCleaner/)
+[![bioRxiv](https://img.shields.io/badge/bioRxiv-10.64898%2F2026.09.06.749687-B31B1B)](https://doi.org/10.64898/2026.09.06.749687)
 
 MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets through composable cleaning pipelines, unified sequence and mutation data structures, and dataset-specific cleaners.
 
+* **Preprint**: https://doi.org/10.64898/2026.09.06.749687
 * **Documentation**: https://xulab-research.github.io/MutCleaner
 * **Cleaning Examples**: https://xulab-research.github.io/MutCleaner/user_guide/supported_datasets.html
 
@@ -257,11 +259,13 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
 If you use MutCleaner in your research, please cite:
 
 ```bibtex
-@misc{mutcleaner,
-  title = {MutCleaner: Cleaning and Standardizing Biological Mutation Datasets for Variant Effect Prediction},
-  author = {Ziyu Shi, Yuxiang Tang, Mengxin Yang, Shize Yu, Yancheng Shi and Yunxin Xu},
-  year = {2026},
-  url = {https://github.com/xulab-research/MutCleaner}
+@article{
+  title   = {MutCleaner: Cleaning and Standardizing Biological Mutation Datasets for Variant Effect Prediction},
+  author  = {Ziyu Shi, Yuxiang Tang, Mengxin Yang, Shize Yu, Yancheng Shi and Yunxin Xu},
+  journal = {bioRxiv},
+  year    = {2026},
+  doi     = {10.64898/2026.09.06.749687},
+  url     = {https://doi.org/10.64898/2026.09.06.749687}
 }
 ```
 
