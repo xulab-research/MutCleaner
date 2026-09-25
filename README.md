@@ -260,7 +260,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
 If you use MutCleaner in your research, please cite:
 
 ```bibtex
-@article{
+@article{mutcleaner
   title   = {MutCleaner: Cleaning and Standardizing Biological Mutation Datasets for Variant Effect Prediction},
   author  = {Ziyu Shi, Yuxiang Tang, Mengxin Yang, Shize Yu, Yancheng Shi and Yunxin Xu},
   journal = {bioRxiv},
