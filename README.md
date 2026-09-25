@@ -1,18 +1,17 @@
 # MutCleaner
 
-[![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=python&logoColor=white&color=blue)](https://pypi.org/project/mutcleaner/)
+[![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/mutcleaner/)
 [![Python version badge](https://img.shields.io/python/required-version-toml.svg?logo=python&logoColor=white&color=blue&tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fxulab-research%2FMutCleaner%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)](https://pypi.org/project/mutcleaner/)
 [![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
 [![Docs](https://github.com/xulab-research/MutCleaner/actions/workflows/docs.yml/badge.svg)](https://xulab-research.github.io/MutCleaner/)
-[![bioRxiv](https://img.shields.io/badge/bioRxiv-preprint-B31B1B)](https://doi.org/10.64898/2026.09.06.749687)
+[![bioRxiv](plot/figures/biorxiv-badge.svg)](https://doi.org/10.64898/2026.09.06.749687)
 
+MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets through composable cleaning pipelines, unified sequence and mutation data structures, and dataset-specific cleaners.
 
 <p align="center">
   <img src="plot/figures/overview.svg" alt="MutCleaner overview">
 </p>
-
-MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets through composable cleaning pipelines, unified sequence and mutation data structures, and dataset-specific cleaners.
 
 * **Preprint**: https://doi.org/10.64898/2026.09.06.749687
 * **Documentation**: https://xulab-research.github.io/MutCleaner
