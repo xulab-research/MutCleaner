@@ -64,20 +64,23 @@ pip install -e ".[dev]"
 ## Package Structure
 ```text
 mutcleaner/
-├── cleaners/                # Reusable cleaners and dataset-specific pipelines
-│   ├── basic_cleaners.py    # Reusable data-cleaning and standardization steps
-│   ├── base_config.py       # Base configuration for dataset-specific cleaners
-│   └── ...                  # Dataset-specific cleaner modules
-├── core/                    # Core data structures and processing logic
-│   ├── alphabet.py          # Biological alphabets and sequence validation
-│   ├── codon.py             # Codon-table definitions and translation
-│   ├── constants.py         # Biological alphabets, mappings and genetic-code constants
-│   ├── dataset.py           # MutationDataset representation, validation and export
-│   ├── mutation.py          # Mutation parsing, representation and validation
-│   ├── pipeline.py          # Composable data-cleaning pipeline framework
-│   ├── sequence.py          # DNA, RNA and protein sequence representations and operations
-│   └── types.py             # Shared type variables and type annotations
-└── utils/                   # Supporting utilities for conversion, processing and I/O
+|-- cleaners/                 # Reusable and dataset-specific cleaning components
+|   |-- basic_cleaners.py     # Reusable data-cleaning and standardization steps
+|   |-- base_config.py        # Base class for dataset cleaner configurations
+|   |-- *_cleaner.py          # Dataset-specific configurations and cleaning pipelines
+|   `-- *_custom_cleaner*.py  # Dataset-specific transformation steps
+|
+|-- core/                     # Core data structures and processing framework
+|   |-- alphabet.py           # Biological alphabets and sequence validation
+|   |-- codon.py              # Codon tables and codon translation
+|   |-- constants.py          # Biological and genetic-code constants
+|   |-- dataset.py            # MutationDataset representation, validation, and export
+|   |-- mutation.py           # Mutation representation, parsing, and validation
+|   |-- pipeline.py           # Composable data-cleaning pipeline framework
+|   |-- sequence.py           # DNA, RNA, and protein sequence representations and operations
+|   `-- types.py              # Shared type variables
+|
+`-- utils/                    # Utilities for data conversion, parallel processing, and I/O
 ```
 ### Module Overview
 #### mutcleaner.cleaners
