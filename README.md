@@ -3,10 +3,12 @@
 [![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=pypi&logoColor=white&color=blue&label=PyPI)](https://pypi.org/project/mutcleaner/)
 [![Python version badge](https://img.shields.io/python/required-version-toml.svg?logo=python&logoColor=white&color=blue&label=Python&tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fxulab-research%2FMutCleaner%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)](https://pypi.org/project/mutcleaner/)
 [![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
-[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
 [![DOI](https://img.shields.io/badge/DOI-10.64898%2F2026.09.06.749687-blue?logo=doi&logoColor=white)](https://doi.org/10.64898/2026.09.06.749687)
 
-MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets through composable cleaning pipelines, unified sequence and mutation data structures, and dataset-specific cleaners.
+## Overview
+
+MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets. The package combines dataset-specific cleaning pipelines with reusable sequence and mutation utilities, enabling reproducible preprocessing of large-scale mutational datasets for downstream bioinformatics and machine learning analyses.
 
 * **Preprint**: https://doi.org/10.64898/2026.09.06.749687
 * **Documentation**: https://xulab-research.github.io/MutCleaner
@@ -16,34 +18,18 @@ MutCleaner is an extensible Python framework that cleans, validates, and standar
   <img src="plot/figures/overview.svg" alt="MutCleaner overview">
 </p>
 
-## Overview
-
-MutCleaner is an extensible Python toolkit for cleaning, standardizing, and analyzing biological mutation datasets. It currently focuses on protein variant data while providing core abstractions for DNA, RNA, protein sequences, and codon-level mutation representations.
-
-The package combines dataset-specific cleaning pipelines with reusable sequence and mutation utilities, enabling reproducible preprocessing of large-scale mutational datasets for downstream bioinformatics and machine learning analyses.
-
-### Key Capabilities
-
-- **Mutation dataset cleaning and standardization**: Harmonize mutation annotations, sequences, labels, and metadata across heterogeneous biological mutation datasets.
-- **Sequence representation and validation**: Utilities for DNA, RNA, and protein sequences, including validation, transcription, reverse transcription, translation, and mutation application.
-- **Mutation parsing and transformation**: Tools for parsing amino-acid and codon-level mutations, inferring mutations from sequences, applying mutations to reference sequences, and converting codon mutations into amino-acid changes.
-- **Modular pipeline architecture**: A composable pipeline interface for building reproducible dataset-cleaning workflows.
-- **Parallel and scalable dataset processing**: Multi-core utilities for mutation validation, mutation application, and sequence-based mutation inference, supporting efficient processing of large tabular mutation datasets.
 
 ## Installation
 
-### Requirements
+Choose one of the following installation methods.
 
-- Python 3.13+
-- Dependencies are automatically installed via pip.
-
-### Install via pip
+### Install from PyPI
 
 ```bash
 pip install mutcleaner
 ```
 
-### Development Installation
+### Install from source (editable mode)
 
 ```bash
 git clone https://github.com/xulab-research/MutCleaner.git MutCleaner
@@ -51,70 +37,70 @@ cd MutCleaner
 pip install -e .
 ```
 
-To install development dependencies for testing and documentation:
+## Repository structure
 
-```bash
-pip install -e ".[dev]"
-```
+The overview below shows directories up to two levels deep and files at the repository root.
 
-## Package Structure
 ```text
-mutcleaner/
-|-- cleaners/                 # Reusable and dataset-specific cleaning components
-|   |-- basic_cleaners.py     # Reusable data-cleaning and standardization steps
-|   |-- base_config.py        # Base class for dataset cleaner configurations
-|   |-- *_cleaner.py          # Dataset-specific configurations and cleaning pipelines
-|   `-- *_custom_cleaner*.py  # Dataset-specific transformation steps
-|
-|-- core/                     # Core data structures and processing framework
-|   |-- alphabet.py           # Biological alphabets and sequence validation
-|   |-- codon.py              # Codon tables and codon translation
-|   |-- constants.py          # Biological and genetic-code constants
-|   |-- dataset.py            # MutationDataset representation, validation, and export
-|   |-- mutation.py           # Mutation representation, parsing, and validation
-|   |-- pipeline.py           # Composable data-cleaning pipeline framework
-|   |-- sequence.py           # DNA, RNA, and protein sequence representations and operations
-|   `-- types.py              # Shared type variables
-|
-`-- utils/                    # Utilities for data conversion, parallel processing, and I/O
+MutCleaner/
+├── .github/                  # GitHub configuration
+│   └── workflows/            # Testing, documentation, and release workflows
+├── doc/                      # Documentation and build configuration
+│   ├── changelog/            # Version changelogs
+│   └── source/               # Documentation source files
+├── mutcleaner/               # MutCleaner Python package
+│   ├── cleaners/             # Reusable cleaners and dataset-specific pipelines
+│   ├── core/                 # Core data structures and processing framework
+│   └── utils/                # Data conversion, parallel processing, and I/O utilities
+├── plot/                     # Figure-generation scripts
+│   └── figures/              # Figures and graphical assets
+├── tests/                    # Tests for datasets, mutations, pipelines, and sequences
+├── tools/                    # Changelog generation and release scripts
+├── .gitignore                # Git ignore rules
+├── CONTRIBUTING.md           # Contribution guidelines
+├── LICENSE                   # Apache License 2.0
+├── pyproject.toml            # Package metadata, dependencies, and build configuration
+└── README.md                 # Project overview and usage instructions
 ```
-### Module Overview
-#### mutcleaner.cleaners
 
-The `cleaners` module provides both reusable cleaning functions and predefined dataset-specific cleaning pipelines.  
+## Key Capabilities
 
-`basic_cleaners.py` contains general-purpose cleaning functions that can be reused across different datasets, such as column checking, missing value handling, sequence validation, mutation validation, and common formatting operations.  
-`base_config.py` defines shared configuration used by dataset cleaners, such as common column names, required fields, and reusable cleaner settings.  
-`*_cleaner.py` files define dataset-specific cleaning pipelines. Each file is designed for a particular dataset or benchmark and combines reusable cleaning functions into a complete workflow.  
-#### mutcleaner.core
+### Sequence Data Manipulation
 
-The `core` module contains the fundamental data structures and processing logic used throughout MutCleaner.  
+- **Sequence validation**: Validate DNA, RNA, and protein sequences against predefined alphabets.
+- **Sequence transformation**: Support transcription, reverse transcription, translation, and reverse-complement operations.
+- **Batch processing**: Process large tabular mutation datasets through reusable cleaning utilities.
 
-`alphabet.py` defines biological alphabets and validation rules for DNA, RNA, and protein sequences.  
-`codon.py` provides codon table utilities and sequence translation functionality.
-`constants.py` stores shared biological constants, such as amino acid symbols, nucleotide symbols, complements, and stop codon definitions.  
-`dataset.py` defines the standard dataset abstraction used to store, manage, validate, and export cleaned mutation datasets.  
-`mutation.py` provides mutation parsing, mutation representation, and mutation validation logic.  
-`pipeline.py` defines the reusable data cleaning pipeline framework, including pipeline steps, execution order, and artifact tracking.  
-`sequence.py` defines biological sequence abstractions, including DNA, RNA, and protein sequence classes.  
-`types.py` stores shared type aliases and annotations used across the package.  
+### Mutation Analysis
 
-#### mutcleaner.utils
+- **Mutation parsing**: Parse amino-acid and codon-level mutation annotations.
+- **Mutation inference**: Infer mutation annotations by comparing reference and mutated sequences.
+- **Mutation transformation**: Apply mutation annotations to reference sequences and convert codon-level mutations into amino-acid changes.
 
-The `utils` module contains helper functions that support common operations outside the core cleaning logic.  
-It includes utilities for downloading source files, handling paths, extracting files, checking file existence, and managing common input/output operations.  
+### Data Cleaning and Preprocessing
+
+- **Standardization**: Harmonize mutation names, sequences, labels, and metadata across heterogeneous datasets.
+- **Duplicate handling**: Remove or aggregate redundant mutation records according to dataset-specific rules.
+- **Dataset-specific cleaners**: Provide reusable cleaning pipelines for commonly used mutation datasets.
+
+### Pipeline Architecture
+
+- **Modular design**: Compose cleaning workflows from reusable processing components.
+- **Parallel processing**: Use multi-core processing for mutation validation, mutation application, and sequence-based mutation inference.
+- **Progress tracking**: Monitor long-running cleaning tasks with progress bars and structured execution summaries.
+
 ## Quick Start
 
 See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/user_guide) for more examples.
 
-### Supported Datasets
+## Supported Datasets
 
 <table>
   <thead>
     <tr>
       <th>Dataset Name</th>
       <th>Reference</th>
-      <th>File</th>
+      <th>Hugging Face Datasets URL</th>
     </tr>
   </thead>
   <tbody>
@@ -227,34 +213,6 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     </tr>
   </tbody>
 </table>
-
-
-## Core Features
-
-### Sequence Data Manipulation
-
-- **Sequence validation**: Validate DNA, RNA, and protein sequences against predefined alphabets.
-- **Sequence transformation**: Support transcription, reverse transcription, translation, and reverse-complement operations.
-- **Batch processing**: Process large tabular mutation datasets through reusable cleaning utilities.
-
-### Mutation Analysis
-
-- **Mutation parsing**: Parse amino-acid and codon-level mutation annotations.
-- **Mutation inference**: Infer mutation annotations by comparing reference and mutated sequences.
-- **Mutation transformation**: Apply mutation annotations to reference sequences and convert codon-level mutations into amino-acid changes.
-
-### Data Cleaning and Preprocessing
-
-- **Standardization**: Harmonize mutation names, sequences, labels, and metadata across heterogeneous datasets.
-- **Duplicate handling**: Remove or aggregate redundant mutation records according to dataset-specific rules.
-- **Dataset-specific cleaners**: Provide reusable cleaning pipelines for commonly used mutation datasets.
-
-### Pipeline Architecture
-
-- **Modular design**: Compose cleaning workflows from reusable processing components.
-- **Parallel processing**: Use multi-core processing for mutation validation, mutation application, and sequence-based mutation inference.
-- **Progress tracking**: Monitor long-running cleaning tasks with progress bars and structured execution summaries.
-
 
 ## Citation
 
