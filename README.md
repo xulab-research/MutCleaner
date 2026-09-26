@@ -65,29 +65,19 @@ MutCleaner/
 
 ## Key Capabilities
 
-### Sequence Data Manipulation
+- **Mutation validation and standardization**: Parse amino-acid and codon substitutions, normalize mutation separators and position indexing, and detect invalid symbols, repeated mutation positions, out-of-range positions, and mismatches with reference sequences.
 
-- **Sequence validation**: Validate DNA, RNA, and protein sequences against predefined alphabets.
-- **Sequence transformation**: Support transcription, reverse transcription, translation, and reverse-complement operations.
-- **Batch processing**: Process large tabular mutation datasets through reusable cleaning utilities.
+- **Sequence and mutation conversion**: Generate mutant sequences from reference sequences and mutation annotations, infer substitutions from equal-length sequence pairs, and convert codon mutations into amino-acid changes. DNA and RNA sequence utilities also support transcription, reverse transcription, translation, and reverse-complement operations.
 
-### Mutation Analysis
+- **Tabular data cleaning**: Map source columns to consistent names, convert data types, filter records with missing values or unwanted patterns, and resolve repeated measurements using mean aggregation, representative-row selection, or custom rules.
 
-- **Mutation parsing**: Parse amino-acid and codon-level mutation annotations.
-- **Mutation inference**: Infer mutation annotations by comparing reference and mutated sequences.
-- **Mutation transformation**: Apply mutation annotations to reference sequences and convert codon-level mutations into amino-acid changes.
+- **Configurable cleaning pipelines**: Use built-in pipelines for supported protein- and codon-level datasets, customize their settings, or assemble new workflows from reusable cleaning functions and dataset-specific transformations.
 
-### Data Cleaning and Preprocessing
+- **Inspection of cleaning results**: Retain failed records from validation and sequence-processing steps with error messages, inspect intermediate results, and access execution summaries with step status and runtime.
 
-- **Standardization**: Harmonize mutation names, sequences, labels, and metadata across heterogeneous datasets.
-- **Duplicate handling**: Remove or aggregate redundant mutation records according to dataset-specific rules.
-- **Dataset-specific cleaners**: Provide reusable cleaning pipelines for commonly used mutation datasets.
+- **Parallel processing**: Run mutation validation, mutant-sequence generation, and sequence-based mutation inference across multiple worker processes, with configurable worker counts.
 
-### Pipeline Architecture
-
-- **Modular design**: Compose cleaning workflows from reusable processing components.
-- **Parallel processing**: Use multi-core processing for mutation validation, mutation application, and sequence-based mutation inference.
-- **Progress tracking**: Monitor long-running cleaning tasks with progress bars and structured execution summaries.
+- **Unified dataset representation and export**: Organize reference sequences, mutation sets, labels, and metadata in a `MutationDataset`. Export each reference sequence and its variants as `wt.fasta`, `data.csv`, and `metadata.json` for downstream analysis.
 
 ## Quick Start
 
