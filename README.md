@@ -21,20 +21,8 @@ MutCleaner is an extensible Python framework that cleans, validates, and standar
 
 ## Installation
 
-Choose one of the following installation methods.
-
-### Install from PyPI
-
 ```bash
 pip install mutcleaner
-```
-
-### Install from source (editable mode)
-
-```bash
-git clone https://github.com/xulab-research/MutCleaner.git MutCleaner
-cd MutCleaner
-pip install -e .
 ```
 
 ## Repository structure
