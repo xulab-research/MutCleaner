@@ -51,7 +51,7 @@ MutCleaner/
 └── README.md                 # Project overview and usage instructions
 ```
 
-## Key Capabilities
+## Features
 
 - **Mutation validation and standardization**: Parse amino-acid and codon substitutions, normalize mutation separators and position indexing, and detect invalid symbols, repeated mutation positions, out-of-range positions, and mismatches with reference sequences.
 
