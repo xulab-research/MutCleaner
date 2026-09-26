@@ -3,8 +3,8 @@
 [![PyPI version badge](https://img.shields.io/pypi/v/mutcleaner.svg?logo=pypi&logoColor=white&color=blue&label=PyPI)](https://pypi.org/project/mutcleaner/)
 [![Python version badge](https://img.shields.io/python/required-version-toml.svg?logo=python&logoColor=white&color=blue&label=Python&tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fxulab-research%2FMutCleaner%2Frefs%2Fheads%2Fmain%2Fpyproject.toml)](https://pypi.org/project/mutcleaner/)
 [![License badge](https://img.shields.io/badge/License-Apache_2.0-blue?logo=apache&logoColor=white)](https://github.com/xulab-research/MutCleaner/blob/main/LICENSE)
-[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
-[![DOI](https://img.shields.io/badge/DOI-10.64898%2F2026.09.06.749687-blue?logo=doi&logoColor=white)](https://doi.org/10.64898/2026.09.06.749687)
+[![Hugging Face badge](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Datasets-yellow)](https://huggingface.co/datasets/xulab-research/MutCleaner)
+[![DOI badge](https://img.shields.io/badge/DOI-10.64898%2F2026.09.06.749687-blue?logo=doi&logoColor=white)](https://doi.org/10.64898/2026.09.06.749687)
 
 ## Overview
 
