@@ -10,9 +10,9 @@
 
 MutCleaner is an extensible Python framework that cleans, validates, and standardizes protein- and codon-level mutation datasets. The package combines dataset-specific cleaning pipelines with reusable sequence and mutation utilities, enabling reproducible preprocessing of large-scale mutational datasets for downstream bioinformatics and machine learning analyses.
 
-* **Preprint**: https://doi.org/10.64898/2026.09.06.749687
+* **Paper**: https://doi.org/10.64898/2026.09.06.749687
 * **Documentation**: https://xulab-research.github.io/MutCleaner
-* **Cleaning Examples**: https://xulab-research.github.io/MutCleaner/user_guide/supported_datasets.html
+* **Example**: https://xulab-research.github.io/MutCleaner/user_guide/supported_datasets.html
 
 <p align="center">
   <img src="plot/figures/overview.svg" alt="MutCleaner overview">
