@@ -1,0 +1,2844 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index &#8212; mutcleaner v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mutcleaner v0.1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#H"><strong>H</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
+ 
+</div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.add_columns">add_columns() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.add_delayed_step">add_delayed_step() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.add_delayed_step">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.add_mutation">add_mutation() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.add_mutation_set">add_mutation_set() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.add_mutation_set">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.add_mutation_sets">add_mutation_sets() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.add_mutation_sets">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.add_reference_sequence">add_reference_sequence() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.add_reference_sequence">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_custom_cleaners.html#mutcleaner.cleaners.rbd_custom_cleaners.add_reference_sequences_by_target">add_reference_sequences_by_target() (in module mutcleaner.cleaners.rbd_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_custom_cleaners.html#mutcleaner.cleaners.human_domainome_custom_cleaners.add_sequences_to_dataset">add_sequences_to_dataset() (in module mutcleaner.cleaners.human_domainome_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.aggregate_labels_by_name">aggregate_labels_by_name() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.aggregation_strategy">aggregation_strategy (mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.aggregation_strategy">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation">AminoAcidMutation (class in mutcleaner.core.mutation)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.AminoAcidMutationSet">AminoAcidMutationSet (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutationSet">(class in mutcleaner.core.mutation)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig">AntitoxinParD3CleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig">(class in mutcleaner.cleaners.antitoxin_pard3_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.apply">apply() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.apply">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.BaseSequence.apply_mutation">apply_mutation() (mutcleaner.core.sequence.BaseSequence method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_custom_cleaners.html#mutcleaner.cleaners.rbd_custom_cleaners.apply_mutations_preserving_wild_type">apply_mutations_preserving_wild_type() (in module mutcleaner.cleaners.rbd_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.apply_mutations_to_sequences">apply_mutations_to_sequences() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#mutcleaner.utils.cleaner_workers.apply_single_mutation">apply_single_mutation() (in module mutcleaner.utils.cleaner_workers)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig">ArchStabMS1E10CleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig">(class in mutcleaner.cleaners.archstabms_1e10_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.artifacts">artifacts (mutcleaner.core.Pipeline property)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.artifacts">(mutcleaner.core.pipeline.Pipeline property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.assign">assign() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.assign">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.average_labels_by_name">average_labels_by_name() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.RNASequence.back_transcribe">back_transcribe() (mutcleaner.core.RNASequence method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.RNASequence.back_transcribe">(mutcleaner.core.sequence.RNASequence method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.BaseAlphabet">BaseAlphabet (class in mutcleaner.core.alphabet)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig">BaseCleanerConfig (class in mutcleaner.cleaners.base_config)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.BaseMutation">BaseMutation (class in mutcleaner.core.mutation)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.BaseSequence">BaseSequence (class in mutcleaner.core.sequence)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.cache_validation_results">cache_validation_results (mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.cache_validation_results">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.cache_validation_results">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.cache_validation_results">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig">CDNAProteolysisCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig">(class in mutcleaner.cleaners.cdna_proteolysis_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_antitoxin_pard3_dataset">clean_antitoxin_pard3_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.clean_antitoxin_pard3_dataset">(in module mutcleaner.cleaners.antitoxin_pard3_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_archstabms_1e10_dataset">clean_archstabms_1e10_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.clean_archstabms_1e10_dataset">(in module mutcleaner.cleaners.archstabms_1e10_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_cdna_proteolysis_dataset">clean_cdna_proteolysis_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.clean_cdna_proteolysis_dataset">(in module mutcleaner.cleaners.cdna_proteolysis_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_ctxm_dataset">clean_ctxm_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.clean_ctxm_dataset">(in module mutcleaner.cleaners.ctxm_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_ddg_dtm_dataset">clean_ddg_dtm_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.clean_ddg_dtm_dataset">(in module mutcleaner.cleaners.ddg_dtm_cleaners)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_human_domainome_sup2_dataset">clean_human_domainome_sup2_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.clean_human_domainome_sup2_dataset">(in module mutcleaner.cleaners.human_domainome_sup2_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_human_myoglobin_dataset">clean_human_myoglobin_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.clean_human_myoglobin_dataset">(in module mutcleaner.cleaners.human_myoglobin_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_proteingym_dms_substitutions_dataset">clean_proteingym_dms_substitutions_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.clean_proteingym_dms_substitutions_dataset">(in module mutcleaner.cleaners.proteingym_dms_substitutions_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_rbd_ace2_dataset">clean_rbd_ace2_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.clean_rbd_ace2_dataset">(in module mutcleaner.cleaners.rbd_ace2_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_rbd_antibody_dataset">clean_rbd_antibody_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.clean_rbd_antibody_dataset">(in module mutcleaner.cleaners.rbd_antibody_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.clean_trpb_dataset">clean_trpb_dataset() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.clean_trpb_dataset">(in module mutcleaner.cleaners.trpb_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutation">CodonMutation (class in mutcleaner.core.mutation)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonMutationSet">CodonMutationSet (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutationSet">(class in mutcleaner.core.mutation)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonTable">CodonTable (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.codon.html#mutcleaner.core.codon.CodonTable">(class in mutcleaner.core.codon)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.column_mapping">column_mapping (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.column_mapping">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.column_mapping">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.column_mapping">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.column_mapping">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.column_mapping">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.column_mapping">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.column_mapping">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.column_mapping">(mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.column_mapping">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.column_mapping">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.column_mapping">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.column_mapping">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.column_mapping">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.column_mapping">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.column_mapping">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.column_mapping">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.column_mapping">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.column_mapping">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.column_mapping">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.column_mapping">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.column_mapping">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_custom_cleaners.html#mutcleaner.cleaners.archstabms_1e10_custom_cleaners.compute_mutations">compute_mutations() (in module mutcleaner.cleaners.archstabms_1e10_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_custom_cleaners.html#mutcleaner.cleaners.human_myoglobin_custom_cleaners.convert_codon_to_amino_acid">convert_codon_to_amino_acid() (in module mutcleaner.cleaners.human_myoglobin_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.convert_codon_to_amino_acid_sets">convert_codon_to_amino_acid_sets() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.convert_codon_to_amino_acid_sets">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.convert_data_types">convert_data_types() (in module mutcleaner.cleaners.basic_cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.type_converter.html#mutcleaner.utils.type_converter.convert_data_types">(in module mutcleaner.utils.type_converter)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.type_converter.html#mutcleaner.utils.type_converter.convert_data_types_batch">convert_data_types_batch() (in module mutcleaner.utils.type_converter)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.dataset_builders.html#mutcleaner.utils.dataset_builders.convert_format_1">convert_format_1() (in module mutcleaner.utils.dataset_builders)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.dataset_builders.html#mutcleaner.utils.dataset_builders.convert_format_2">convert_format_2() (in module mutcleaner.utils.dataset_builders)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.type_converter.html#mutcleaner.utils.type_converter.convert_to_boolean">convert_to_boolean() (in module mutcleaner.utils.type_converter)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format">convert_to_mutation_dataset_format() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.copy">copy() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.copy">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.AminoAcidMutationSet.count_by_effect_type">count_by_effect_type() (mutcleaner.core.AminoAcidMutationSet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutationSet.count_by_effect_type">(mutcleaner.core.mutation.AminoAcidMutationSet method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_antitoxin_pard3_cleaner">create_antitoxin_pard3_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.create_antitoxin_pard3_cleaner">(in module mutcleaner.cleaners.antitoxin_pard3_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_archstabms_1e10_cleaner">create_archstabms_1e10_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.create_archstabms_1e10_cleaner">(in module mutcleaner.cleaners.archstabms_1e10_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_cdna_proteolysis_cleaner">create_cdna_proteolysis_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.create_cdna_proteolysis_cleaner">(in module mutcleaner.cleaners.cdna_proteolysis_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_ctxm_cleaner">create_ctxm_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.create_ctxm_cleaner">(in module mutcleaner.cleaners.ctxm_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_ddg_dtm_cleaner">create_ddg_dtm_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner">(in module mutcleaner.cleaners.ddg_dtm_cleaners)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_human_domainome_sup2_cleaner">create_human_domainome_sup2_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.create_human_domainome_sup2_cleaner">(in module mutcleaner.cleaners.human_domainome_sup2_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_human_myoglobin_cleaner">create_human_myoglobin_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.create_human_myoglobin_cleaner">(in module mutcleaner.cleaners.human_myoglobin_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.create_pipeline">create_pipeline() (in module mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.create_pipeline">(in module mutcleaner.core.pipeline)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_proteingym_dms_substitutions_cleaner">create_proteingym_dms_substitutions_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.create_proteingym_dms_substitutions_cleaner">(in module mutcleaner.cleaners.proteingym_dms_substitutions_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_rbd_ace2_cleaner">create_rbd_ace2_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.create_rbd_ace2_cleaner">(in module mutcleaner.cleaners.rbd_ace2_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_rbd_antibody_cleaner">create_rbd_antibody_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.create_rbd_antibody_cleaner">(in module mutcleaner.cleaners.rbd_antibody_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.create_trpb_cleaner">create_trpb_cleaner() (in module mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.create_trpb_cleaner">(in module mutcleaner.cleaners.trpb_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig">CTXMCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig">(class in mutcleaner.cleaners.ctxm_cleaner)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.data">data (mutcleaner.core.Pipeline property)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.data">(mutcleaner.core.pipeline.Pipeline property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig">DdgDtmCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig">(class in mutcleaner.cleaners.ddg_dtm_cleaners)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.DNASequence.default_alphabet">default_alphabet() (mutcleaner.core.DNASequence class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinSequence.default_alphabet">(mutcleaner.core.ProteinSequence class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.RNASequence.default_alphabet">(mutcleaner.core.RNASequence class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.BaseSequence.default_alphabet">(mutcleaner.core.sequence.BaseSequence class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.DNASequence.default_alphabet">(mutcleaner.core.sequence.DNASequence class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.ProteinSequence.default_alphabet">(mutcleaner.core.sequence.ProteinSequence class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.RNASequence.default_alphabet">(mutcleaner.core.sequence.RNASequence class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.delayed_then">delayed_then() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.delayed_then">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.DNAAlphabet">DNAAlphabet (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.DNAAlphabet">(class in mutcleaner.core.alphabet)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.DNASequence">DNASequence (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.DNASequence">(class in mutcleaner.core.sequence)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download">download() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_antitoxin_pard3_source_file">download_antitoxin_pard3_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_antitoxin_pard3_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_archstabms1e10_source_file">download_archstabms1e10_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_archstabms1e10_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_cdna_proteolysis_source_file">download_cdna_proteolysis_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_cdna_proteolysis_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_ctxm_source_file">download_ctxm_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_ctxm_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_ddg_dtm_source_file">download_ddg_dtm_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_ddg_dtm_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_human_domainome_source_file">download_human_domainome_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_human_domainome_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_human_myoglobin_source_file">download_human_myoglobin_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_human_myoglobin_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_proteingym_source_file">download_proteingym_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_proteingym_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_rbd_ace2_source_file">download_rbd_ace2_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_rbd_ace2_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_rbd_antibody_source_file">download_rbd_antibody_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_rbd_antibody_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.download_trpb_source_file">download_trpb_source_file() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#mutcleaner.utils.raw_data_downloader.download_trpb_source_file">(in module mutcleaner.utils.raw_data_downloader)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.drop_na_columns">drop_na_columns (mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.drop_na_columns">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.drop_na_columns">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.drop_na_columns">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.drop_na_columns">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.drop_na_columns">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.effect_type">effect_type (mutcleaner.core.mutation.AminoAcidMutation property)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.execute">execute() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.execute">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.extract_and_rename_columns">extract_and_rename_columns() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_custom_cleaners.html#mutcleaner.cleaners.human_domainome_custom_cleaners.extract_domain_sequences">extract_domain_sequences() (in module mutcleaner.cleaners.human_domainome_custom_cleaners)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.filter">filter() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.filter">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.filter_and_clean_data">filter_and_clean_data() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.filter_by_category">filter_by_category() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.filter_by_effect_type">filter_by_effect_type() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.filter_by_effect_type">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.filter_by_mutation_type">filter_by_mutation_type() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.filter_by_mutation_type">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.filter_by_reference">filter_by_reference() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.filter_by_reference">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.filters">filters (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.filters">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.filters">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.filters">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.filters">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.filters">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.filters">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.filters">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.filters">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.filters">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.filters">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.filters">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.filters">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.filters">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.filters">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.filters">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.filters">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.filters">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.filters">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.filters">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinSequence.find_motif">find_motif() (mutcleaner.core.ProteinSequence method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.ProteinSequence.find_motif">(mutcleaner.core.sequence.ProteinSequence method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.from_dataframe">from_dataframe() (mutcleaner.core.dataset.MutationDataset class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.from_dataframe">(mutcleaner.core.MutationDataset class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.from_dict">from_dict() (mutcleaner.cleaners.base_config.BaseCleanerConfig class method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.from_json">from_json() (mutcleaner.cleaners.base_config.BaseCleanerConfig class method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.from_string">from_string() (mutcleaner.core.mutation.AminoAcidMutation class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.BaseMutation.from_string">(mutcleaner.core.mutation.BaseMutation class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutation.from_string">(mutcleaner.core.mutation.CodonMutation class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.from_string">(mutcleaner.core.mutation.MutationSet class method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_custom_cleaners.html#mutcleaner.cleaners.human_domainome_custom_cleaners.generate_mutation_strings">generate_mutation_strings() (in module mutcleaner.cleaners.human_domainome_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.get_all_artifacts">get_all_artifacts() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.get_all_artifacts">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.get_artifact">get_artifact() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.get_artifact">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.type_converter.html#mutcleaner.utils.type_converter.get_conversion_function">get_conversion_function() (in module mutcleaner.utils.type_converter)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.get_data">get_data() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.get_data">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.get_delayed_steps_info">get_delayed_steps_info() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.get_delayed_steps_info">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.get_execution_summary">get_execution_summary() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.get_execution_summary">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.BaseAlphabet.get_invalid_chars">get_invalid_chars() (mutcleaner.core.alphabet.BaseAlphabet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.AminoAcidMutationSet.get_missense_mutations">get_missense_mutations() (mutcleaner.core.AminoAcidMutationSet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutationSet.get_missense_mutations">(mutcleaner.core.mutation.AminoAcidMutationSet method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.get_mutation_at">get_mutation_at() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.get_mutation_categories">get_mutation_categories() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.get_mutation_category">get_mutation_category() (mutcleaner.core.mutation.AminoAcidMutation method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.BaseMutation.get_mutation_category">(mutcleaner.core.mutation.BaseMutation method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutation.get_mutation_category">(mutcleaner.core.mutation.CodonMutation method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.get_mutation_count">get_mutation_count() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.get_mutation_set_label">get_mutation_set_label() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.get_mutation_set_label">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.get_mutation_set_reference">get_mutation_set_reference() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.get_mutation_set_reference">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.AminoAcidMutationSet.get_nonsense_mutations">get_nonsense_mutations() (mutcleaner.core.AminoAcidMutationSet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutationSet.get_nonsense_mutations">(mutcleaner.core.mutation.AminoAcidMutationSet method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.ProteinAlphabet.get_one_letter_code">get_one_letter_code() (mutcleaner.core.alphabet.ProteinAlphabet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinAlphabet.get_one_letter_code">(mutcleaner.core.ProteinAlphabet method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.get_position_coverage">get_position_coverage() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.get_position_coverage">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.get_positions">get_positions() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.get_positions_set">get_positions_set() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.get_reference_sequence">get_reference_sequence() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.get_reference_sequence">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinSequence.get_residue">get_residue() (mutcleaner.core.ProteinSequence method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.ProteinSequence.get_residue">(mutcleaner.core.sequence.ProteinSequence method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.get_sorted_by_position">get_sorted_by_position() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.codon.html#mutcleaner.core.codon.CodonTable.get_standard_table">get_standard_table() (mutcleaner.core.codon.CodonTable class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonTable.get_standard_table">(mutcleaner.core.CodonTable class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.get_statistics">get_statistics() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.get_statistics">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.get_step_result">get_step_result() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.get_step_result">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.BaseSequence.get_subsequence">get_subsequence() (mutcleaner.core.sequence.BaseSequence method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.get_summary">get_summary() (mutcleaner.cleaners.base_config.BaseCleanerConfig method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.AminoAcidMutationSet.get_synonymous_mutations">get_synonymous_mutations() (mutcleaner.core.AminoAcidMutationSet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutationSet.get_synonymous_mutations">(mutcleaner.core.mutation.AminoAcidMutationSet method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.codon.html#mutcleaner.core.codon.CodonTable.get_table_by_name">get_table_by_name() (mutcleaner.core.codon.CodonTable class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonTable.get_table_by_name">(mutcleaner.core.CodonTable class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.ProteinAlphabet.get_three_letter_code">get_three_letter_code() (mutcleaner.core.alphabet.ProteinAlphabet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinAlphabet.get_three_letter_code">(mutcleaner.core.ProteinAlphabet method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="H">H</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.handle_multiple_wt">handle_multiple_wt (mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.handle_multiple_wt">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.handle_multiple_wt">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.handle_multiple_wt">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.has_mutation_at">has_mutation_at() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.has_pending_steps">has_pending_steps (mutcleaner.core.Pipeline property)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.has_pending_steps">(mutcleaner.core.pipeline.Pipeline property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.AminoAcidMutationSet.has_stop_codon_mutations">has_stop_codon_mutations() (mutcleaner.core.AminoAcidMutationSet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutationSet.has_stop_codon_mutations">(mutcleaner.core.mutation.AminoAcidMutationSet method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig">HumanDomainomeSup2CleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig">(class in mutcleaner.cleaners.human_domainome_sup2_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig">HumanMyoglobinCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig">(class in mutcleaner.cleaners.human_myoglobin_cleaner)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.infer_mut_workers">infer_mut_workers (mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.infer_mut_workers">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.infer_mut_workers">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.infer_mut_workers">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.BaseSequence.infer_mutation">infer_mutation() (mutcleaner.core.sequence.BaseSequence method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.infer_mutations_from_sequences">infer_mutations_from_sequences() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#mutcleaner.utils.cleaner_workers.infer_single_mutationset">infer_single_mutationset() (in module mutcleaner.utils.cleaner_workers)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.infer_wildtype_sequences">infer_wildtype_sequences() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html#mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.infer_wt_sequence">infer_wt_sequence() (in module mutcleaner.cleaners.antitoxin_pard3_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#mutcleaner.utils.cleaner_workers.infer_wt_sequence_grouped">infer_wt_sequence_grouped() (in module mutcleaner.utils.cleaner_workers)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.infer_wt_workers">infer_wt_workers (mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.infer_wt_workers">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.infer_wt_workers">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.infer_wt_workers">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.input_is_zero_based">input_is_zero_based (mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.input_is_zero_based">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.mutation_converter.html#mutcleaner.utils.mutation_converter.invert_mutation">invert_mutation() (in module mutcleaner.utils.mutation_converter)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.mutation_converter.html#mutcleaner.utils.mutation_converter.invert_mutation_set">invert_mutation_set() (in module mutcleaner.utils.mutation_converter)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.is_missense">is_missense() (mutcleaner.core.mutation.AminoAcidMutation method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.is_multiple_mutations">is_multiple_mutations() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.is_nonsense">is_nonsense() (mutcleaner.core.mutation.AminoAcidMutation method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.is_single_mutation">is_single_mutation() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.codon.html#mutcleaner.core.codon.CodonTable.is_start_codon">is_start_codon() (mutcleaner.core.codon.CodonTable method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonTable.is_start_codon">(mutcleaner.core.CodonTable method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.codon.html#mutcleaner.core.codon.CodonTable.is_stop_codon">is_stop_codon() (mutcleaner.core.codon.CodonTable method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonTable.is_stop_codon">(mutcleaner.core.CodonTable method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.is_synonymous">is_synonymous() (mutcleaner.core.mutation.AminoAcidMutation method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.BaseAlphabet.is_valid_char">is_valid_char() (mutcleaner.core.alphabet.BaseAlphabet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.BaseAlphabet.is_valid_sequence">is_valid_sequence() (mutcleaner.core.alphabet.BaseAlphabet method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.label_columns">label_columns (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.label_columns">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.label_columns">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.label_columns">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.label_columns">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.label_columns">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.label_columns">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.label_columns">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.label_columns">(mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.label_columns">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.label_columns">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.label_columns">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.label_columns">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.label_columns">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.label_columns">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.label_columns">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.label_columns">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.label_columns">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.label_columns">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.label_columns">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.label_columns">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.label_columns">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.list_datasets_with_built_in_cleaners">list_datasets_with_built_in_cleaners() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.data_source.html#mutcleaner.utils.data_source.list_datasets_with_built_in_cleaners">(in module mutcleaner.utils.data_source)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.list_reference_sequences">list_reference_sequences() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.list_reference_sequences">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.load">load() (mutcleaner.core.dataset.MutationDataset class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.load">(mutcleaner.core.MutationDataset class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.load">(mutcleaner.core.Pipeline class method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.load">(mutcleaner.core.pipeline.Pipeline class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.load_by_reference">load_by_reference() (mutcleaner.core.dataset.MutationDataset class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.load_by_reference">(mutcleaner.core.MutationDataset class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.load_sequences">load_sequences() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.load_structured_data">load_structured_data() (mutcleaner.core.Pipeline class method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.load_structured_data">(mutcleaner.core.pipeline.Pipeline class method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.utils.label_resolvers.html#mutcleaner.utils.label_resolvers.make_resolver">make_resolver() (in module mutcleaner.utils.label_resolvers)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_custom_cleaners.html#mutcleaner.cleaners.rbd_custom_cleaners.mark_wild_type_by_variant_class">mark_wild_type_by_variant_class() (in module mutcleaner.cleaners.rbd_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.merge">merge() (mutcleaner.cleaners.base_config.BaseCleanerConfig method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.merge_columns">merge_columns() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#module-mutcleaner.cleaners">mutcleaner.cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#module-mutcleaner.cleaners.antitoxin_pard3_cleaner">mutcleaner.cleaners.antitoxin_pard3_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html#module-mutcleaner.cleaners.antitoxin_pard3_custom_cleaners">mutcleaner.cleaners.antitoxin_pard3_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#module-mutcleaner.cleaners.archstabms_1e10_cleaner">mutcleaner.cleaners.archstabms_1e10_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_custom_cleaners.html#module-mutcleaner.cleaners.archstabms_1e10_custom_cleaners">mutcleaner.cleaners.archstabms_1e10_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.base_config.html#module-mutcleaner.cleaners.base_config">mutcleaner.cleaners.base_config</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#module-mutcleaner.cleaners.basic_cleaners">mutcleaner.cleaners.basic_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#module-mutcleaner.cleaners.cdna_proteolysis_cleaner">mutcleaner.cleaners.cdna_proteolysis_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.html#module-mutcleaner.cleaners.cdna_proteolysis_custom_cleaners">mutcleaner.cleaners.cdna_proteolysis_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#module-mutcleaner.cleaners.ctxm_cleaner">mutcleaner.cleaners.ctxm_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#module-mutcleaner.cleaners.ddg_dtm_cleaners">mutcleaner.cleaners.ddg_dtm_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_custom_cleaners.html#module-mutcleaner.cleaners.human_domainome_custom_cleaners">mutcleaner.cleaners.human_domainome_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#module-mutcleaner.cleaners.human_domainome_sup2_cleaner">mutcleaner.cleaners.human_domainome_sup2_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#module-mutcleaner.cleaners.human_myoglobin_cleaner">mutcleaner.cleaners.human_myoglobin_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_custom_cleaners.html#module-mutcleaner.cleaners.human_myoglobin_custom_cleaners">mutcleaner.cleaners.human_myoglobin_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#module-mutcleaner.cleaners.proteingym_dms_substitutions_cleaner">mutcleaner.cleaners.proteingym_dms_substitutions_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners.html#module-mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners">mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#module-mutcleaner.cleaners.rbd_ace2_cleaner">mutcleaner.cleaners.rbd_ace2_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#module-mutcleaner.cleaners.rbd_antibody_cleaner">mutcleaner.cleaners.rbd_antibody_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_custom_cleaners.html#module-mutcleaner.cleaners.rbd_custom_cleaners">mutcleaner.cleaners.rbd_custom_cleaners</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#module-mutcleaner.cleaners.trpb_cleaner">mutcleaner.cleaners.trpb_cleaner</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.html#module-mutcleaner.core">mutcleaner.core</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.alphabet.html#module-mutcleaner.core.alphabet">mutcleaner.core.alphabet</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.codon.html#module-mutcleaner.core.codon">mutcleaner.core.codon</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.constants.html#module-mutcleaner.core.constants">mutcleaner.core.constants</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.dataset.html#module-mutcleaner.core.dataset">mutcleaner.core.dataset</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#module-mutcleaner.core.mutation">mutcleaner.core.mutation</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#module-mutcleaner.core.pipeline">mutcleaner.core.pipeline</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#module-mutcleaner.core.sequence">mutcleaner.core.sequence</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.types.html#module-mutcleaner.core.types">mutcleaner.core.types</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.html#module-mutcleaner.utils">mutcleaner.utils</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#module-mutcleaner.utils.cleaner_workers">mutcleaner.utils.cleaner_workers</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.data_source.html#module-mutcleaner.utils.data_source">mutcleaner.utils.data_source</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.dataset_builders.html#module-mutcleaner.utils.dataset_builders">mutcleaner.utils.dataset_builders</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.label_resolvers.html#module-mutcleaner.utils.label_resolvers">mutcleaner.utils.label_resolvers</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.mutation_converter.html#module-mutcleaner.utils.mutation_converter">mutcleaner.utils.mutation_converter</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#module-mutcleaner.utils.raw_data_downloader">mutcleaner.utils.raw_data_downloader</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.sequence_io.html#module-mutcleaner.utils.sequence_io">mutcleaner.utils.sequence_io</a>
+</li>
+        <li><a href="api/generated/mutcleaner.utils.type_converter.html#module-mutcleaner.utils.type_converter">mutcleaner.utils.type_converter</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.multiout_step">multiout_step() (in module mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.multiout_step">(in module mutcleaner.core.pipeline)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.mutation_subtype">mutation_subtype (mutcleaner.core.mutation.MutationSet property)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset">MutationDataset (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset">(class in mutcleaner.core.dataset)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet">MutationSet (class in mutcleaner.core.mutation)</a>
+</li>
+      <li>
+    mutcleaner.cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#module-mutcleaner.cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.antitoxin_pard3_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#module-mutcleaner.cleaners.antitoxin_pard3_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.antitoxin_pard3_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html#module-mutcleaner.cleaners.antitoxin_pard3_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.archstabms_1e10_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#module-mutcleaner.cleaners.archstabms_1e10_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.archstabms_1e10_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_custom_cleaners.html#module-mutcleaner.cleaners.archstabms_1e10_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.base_config
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.base_config.html#module-mutcleaner.cleaners.base_config">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.basic_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#module-mutcleaner.cleaners.basic_cleaners">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    mutcleaner.cleaners.cdna_proteolysis_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#module-mutcleaner.cleaners.cdna_proteolysis_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.cdna_proteolysis_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.html#module-mutcleaner.cleaners.cdna_proteolysis_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.ctxm_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#module-mutcleaner.cleaners.ctxm_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.ddg_dtm_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#module-mutcleaner.cleaners.ddg_dtm_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.human_domainome_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_custom_cleaners.html#module-mutcleaner.cleaners.human_domainome_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.human_domainome_sup2_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#module-mutcleaner.cleaners.human_domainome_sup2_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.human_myoglobin_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#module-mutcleaner.cleaners.human_myoglobin_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.human_myoglobin_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_custom_cleaners.html#module-mutcleaner.cleaners.human_myoglobin_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.proteingym_dms_substitutions_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#module-mutcleaner.cleaners.proteingym_dms_substitutions_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners.html#module-mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.rbd_ace2_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#module-mutcleaner.cleaners.rbd_ace2_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.rbd_antibody_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#module-mutcleaner.cleaners.rbd_antibody_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.rbd_custom_cleaners
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_custom_cleaners.html#module-mutcleaner.cleaners.rbd_custom_cleaners">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.cleaners.trpb_cleaner
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#module-mutcleaner.cleaners.trpb_cleaner">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#module-mutcleaner.core">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.alphabet
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.alphabet.html#module-mutcleaner.core.alphabet">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.codon
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.codon.html#module-mutcleaner.core.codon">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.constants
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.constants.html#module-mutcleaner.core.constants">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.dataset
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.dataset.html#module-mutcleaner.core.dataset">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.mutation
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#module-mutcleaner.core.mutation">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.pipeline
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#module-mutcleaner.core.pipeline">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.sequence
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#module-mutcleaner.core.sequence">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.core.types
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.types.html#module-mutcleaner.core.types">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.html#module-mutcleaner.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.cleaner_workers
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#module-mutcleaner.utils.cleaner_workers">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.data_source
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.data_source.html#module-mutcleaner.utils.data_source">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.dataset_builders
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.dataset_builders.html#module-mutcleaner.utils.dataset_builders">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.label_resolvers
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.label_resolvers.html#module-mutcleaner.utils.label_resolvers">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.mutation_converter
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.mutation_converter.html#module-mutcleaner.utils.mutation_converter">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.raw_data_downloader
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.raw_data_downloader.html#module-mutcleaner.utils.raw_data_downloader">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.sequence_io
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.sequence_io.html#module-mutcleaner.utils.sequence_io">module</a>
+</li>
+      </ul></li>
+      <li>
+    mutcleaner.utils.type_converter
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.type_converter.html#module-mutcleaner.utils.type_converter">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.nearest_by">nearest_by (mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.nearest_by">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_custom_cleaners.html#mutcleaner.cleaners.rbd_custom_cleaners.normalize_rbd_ace2_target_names">normalize_rbd_ace2_target_names() (in module mutcleaner.cleaners.rbd_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.type_converter.html#mutcleaner.utils.type_converter.normalize_type_conversions">normalize_type_conversions() (in module mutcleaner.utils.type_converter)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.num_workers">num_workers (mutcleaner.cleaners.base_config.BaseCleanerConfig attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.parse_custom_delimiter_header">parse_custom_delimiter_header() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.parse_fasta">parse_fasta() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.parse_ncbi_header">parse_ncbi_header() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.parse_simple_header">parse_simple_header() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.parse_uniprot_header">parse_uniprot_header() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.peek">peek() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.peek">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline">Pipeline (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline">(class in mutcleaner.core.pipeline)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.pipeline_name">pipeline_name (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.pipeline_name">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.pipeline_name">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.pipeline_name">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.pipeline_name">(mutcleaner.cleaners.base_config.BaseCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.pipeline_name">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.pipeline_name">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.pipeline_name">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.pipeline_name">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.pipeline_name">(mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.pipeline_name">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.pipeline_name">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.pipeline_name">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.pipeline_name">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.pipeline_name">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.pipeline_name">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.pipeline_name">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.pipeline_name">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.pipeline_name">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.pipeline_name">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.pipeline_name">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.pipeline_name">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.pipeline_name">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.pipeline_step">pipeline_step() (in module mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.pipeline_step">(in module mutcleaner.core.pipeline)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.primary_label_column">primary_label_column (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.primary_label_column">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.primary_label_column">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.primary_label_column">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.primary_label_column">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.primary_label_column">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.primary_label_column">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.primary_label_column">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.primary_label_column">(mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.primary_label_column">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.primary_label_column">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.primary_label_column">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.primary_label_column">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.primary_label_column">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.primary_label_column">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.primary_label_column">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.primary_label_column">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.primary_label_column">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.primary_label_column">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.primary_label_column">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.primary_label_column">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.primary_label_column">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_custom_cleaners.html#mutcleaner.cleaners.human_domainome_custom_cleaners.process_domain_positions">process_domain_positions() (in module mutcleaner.cleaners.human_domainome_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.process_workers">process_workers (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.process_workers">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.process_workers">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.process_workers">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.process_workers">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.process_workers">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.process_workers">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.process_workers">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.process_workers">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.process_workers">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinAlphabet">ProteinAlphabet (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.ProteinAlphabet">(class in mutcleaner.core.alphabet)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig">ProteinGymCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig">(class in mutcleaner.cleaners.proteingym_dms_substitutions_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.ProteinSequence">ProteinSequence (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.ProteinSequence">(class in mutcleaner.core.sequence)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig">RBDACE2CleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig">(class in mutcleaner.cleaners.rbd_ace2_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig">RBDAntibodyCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig">(class in mutcleaner.cleaners.rbd_antibody_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.read_dataset">read_dataset() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners.html#mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners.read_proteingym_dms_substitutions_data">read_proteingym_dms_substitutions_data() (in module mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.reference_sequences">reference_sequences (mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.reference_sequences">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.remove_delayed_step">remove_delayed_step() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.remove_delayed_step">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.remove_mutation">remove_mutation() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.remove_mutation_set">remove_mutation_set() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.remove_mutation_set">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.remove_reference_sequence">remove_reference_sequence() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.remove_reference_sequence">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.replace_in_column">replace_in_column() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.DNASequence.reverse_complement">reverse_complement() (mutcleaner.core.DNASequence method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.RNASequence.reverse_complement">(mutcleaner.core.RNASequence method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.DNASequence.reverse_complement">(mutcleaner.core.sequence.DNASequence method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.RNASequence.reverse_complement">(mutcleaner.core.sequence.RNASequence method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.RNAAlphabet">RNAAlphabet (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.RNAAlphabet">(class in mutcleaner.core.alphabet)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.RNASequence">RNASequence (class in mutcleaner.core)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.RNASequence">(class in mutcleaner.core.sequence)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.save">save() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.save">(mutcleaner.core.MutationDataset method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.save">(mutcleaner.core.Pipeline method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.save">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.save_artifacts">save_artifacts() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.save_artifacts">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.save_by_reference">save_by_reference() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.save_by_reference">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.save_structured_data">save_structured_data() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.save_structured_data">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonMutationSet.seq_type">seq_type (mutcleaner.core.CodonMutationSet property)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutationSet.seq_type">(mutcleaner.core.mutation.CodonMutationSet property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.set_mutation_set_label">set_mutation_set_label() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.set_mutation_set_label">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.set_mutation_set_reference">set_mutation_set_reference() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.set_mutation_set_reference">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.utils.html#mutcleaner.utils.show_download_instructions">show_download_instructions() (in module mutcleaner.utils)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.utils.data_source.html#mutcleaner.utils.data_source.show_download_instructions">(in module mutcleaner.utils.data_source)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html#mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.simplify_mutations">simplify_mutations() (in module mutcleaner.cleaners.antitoxin_pard3_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.sort_by_position">sort_by_position() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.split_columns">split_columns() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.store">store() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.store">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.structured_data">structured_data (mutcleaner.core.Pipeline property)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.structured_data">(mutcleaner.core.pipeline.Pipeline property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.subtract_labels_by_wt">subtract_labels_by_wt() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.target_name_aliases">target_name_aliases (mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.target_name_aliases">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.then">then() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.then">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutation.to_amino_acid_mutation">to_amino_acid_mutation() (mutcleaner.core.mutation.CodonMutation method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonMutationSet.to_amino_acid_mutation_set">to_amino_acid_mutation_set() (mutcleaner.core.CodonMutationSet method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutationSet.to_amino_acid_mutation_set">(mutcleaner.core.mutation.CodonMutationSet method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.to_dataframe">to_dataframe() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.to_dataframe">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.to_dict">to_dict() (mutcleaner.cleaners.base_config.BaseCleanerConfig method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.to_json">to_json() (mutcleaner.cleaners.base_config.BaseCleanerConfig method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.DNASequence.transcribe">transcribe() (mutcleaner.core.DNASequence method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.DNASequence.transcribe">(mutcleaner.core.sequence.DNASequence method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.transform">transform() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.transform">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.DNASequence.translate">translate() (mutcleaner.core.DNASequence method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.RNASequence.translate">(mutcleaner.core.RNASequence method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.DNASequence.translate">(mutcleaner.core.sequence.DNASequence method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.sequence.html#mutcleaner.core.sequence.RNASequence.translate">(mutcleaner.core.sequence.RNASequence method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.codon.html#mutcleaner.core.codon.CodonTable.translate_codon">translate_codon() (mutcleaner.core.codon.CodonTable method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.CodonTable.translate_codon">(mutcleaner.core.CodonTable method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig">TrpBCleanerConfig (class in mutcleaner.cleaners)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig">(class in mutcleaner.cleaners.trpb_cleaner)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.AminoAcidMutation.type">type (mutcleaner.core.mutation.AminoAcidMutation property)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.BaseMutation.type">(mutcleaner.core.mutation.BaseMutation property)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.CodonMutation.type">(mutcleaner.core.mutation.CodonMutation property)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.type_conversions">type_conversions (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.type_conversions">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.type_conversions">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.type_conversions">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.type_conversions">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.type_conversions">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.type_conversions">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.type_conversions">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.type_conversions">(mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.type_conversions">(mutcleaner.cleaners.DdgDtmCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.type_conversions">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.type_conversions">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.type_conversions">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.type_conversions">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.type_conversions">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.type_conversions">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.type_conversions">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.type_conversions">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.type_conversions">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.type_conversions">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.type_conversions">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.type_conversions">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#mutcleaner.utils.cleaner_workers.valid_single_mutation">valid_single_mutation() (in module mutcleaner.utils.cleaner_workers)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate">validate() (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.validate">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig.validate">(mutcleaner.cleaners.ArchStabMS1E10CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.archstabms_1e10_cleaner.html#mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig.validate">(mutcleaner.cleaners.archstabms_1e10_cleaner.ArchStabMS1E10CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.validate">(mutcleaner.cleaners.base_config.BaseCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.validate">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.validate">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.validate">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.validate">(mutcleaner.cleaners.CTXMCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig.validate">(mutcleaner.cleaners.ddg_dtm_cleaners.DdgDtmCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig.validate">(mutcleaner.cleaners.DdgDtmCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.validate">(mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.validate">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.validate">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.validate">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.validate">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.validate">(mutcleaner.cleaners.ProteinGymCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.validate">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.validate">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.validate">(mutcleaner.cleaners.RBDACE2CleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.validate">(mutcleaner.cleaners.RBDAntibodyCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.validate">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.validate">(mutcleaner.cleaners.TrpBCleanerConfig method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.validate">(mutcleaner.core.Pipeline method)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.validate">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset.validate_against_references">validate_against_references() (mutcleaner.core.dataset.MutationDataset method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.MutationDataset.validate_against_references">(mutcleaner.core.MutationDataset method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.core.mutation.html#mutcleaner.core.mutation.MutationSet.validate_all">validate_all() (mutcleaner.core.mutation.MutationSet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig.validate_config">validate_config (mutcleaner.cleaners.base_config.BaseCleanerConfig attribute)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate_mut_workers">validate_mut_workers (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.validate_mut_workers">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_ace2_cleaner.html#mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig.validate_mut_workers">(mutcleaner.cleaners.rbd_ace2_cleaner.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig.validate_mut_workers">(mutcleaner.cleaners.RBDACE2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.validate_mut_workers">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.basic_cleaners.html#mutcleaner.cleaners.basic_cleaners.validate_mutations">validate_mutations() (in module mutcleaner.cleaners.basic_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.core.alphabet.html#mutcleaner.core.alphabet.BaseAlphabet.validate_sequence">validate_sequence() (mutcleaner.core.alphabet.BaseAlphabet method)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.utils.cleaner_workers.html#mutcleaner.utils.cleaner_workers.validate_single_mutation_and_sequence">validate_single_mutation_and_sequence() (in module mutcleaner.utils.cleaner_workers)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.html#mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.validate_wt_sequence">validate_wt_sequence() (in module mutcleaner.cleaners.cdna_proteolysis_custom_cleaners)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.cdna_proteolysis_cleaner.html#mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig.validate_wt_workers">validate_wt_workers (mutcleaner.cleaners.cdna_proteolysis_cleaner.CDNAProteolysisCleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig.validate_wt_workers">(mutcleaner.cleaners.CDNAProteolysisCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.human_domainome_sup2_cleaner.html#mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig.validation_workers">validation_workers (mutcleaner.cleaners.human_domainome_sup2_cleaner.HumanDomainomeSup2CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig.validation_workers">(mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html#mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig.validation_workers">(mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.ProteinGymCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig.validation_workers">(mutcleaner.cleaners.ProteinGymCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.core.html#mutcleaner.core.Pipeline.visualize_pipeline">visualize_pipeline() (mutcleaner.core.Pipeline method)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline.visualize_pipeline">(mutcleaner.core.pipeline.Pipeline method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/generated/mutcleaner.utils.sequence_io.html#mutcleaner.utils.sequence_io.write_fasta">write_fasta() (in module mutcleaner.utils.sequence_io)</a>
+</li>
+      <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.wt_name">wt_name (mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.wt_name">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.html#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.wt_sequence">wt_sequence (mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig attribute)</a>
+
+      <ul>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig.wt_sequence">(mutcleaner.cleaners.AntitoxinParD3CleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.ctxm_cleaner.html#mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig.wt_sequence">(mutcleaner.cleaners.ctxm_cleaner.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig.wt_sequence">(mutcleaner.cleaners.CTXMCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.human_myoglobin_cleaner.html#mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig.wt_sequence">(mutcleaner.cleaners.human_myoglobin_cleaner.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig.wt_sequence">(mutcleaner.cleaners.HumanMyoglobinCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.rbd_antibody_cleaner.html#mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig.wt_sequence">(mutcleaner.cleaners.rbd_antibody_cleaner.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig.wt_sequence">(mutcleaner.cleaners.RBDAntibodyCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.trpb_cleaner.html#mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig.wt_sequence">(mutcleaner.cleaners.trpb_cleaner.TrpBCleanerConfig attribute)</a>
+</li>
+        <li><a href="api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig.wt_sequence">(mutcleaner.cleaners.TrpBCleanerConfig attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Yuxiang Tang, ZiyuShi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

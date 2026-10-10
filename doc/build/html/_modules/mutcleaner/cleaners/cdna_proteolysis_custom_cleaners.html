@@ -1,0 +1,664 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mutcleaner.cleaners.cdna_proteolysis_custom_cleaners &#8212; mutcleaner v0.8.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../_static/documentation_options.js?v=b3dab91b"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mutcleaner/cleaners/cdna_proteolysis_custom_cleaners';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mutcleaner v0.8.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mutcleaner.cleaners.cdna_proteolysis_custom_cleaners</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mutcleaner.cleaners.cdna_proteolysis_custom_cleaners</h1><div class="highlight"><pre>
+<span></span><span class="c1"># cleaners/cdna_proteolysis_custom_cleaners.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">joblib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.mutation</span><span class="w"> </span><span class="kn">import</span> <span class="n">MutationSet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">multiout_step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.sequence</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProteinSequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.mutation_converter</span><span class="w"> </span><span class="kn">import</span> <span class="n">invert_mutation_set</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;validate_wt_sequence&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="fm">__dir__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">__all__</span>
+
+
+<div class="viewcode-block" id="validate_wt_sequence">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.html#mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.validate_wt_sequence">[docs]</a>
+<span class="nd">@multiout_step</span><span class="p">(</span><span class="n">main</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="n">failed</span><span class="o">=</span><span class="s2">&quot;failed&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_wt_sequence</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">name_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">mutation_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sequence_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">wt_identifier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wt&quot;</span><span class="p">,</span>
+    <span class="n">num_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate wild-type (WT) sequences per protein/name group by checking</span>
+<span class="sd">    consistency between the *explicit* WT row and the WT sequence *inferred*</span>
+<span class="sd">    from each mutant row.</span>
+
+<span class="sd">    This step groups the dataset by ``name_column`` and, for each group:</span>
+<span class="sd">      1) Ensures a WT row is present (i.e., ``mutation_column == wt_identifier``).</span>
+<span class="sd">      2) Treats each row&#39;s sequence as the mutated sequence and parses the</span>
+<span class="sd">         mutation string using ``MutationSet.from_string(sep=&quot;_&quot;, is_zero_based=True)``.</span>
+<span class="sd">      3) Inverts the mutation set (``invert_mutation_set``) and applies it to the</span>
+<span class="sd">         per-row sequence to infer that row&#39;s WT sequence.</span>
+<span class="sd">      4) Fails the group if (a) multiple distinct inferred WT sequences are found,</span>
+<span class="sd">         or (b) the single inferred WT sequence does not match the explicit WT</span>
+<span class="sd">         sequence from the WT row. Otherwise the group is marked as success.</span>
+
+<span class="sd">    Parallel execution is performed with ``joblib.Parallel(backend=&quot;loky&quot;)`` and</span>
+<span class="sd">    a progress bar via ``tqdm``. If parallel execution fails, a sequential</span>
+<span class="sd">    fallback is used. Diagnostic warnings are printed with ``tqdm.write``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dataset : pd.DataFrame</span>
+<span class="sd">        Input dataframe containing at least the name, mutation, and sequence columns.</span>
+<span class="sd">    name_column : str</span>
+<span class="sd">        Column that identifies a protein/name group for validation.</span>
+<span class="sd">    mutation_column : str</span>
+<span class="sd">        Column containing mutation annotations. Its format must be parsable by</span>
+<span class="sd">        ``MutationSet.from_string(sep=&quot;_&quot;, is_zero_based=True)`` (the project’s</span>
+<span class="sd">        standard mutation string convention).</span>
+<span class="sd">    sequence_column : str</span>
+<span class="sd">        Column containing the amino-acid sequence for that row (treated as the</span>
+<span class="sd">        mutated sequence for mutants and the WT sequence for the WT row).</span>
+<span class="sd">    wt_identifier : str, default &quot;wt&quot;</span>
+<span class="sd">        The exact token used in ``mutation_column`` to mark the explicit WT row.</span>
+<span class="sd">    num_workers : int, default 4</span>
+<span class="sd">        Number of worker processes for parallel execution.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Tuple[pd.DataFrame, pd.DataFrame]</span>
+<span class="sd">        - successful_df:</span>
+<span class="sd">            Concatenation of **original rows** for groups that passed validation.</span>
+<span class="sd">            No new rows are synthesized; both mutant and WT rows from successful</span>
+<span class="sd">            groups are returned as-is. May be empty if no group passes.</span>
+<span class="sd">        - failed_df:</span>
+<span class="sd">            Rows summarizing groups that failed validation. Each failed group is</span>
+<span class="sd">            represented by at least one row (derived from the group&#39;s first row)</span>
+<span class="sd">            with an additional column ``&quot;error_message&quot;`` describing the reason,</span>
+<span class="sd">            e.g., missing WT row, multiple inferred WT sequences, or mismatch</span>
+<span class="sd">            between inferred and explicit WT sequences. May be empty.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; # Minimal schema example (mutation format must match your project&#39;s parser):</span>
+<span class="sd">    &gt;&gt;&gt; df = pd.DataFrame({</span>
+<span class="sd">    ...     &quot;protein&quot;: [&quot;P1&quot;, &quot;P1&quot;, &quot;P1&quot;, &quot;P2&quot;, &quot;P2&quot;],</span>
+<span class="sd">    ...     &quot;mut&quot;:     [&quot;wt&quot;, &quot;A0G&quot;, &quot;L4F&quot;, &quot;wt&quot;, &quot;K3R&quot;],</span>
+<span class="sd">    ...     &quot;seq&quot;:     [&quot;ACDELG&quot;, &quot;GCDELG&quot;, &quot;ACDEFG&quot;, &quot;MNPKQ&quot;, &quot;MNPRQ&quot;],</span>
+<span class="sd">    ... })</span>
+<span class="sd">    &gt;&gt;&gt; successful, failed = validate_wt_sequence(</span>
+<span class="sd">    ...     df, name_column=&quot;protein&quot;, mutation_column=&quot;mut&quot;, sequence_column=&quot;seq&quot;,</span>
+<span class="sd">    ...     wt_identifier=&quot;wt&quot;, num_workers=2</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; successful</span>
+<span class="sd">      protein  mut     seq</span>
+<span class="sd">    0      P1  A0G  GCDELG</span>
+<span class="sd">    1      P1  L4F  ACDEFG</span>
+<span class="sd">    2      P1   wt  ACDELG</span>
+<span class="sd">    3      P2  K3R   MNPRQ</span>
+<span class="sd">    4      P2   wt   MNPKQ</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    validate_wt_sequence_grouped : The per-group worker that validates a single name/protein group.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_process_protein_group</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+        <span class="n">validate_wt_sequence_grouped</span><span class="p">,</span>
+        <span class="n">name_column</span><span class="o">=</span><span class="n">name_column</span><span class="p">,</span>
+        <span class="n">mutation_column</span><span class="o">=</span><span class="n">mutation_column</span><span class="p">,</span>
+        <span class="n">sequence_column</span><span class="o">=</span><span class="n">sequence_column</span><span class="p">,</span>
+        <span class="n">wt_identifier</span><span class="o">=</span><span class="n">wt_identifier</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Group by protein and process in parallel</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dataset</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">name_column</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="n">num_workers</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;loky&quot;</span><span class="p">)(</span>
+            <span class="n">delayed</span><span class="p">(</span><span class="n">_process_protein_group</span><span class="p">)(</span><span class="n">group_data</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">group_data</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processing proteins&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Warning: Parallel processing failed, falling back to sequential: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Fallback to sequential processing</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">group_data</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">grouped</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processing proteins (sequential)&quot;</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">_process_protein_group</span><span class="p">(</span><span class="n">group_data</span><span class="p">)</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">group_e</span><span class="p">:</span>
+                <span class="c1"># Create error entry for this specific group</span>
+                <span class="n">protein_name</span> <span class="o">=</span> <span class="n">group_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">error_row</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">name_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">protein_name</span><span class="p">),</span>
+                    <span class="s2">&quot;error_message&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Sequential processing error: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">group_e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">group_e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(([</span><span class="n">error_row</span><span class="p">],</span> <span class="s2">&quot;failed&quot;</span><span class="p">))</span>
+
+    <span class="c1"># Filter out None results and validate structure</span>
+    <span class="n">valid_results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">invalid_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">invalid_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Result </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> is None, skipping&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">invalid_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Result </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> has invalid format, skipping: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="n">rows_list</span><span class="p">,</span> <span class="n">category</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">):</span>
+            <span class="n">invalid_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Warning: Result </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> has invalid category &#39;</span><span class="si">{</span><span class="n">category</span><span class="si">}</span><span class="s2">&#39;, skipping&quot;</span>
+            <span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rows_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">invalid_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Result </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> has invalid rows format, skipping&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="n">valid_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">invalid_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: </span><span class="si">{</span><span class="n">invalid_count</span><span class="si">}</span><span class="s2"> invalid results were skipped&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Collect all rows</span>
+    <span class="n">successful_rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">failed_rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">rows_list</span><span class="p">,</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">valid_results</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span><span class="p">:</span>
+            <span class="n">successful_rows</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">rows_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">failed_rows</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">rows_list</span><span class="p">)</span>
+
+    <span class="c1"># Convert to DataFrame format</span>
+    <span class="n">successful_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">successful_rows</span><span class="p">)</span> <span class="k">if</span> <span class="n">successful_rows</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">failed_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">failed_rows</span><span class="p">)</span> <span class="k">if</span> <span class="n">failed_rows</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Success: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">successful_df</span><span class="p">)</span><span class="si">}</span><span class="s2">, Failed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">failed_df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">successful_df</span><span class="p">,</span> <span class="n">failed_df</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_wt_sequence_grouped</span><span class="p">(</span>
+    <span class="n">group_data</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+    <span class="n">name_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">mutation_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">sequence_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">wt_identifier</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;wt&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate one protein/name group by comparing the explicit WT row with</span>
+<span class="sd">    the WT sequence inferred from each mutant row.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">protein_name</span><span class="p">,</span> <span class="n">original_group</span> <span class="o">=</span> <span class="n">group_data</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Check WT sequence is valid</span>
+        <span class="n">wt_rows</span> <span class="o">=</span> <span class="n">original_group</span><span class="p">[</span><span class="n">original_group</span><span class="p">[</span><span class="n">mutation_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">wt_identifier</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">wt_rows</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">error_row</span> <span class="o">=</span> <span class="n">original_group</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">error_row</span><span class="p">[</span><span class="s2">&quot;error_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;WT row not found&quot;</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">error_row</span><span class="p">],</span> <span class="s2">&quot;failed&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wt_rows</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">error_row</span> <span class="o">=</span> <span class="n">wt_rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">error_row</span><span class="p">[</span><span class="s2">&quot;error_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Multiple explicit WT rows&quot;</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">error_row</span><span class="p">],</span> <span class="s2">&quot;failed&quot;</span>
+        <span class="c1"># Extract original WT sequence</span>
+        <span class="n">explicit_wt_seq</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">wt_rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">sequence_column</span><span class="p">])</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">wt_row_dict</span> <span class="o">=</span> <span class="n">wt_rows</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+        <span class="n">mutants</span> <span class="o">=</span> <span class="n">original_group</span><span class="p">[</span><span class="n">original_group</span><span class="p">[</span><span class="n">mutation_column</span><span class="p">]</span> <span class="o">!=</span> <span class="n">wt_identifier</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mutants</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="c1"># Return success if no mutants</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">wt_row_dict</span><span class="p">],</span> <span class="s2">&quot;success&quot;</span>
+
+        <span class="c1"># Infer wild-type sequences</span>
+        <span class="n">inferred_wt_seqs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">result_rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># First, add all original rows to result</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">mutants</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">result_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+        <span class="c1"># Then, infer WT sequences</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">mutants</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">mut_info</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">mutation_column</span><span class="p">]</span>
+            <span class="n">mut_seq</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">sequence_column</span><span class="p">]</span>
+
+            <span class="c1"># Parse mutation and create sequence</span>
+            <span class="n">mutation_set</span> <span class="o">=</span> <span class="n">MutationSet</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+                <span class="n">mut_info</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">is_zero_based</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">sequence</span> <span class="o">=</span> <span class="n">ProteinSequence</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">mut_seq</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="c1"># Infer wild-type sequence by applying inverted mutations</span>
+            <span class="n">inverted_mutation_set</span> <span class="o">=</span> <span class="n">invert_mutation_set</span><span class="p">(</span><span class="n">mutation_set</span><span class="p">)</span>
+            <span class="n">wt_seq</span> <span class="o">=</span> <span class="n">sequence</span><span class="o">.</span><span class="n">apply_mutation</span><span class="p">(</span><span class="n">inverted_mutation_set</span><span class="p">)</span>
+            <span class="n">inferred_wt_seqs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">wt_seq</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inferred_wt_seqs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Add error information to the first row</span>
+            <span class="n">error_row</span> <span class="o">=</span> <span class="n">mutants</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">error_row</span><span class="p">[</span><span class="s2">&quot;error_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Multiple wildtype sequences inferred for </span><span class="si">{</span><span class="n">protein_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">inferred_wt_seqs</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">error_row</span><span class="p">],</span> <span class="s2">&quot;failed&quot;</span>
+
+        <span class="c1"># Compare inferred WT sequences with original WT sequences</span>
+        <span class="k">if</span> <span class="n">explicit_wt_seq</span> <span class="o">!=</span> <span class="n">inferred_wt_seqs</span><span class="o">.</span><span class="n">pop</span><span class="p">():</span>
+            <span class="n">error_row</span> <span class="o">=</span> <span class="n">mutants</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="n">error_row</span><span class="p">[</span><span class="s2">&quot;error_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Inferred WT sequence differs from original WT sequence: </span><span class="si">{</span><span class="n">wt_seq</span><span class="si">}</span><span class="s2"> vs. </span><span class="si">{</span><span class="n">inferred_wt_seqs</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">error_row</span><span class="p">],</span> <span class="s2">&quot;failed&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">wt_row_dict</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">result_rows</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="c1"># Save error information in first row</span>
+        <span class="n">error_row</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">mutants</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mutants</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="k">else</span> <span class="p">{</span><span class="n">name_column</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">protein_name</span><span class="p">)}</span>
+        <span class="p">)</span>
+        <span class="n">error_row</span><span class="p">[</span><span class="s2">&quot;error_message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">error_row</span><span class="p">],</span> <span class="s2">&quot;failed&quot;</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, YukunR, ZiyuShi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

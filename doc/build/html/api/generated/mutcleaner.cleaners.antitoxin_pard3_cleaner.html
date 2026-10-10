@@ -1,0 +1,698 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mutcleaner.cleaners.antitoxin_pard3_cleaner &#8212; mutcleaner v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="mutcleaner.cleaners.antitoxin_pard3_custom_cleaners" href="mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html" />
+    <link rel="prev" title="mutcleaner.cleaners" href="mutcleaner.cleaners.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mutcleaner v0.1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="mutcleaner.cleaners.html">mutcleaner.cleaners</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">mutcleaner.cleaners.antitoxin_pard3_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html">mutcleaner.cleaners.antitoxin_pard3_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.archstabms_1e10_cleaner.html">mutcleaner.cleaners.archstabms_1e10_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.archstabms_1e10_custom_cleaners.html">mutcleaner.cleaners.archstabms_1e10_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.base_config.html">mutcleaner.cleaners.base_config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.basic_cleaners.html">mutcleaner.cleaners.basic_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.cdna_proteolysis_cleaner.html">mutcleaner.cleaners.cdna_proteolysis_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.html">mutcleaner.cleaners.cdna_proteolysis_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.ctxm_cleaner.html">mutcleaner.cleaners.ctxm_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.ddg_dtm_cleaners.html">mutcleaner.cleaners.ddg_dtm_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_domainome_custom_cleaners.html">mutcleaner.cleaners.human_domainome_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_domainome_sup2_cleaner.html">mutcleaner.cleaners.human_domainome_sup2_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_myoglobin_cleaner.html">mutcleaner.cleaners.human_myoglobin_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_myoglobin_custom_cleaners.html">mutcleaner.cleaners.human_myoglobin_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html">mutcleaner.cleaners.proteingym_dms_substitutions_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners.html">mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.rbd_ace2_cleaner.html">mutcleaner.cleaners.rbd_ace2_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.rbd_antibody_cleaner.html">mutcleaner.cleaners.rbd_antibody_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.rbd_custom_cleaners.html">mutcleaner.cleaners.rbd_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.trpb_cleaner.html">mutcleaner.cleaners.trpb_cleaner</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="mutcleaner.core.html">mutcleaner.core</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.alphabet.html">mutcleaner.core.alphabet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.codon.html">mutcleaner.core.codon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.constants.html">mutcleaner.core.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.dataset.html">mutcleaner.core.dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.mutation.html">mutcleaner.core.mutation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.pipeline.html">mutcleaner.core.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.sequence.html">mutcleaner.core.sequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.types.html">mutcleaner.core.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="mutcleaner.utils.html">mutcleaner.utils</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.cleaner_workers.html">mutcleaner.utils.cleaner_workers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.data_source.html">mutcleaner.utils.data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.dataset_builders.html">mutcleaner.utils.dataset_builders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.label_resolvers.html">mutcleaner.utils.label_resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.mutation_converter.html">mutcleaner.utils.mutation_converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.raw_data_downloader.html">mutcleaner.utils.raw_data_downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.sequence_io.html">mutcleaner.utils.sequence_io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.type_converter.html">mutcleaner.utils.type_converter</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="mutcleaner.cleaners.html" class="nav-link">mutcleaner.cleaners</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mutcleaner.cleaners.antitoxin_pard3_cleaner</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-mutcleaner.cleaners.antitoxin_pard3_cleaner">
+<span id="mutcleaner-cleaners-antitoxin-pard3-cleaner"></span><h1>mutcleaner.cleaners.antitoxin_pard3_cleaner<a class="headerlink" href="#module-mutcleaner.cleaners.antitoxin_pard3_cleaner" title="Link to this heading">#</a></h1>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.clean_antitoxin_pard3_dataset" title="mutcleaner.cleaners.antitoxin_pard3_cleaner.clean_antitoxin_pard3_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clean_antitoxin_pard3_dataset</span></code></a>(pipeline)</p></td>
+<td><p>Clean Antitoxin dataset using configurable pipeline</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.create_antitoxin_pard3_cleaner" title="mutcleaner.cleaners.antitoxin_pard3_cleaner.create_antitoxin_pard3_cleaner"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_antitoxin_pard3_cleaner</span></code></a>([...])</p></td>
+<td><p>Create Antitoxin dataset cleaning pipeline</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig" title="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig</span></code></a>([pipeline_name, ...])</p></td>
+<td><p>Configuration class for Antitoxin dataset cleaner.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.antitoxin_pard3_cleaner.</span></span><span class="sig-name descname"><span class="pre">AntitoxinParD3CleanerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Antitoxin</span> <span class="pre">Pipeline'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_mut_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_label_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'label'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/antitoxin_pard3_cleaner.html#AntitoxinParD3CleanerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="mutcleaner.cleaners.base_config.html#mutcleaner.cleaners.base_config.BaseCleanerConfig" title="mutcleaner.cleaners.base_config.BaseCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseCleanerConfig</span></code></a></p>
+<p>Configuration class for Antitoxin dataset cleaner.
+Inherits from BaseCleanerConfig and adds Antitoxin-specific configuration options.</p>
+<p>Simply run <cite>mutcleaner.download_antitoxin_source_file()</cite> to download the dataset.</p>
+<p>Alternatively, the raw Antitoxin file can be obtained from:</p>
+<ul class="simple">
+<li><p>Hugging Face: <a class="reference external" href="https://huggingface.co/datasets/xulab-research/TidyMut/blob/main/antitoxin/antitoxin.csv">https://huggingface.co/datasets/xulab-research/TidyMut/blob/main/antitoxin/antitoxin.csv</a></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>column_mapping</strong><span class="classifier">Dict[str, str]</span></dt><dd><p>Mapping from source to target column names</p>
+</dd>
+<dt><strong>filters</strong><span class="classifier">Dict[str, Callable]</span></dt><dd><p>Filter conditions for data cleaning</p>
+</dd>
+<dt><strong>wt_sequence</strong><span class="classifier">str</span></dt><dd><p>Wildtype sequence for the dataset, used for mutation validation</p>
+</dd>
+<dt><strong>type_conversions</strong><span class="classifier">Dict[str, str]</span></dt><dd><p>Data type conversion specifications</p>
+</dd>
+<dt><strong>validate_mut_workers</strong><span class="classifier">int</span></dt><dd><p>Number of workers for mutation validation, set to -1 to use all available CPUs</p>
+</dd>
+<dt><strong>process_workers</strong><span class="classifier">int</span></dt><dd><p>Number of workers for applying mutations to sequences, set to -1 to use all available CPUs</p>
+</dd>
+<dt><strong>label_columns</strong><span class="classifier">List[str]</span></dt><dd><p>List of score columns to process</p>
+</dd>
+<dt><strong>primary_label_column</strong><span class="classifier">str</span></dt><dd><p>Primary score column for the dataset</p>
+</dd>
+<dt><strong>pipeline_name</strong><span class="classifier">str</span></dt><dd><p>Name of the cleaning pipeline</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dict</span></code>(config_dict)</p></td>
+<td><p>Create configuration object from dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code>(json_path)</p></td>
+<td><p>Load configuration from JSON file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_summary</span></code>()</p></td>
+<td><p>Get a human-readable summary of the configuration</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge</span></code>(partial_config)</p></td>
+<td><p>Merge partial configuration with current configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dict</span></code>([exclude_callables])</p></td>
+<td><p>Convert configuration to dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code>(json_path, **json_kwargs)</p></td>
+<td><p>Save configuration to JSON file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate" title="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code></a>()</p></td>
+<td><p>Validate Antitoxin-specific configuration parameters</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.column_mapping">
+<span class="sig-name descname"><span class="pre">column_mapping</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.column_mapping" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.filters">
+<span class="sig-name descname"><span class="pre">filters</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.filters" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.label_columns">
+<span class="sig-name descname"><span class="pre">label_columns</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.label_columns" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.pipeline_name">
+<span class="sig-name descname"><span class="pre">pipeline_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Antitoxin</span> <span class="pre">Pipeline'</span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.pipeline_name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.primary_label_column">
+<span class="sig-name descname"><span class="pre">primary_label_column</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'label'</span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.primary_label_column" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.process_workers">
+<span class="sig-name descname"><span class="pre">process_workers</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.process_workers" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.type_conversions">
+<span class="sig-name descname"><span class="pre">type_conversions</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.type_conversions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/antitoxin_pard3_cleaner.html#AntitoxinParD3CleanerConfig.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate" title="Link to this definition">#</a></dt>
+<dd><p>Validate Antitoxin-specific configuration parameters</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If configuration is invalid</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate_mut_workers">
+<span class="sig-name descname"><span class="pre">validate_mut_workers</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate_mut_workers" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.wt_sequence">
+<span class="sig-name descname"><span class="pre">wt_sequence</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'MANVEKMSVAVTPQQAAVMREAVEAGEYATASEIVREAVRDWLAKRELRHDDIRRLRQLWDEGKASGRPEPVDFDALRKEARQKLTEVPPNGR'</span></span><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.wt_sequence" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.clean_antitoxin_pard3_dataset">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.antitoxin_pard3_cleaner.</span></span><span class="sig-name descname"><span class="pre">clean_antitoxin_pard3_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/antitoxin_pard3_cleaner.html#clean_antitoxin_pard3_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.clean_antitoxin_pard3_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Clean Antitoxin dataset using configurable pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>pipeline</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline" title="mutcleaner.core.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a></span>) – Antitoxin dataset cleaning pipeline</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<a class="reference internal" href="mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline" title="mutcleaner.core.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>, <a class="reference internal" href="mutcleaner.core.dataset.html#mutcleaner.core.dataset.MutationDataset" title="mutcleaner.core.dataset.MutationDataset"><code class="xref py py-class docutils literal notranslate"><span class="pre">MutationDataset</span></code></a>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>Pipeline: The cleaned pipeline - MutationDataset: The cleaned Antitoxin dataset</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Use default configuration:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_antitoxin_cleaner</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>  <span class="c1"># df is raw Antitoxin dataset file</span>
+</pre></div>
+</div>
+<p>Use partial configuration:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_antitoxin_cleaner</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;validate_mut_workers&quot;</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Load configuration from file:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">create_antitoxin_cleaner</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;config.json&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipeline</span><span class="p">,</span> <span class="n">dataset</span> <span class="o">=</span> <span class="n">clean_antitoxin_dataset</span><span class="p">(</span><span class="n">pipeline</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.antitoxin_pard3_cleaner.create_antitoxin_pard3_cleaner">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.antitoxin_pard3_cleaner.</span></span><span class="sig-name descname"><span class="pre">create_antitoxin_pard3_cleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_or_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/antitoxin_pard3_cleaner.html#create_antitoxin_pard3_cleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.create_antitoxin_pard3_cleaner" title="Link to this definition">#</a></dt>
+<dd><p>Create Antitoxin dataset cleaning pipeline</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset_or_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Raw dataset DataFrame or file path to Antitoxin dataset.</p></li>
+<li><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig" title="mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Configuration for the cleaning pipeline. Can be: - AntitoxinCleanerConfig object - Dictionary with configuration parameters (merged with defaults) - Path to JSON configuration file (str or Path) - None (uses default configuration)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="mutcleaner.core.pipeline.html#mutcleaner.core.pipeline.Pipeline" title="mutcleaner.core.pipeline.Pipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pipeline: The cleaning pipeline used</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If config has invalid type</p></li>
+<li><p><strong>ValueError</strong> – If configuration validation fails</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig</span></code></a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.column_mapping"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.column_mapping</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.filters"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.filters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.label_columns"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.label_columns</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.pipeline_name"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.pipeline_name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.primary_label_column"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.primary_label_column</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.process_workers"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.process_workers</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.type_conversions"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.type_conversions</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.validate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.validate_mut_workers"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.validate_mut_workers</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.AntitoxinParD3CleanerConfig.wt_sequence"><code class="docutils literal notranslate"><span class="pre">AntitoxinParD3CleanerConfig.wt_sequence</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.clean_antitoxin_pard3_dataset"><code class="docutils literal notranslate"><span class="pre">clean_antitoxin_pard3_dataset()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.antitoxin_pard3_cleaner.create_antitoxin_pard3_cleaner"><code class="docutils literal notranslate"><span class="pre">create_antitoxin_pard3_cleaner()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/api/generated/mutcleaner.cleaners.antitoxin_pard3_cleaner.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Yuxiang Tang, ZiyuShi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

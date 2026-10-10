@@ -1,0 +1,1645 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mutcleaner.core.sequence &#8212; mutcleaner v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../../_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/mutcleaner/core/sequence';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../../_static/searchtools.js"></script>
+    <script src="../../../_static/language_data.js"></script>
+    <script src="../../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mutcleaner v0.1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mutcleaner.core.sequence</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for mutcleaner.core.sequence</h1><div class="highlight"><pre>
+<span></span><span class="c1"># mutcleaner/core/sequence.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">DNAAlphabet</span><span class="p">,</span> <span class="n">RNAAlphabet</span><span class="p">,</span> <span class="n">ProteinAlphabet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.codon</span><span class="w"> </span><span class="kn">import</span> <span class="n">CodonTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">DNA_BASE_COMPLEMENTS</span><span class="p">,</span> <span class="n">RNA_BASE_COMPLEMENTS</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mutation</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BaseMutation</span><span class="p">,</span>
+    <span class="n">CodonMutation</span><span class="p">,</span>
+    <span class="n">AminoAcidMutation</span><span class="p">,</span>
+    <span class="n">MutationSet</span><span class="p">,</span>
+    <span class="n">CodonMutationSet</span><span class="p">,</span>
+    <span class="n">AminoAcidMutationSet</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.alphabet</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseAlphabet</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SequenceType</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BaseSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;DNASequence&quot;</span><span class="p">,</span> <span class="s2">&quot;ProteinSequence&quot;</span><span class="p">,</span> <span class="s2">&quot;RNASequence&quot;</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="fm">__dir__</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">__all__</span>
+
+
+<div class="viewcode-block" id="BaseSequence">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.BaseSequence">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseSequence</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for biological sequences&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseAlphabet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">sequence</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sequence cannot be empty&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alphabet</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># If not provided, request the subclass&#39;s default</span>
+            <span class="n">alphabet</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">default_alphabet</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">alphabet</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># No default provided by the subclass → raise in the base class</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> requires &#39;alphabet&#39; (no default provided)&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span> <span class="o">=</span> <span class="n">alphabet</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="o">.</span><span class="n">validate_sequence</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span> <span class="ow">or</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">SequenceType</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceType</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">slice</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">key</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">stop</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">key</span><span class="o">.</span><span class="n">stop</span><span class="w"> </span><span class="ow">is</span><span class="w"> </span><span class="ow">not</span><span class="w"> </span><span class="kc">None</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                    <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">key</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">key</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid argument type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">==</span> <span class="n">other</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseSequence</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">sequence</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="p">)</span> <span class="o">==</span> <span class="nb">type</span><span class="p">(</span>
+            <span class="n">other</span><span class="o">.</span><span class="n">alphabet</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="BaseSequence.default_alphabet">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.BaseSequence.default_alphabet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_alphabet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseAlphabet</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subclasses may override this method to provide a default alphabet.</span>
+
+<span class="sd">        By default, it returns None, indicating no default is provided</span>
+<span class="sd">        and callers must pass `alphabet` explicitly.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement this method.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseSequence.get_subsequence">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.BaseSequence.get_subsequence">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_subsequence</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="n">SequenceType</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;get subsequence (0-indexed, inclusive)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">start</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Start position must be greater than or equal to 0&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">end</span> <span class="o">&lt;</span> <span class="n">start</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;End position must be greater than or equal to start.&quot;</span><span class="p">)</span>
+
+        <span class="n">subseq</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">subseq</span></div>
+
+
+<div class="viewcode-block" id="BaseSequence.apply_mutation">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.BaseSequence.apply_mutation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_mutation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">:</span> <span class="n">SequenceType</span><span class="p">,</span>
+        <span class="n">mutation</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">BaseMutation</span><span class="p">,</span> <span class="n">MutationSet</span><span class="p">,</span> <span class="n">MutationSet</span><span class="p">[</span><span class="n">BaseMutation</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SequenceType</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply a mutation or set of mutations to the sequence and return a new sequence.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mutation : Union[BaseMutation, CodonMutationSet, AminoAcidMutationSet]</span>
+<span class="sd">            A single mutation or a set of mutations to apply</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SequenceType</span>
+<span class="sd">            A new sequence with the mutation(s) applied</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If mutation position is invalid or mutation is incompatible</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If mutation type is not supported</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Handle mutation sets (multiple mutations)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mutation</span><span class="p">,</span> <span class="p">(</span><span class="n">AminoAcidMutationSet</span><span class="p">,</span> <span class="n">CodonMutationSet</span><span class="p">)):</span>
+            <span class="c1"># Apply mutations in reverse order of position to avoid index shifting</span>
+            <span class="n">mutations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">mutation</span><span class="o">.</span><span class="n">mutations</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="n">result_sequence</span> <span class="o">=</span> <span class="bp">self</span>
+
+            <span class="k">for</span> <span class="n">single_mutation</span> <span class="ow">in</span> <span class="n">mutations</span><span class="p">:</span>
+                <span class="n">result_sequence</span> <span class="o">=</span> <span class="n">result_sequence</span><span class="o">.</span><span class="n">apply_mutation</span><span class="p">(</span><span class="n">single_mutation</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result_sequence</span>
+
+        <span class="c1"># Handle single mutations</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mutation</span><span class="p">,</span> <span class="n">BaseMutation</span><span class="p">):</span>
+            <span class="c1"># Validate mutation position and get mutation details</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mutation</span><span class="p">,</span> <span class="n">CodonMutation</span><span class="p">):</span>
+                <span class="c1"># For codon mutations, check 3 bases starting at position</span>
+                <span class="k">if</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Codon mutation at position </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2"> extends beyond sequence length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Check mutation subtypes (DNA or RNA)</span>
+                <span class="n">VALID_COMBINATIONS</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;DNA&quot;</span><span class="p">:</span> <span class="n">DNAAlphabet</span><span class="p">,</span>
+                    <span class="s2">&quot;Both&quot;</span><span class="p">:</span> <span class="n">DNAAlphabet</span><span class="p">,</span>
+                    <span class="s2">&quot;RNA&quot;</span><span class="p">:</span> <span class="n">RNAAlphabet</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="n">expected_alphabet</span> <span class="o">=</span> <span class="n">VALID_COMBINATIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mutation</span><span class="o">.</span><span class="n">seq_type</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">expected_alphabet</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="p">,</span> <span class="n">expected_alphabet</span>
+                <span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Unmatching mutation subtype: </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">seq_type</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">seq_type</span><span class="si">}</span><span class="s2"> sequence&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Validate original codon matches expected</span>
+                <span class="n">actual_codon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">actual_codon</span> <span class="o">!=</span> <span class="n">mutation</span><span class="o">.</span><span class="n">wild_codon</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Expected codon &#39;</span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">wild_codon</span><span class="si">}</span><span class="s2">&#39; at position </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;but found &#39;</span><span class="si">{</span><span class="n">actual_codon</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Apply codon mutation (replace 3 bases)</span>
+                <span class="n">new_sequence</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">mutation</span><span class="o">.</span><span class="n">mutant_codon</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="mi">3</span> <span class="p">:]</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mutation</span><span class="p">,</span> <span class="n">AminoAcidMutation</span><span class="p">):</span>
+                <span class="c1"># For amino acid mutations, check single position</span>
+                <span class="k">if</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Amino acid mutation position </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2"> is out of bounds for sequence of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Validate original amino acid matches expected</span>
+                <span class="n">actual_aa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">actual_aa</span> <span class="o">!=</span> <span class="n">mutation</span><span class="o">.</span><span class="n">wild_amino_acid</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Expected amino acid &#39;</span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">wild_amino_acid</span><span class="si">}</span><span class="s2">&#39; at position </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2">, &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;but found &#39;</span><span class="si">{</span><span class="n">actual_aa</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Apply amino acid mutation (replace single position)</span>
+                <span class="n">new_sequence</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="n">mutation</span><span class="o">.</span><span class="n">mutant_amino_acid</span>
+                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+                <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Handle other BaseMutation subclasses generically</span>
+                <span class="k">if</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Mutation position </span><span class="si">{</span><span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="si">}</span><span class="s2"> is out of bounds for sequence of length </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># For generic mutations, we can&#39;t validate original or determine replacement length</span>
+                <span class="c1"># This is a fallback for custom mutation types</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Unsupported mutation subtype: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">mutation</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">. &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Only CodonMutation and AminoAcidMutation are supported.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Update metadata to track mutation</span>
+            <span class="n">new_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s2">&quot;mutations_applied&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_metadata</span><span class="p">:</span>
+                <span class="n">new_metadata</span><span class="p">[</span><span class="s2">&quot;mutations_applied&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">mutation_record</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">mutation</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="s2">&quot;mutation_type&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
+                <span class="s2">&quot;position&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Add type-specific information</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mutation</span><span class="p">,</span> <span class="n">CodonMutation</span><span class="p">):</span>
+                <span class="n">mutation_record</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;wild_codon&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">wild_codon</span><span class="p">,</span>
+                        <span class="s2">&quot;mutant_codon&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">mutant_codon</span><span class="p">,</span>
+                        <span class="s2">&quot;seq_type&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">seq_type</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mutation</span><span class="p">,</span> <span class="n">AminoAcidMutation</span><span class="p">):</span>
+                <span class="n">mutation_record</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;wild_amino_acid&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">wild_amino_acid</span><span class="p">,</span>
+                        <span class="s2">&quot;mutant_amino_acid&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">mutant_amino_acid</span><span class="p">,</span>
+                        <span class="s2">&quot;effect_type&quot;</span><span class="p">:</span> <span class="n">mutation</span><span class="o">.</span><span class="n">effect_type</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+            <span class="n">new_metadata</span><span class="p">[</span><span class="s2">&quot;mutations_applied&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mutation_record</span><span class="p">)</span>
+
+            <span class="c1"># Create new sequence instance</span>
+            <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">new_sequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alphabet</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">new_metadata</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported mutation type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">mutation</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseSequence.infer_mutation">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.BaseSequence.infer_mutation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">infer_mutation</span><span class="p">(</span><span class="bp">self</span><span class="p">:</span> <span class="n">SequenceType</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SequenceType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MutationSet</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Infer a mutation that leads to a specific sequence&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Sequences must be of the same type&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">sequence</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sequences must have the same length&quot;</span><span class="p">)</span>
+        <span class="n">mutations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="p">(</span><span class="n">wt_char</span><span class="p">,</span> <span class="n">mut_char</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">sequence</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">wt_char</span> <span class="o">!=</span> <span class="n">mut_char</span><span class="p">:</span>
+                <span class="c1"># Adjust position based on zero_based parameter</span>
+                <span class="n">mutation</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">wt_char</span><span class="si">}{</span><span class="n">pos</span><span class="si">}{</span><span class="n">mut_char</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">mutations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mutation</span><span class="p">)</span>
+        <span class="n">mutations</span> <span class="o">=</span> <span class="n">MutationSet</span><span class="o">.</span><span class="n">from_string</span><span class="p">(</span>
+            <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mutations</span><span class="p">),</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">is_zero_based</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">mutations</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ProteinSequence">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.ProteinSequence">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProteinSequence</span><span class="p">(</span><span class="n">BaseSequence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Protein sequence with amino acid validation&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ProteinAlphabet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ProteinSequence.default_alphabet">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.ProteinSequence.default_alphabet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_alphabet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseAlphabet</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">ProteinAlphabet</span><span class="p">(</span><span class="n">include_stop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ProteinSequence.get_residue">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.ProteinSequence.get_residue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_residue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get amino acid at specific position (0-indexed)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Position </span><span class="si">{</span><span class="n">position</span><span class="si">}</span><span class="s2"> out of range (0-</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="n">position</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ProteinSequence.find_motif">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.ProteinSequence.find_motif">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_motif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">motif</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all positions where motif occurs (0-indexed)&quot;&quot;&quot;</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">motif</span> <span class="o">=</span> <span class="n">motif</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">motif</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">pos</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">positions</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="RNASequence">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.RNASequence">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RNASequence</span><span class="p">(</span><span class="n">BaseSequence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;RNA sequence with nucleotide validation&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RNAAlphabet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RNASequence.default_alphabet">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.RNASequence.default_alphabet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_alphabet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseAlphabet</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">RNAAlphabet</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RNASequence.reverse_complement">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.RNASequence.reverse_complement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RNASequence&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get reverse complement of RNA sequence&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rev_comp</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">RNA_BASE_COMPLEMENTS</span><span class="p">[</span><span class="n">base</span><span class="p">]</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid RNA base found: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">RNASequence</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">rev_comp</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_rc&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RNASequence.back_transcribe">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.RNASequence.back_transcribe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">back_transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DNASequence&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Back-transcribe RNA sequence into DNA sequence&quot;&quot;&quot;</span>
+        <span class="n">dna_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;U&quot;</span><span class="p">,</span> <span class="s2">&quot;T&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DNASequence</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">dna_seq</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_back_transcribe&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="RNASequence.translate">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.RNASequence.translate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">codon_table</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CodonTable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start_at_first_met</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">stop_at_stop_codon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">require_mod3</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProteinSequence</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Translate RNA sequence into amino acid sequence using this codon table.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        codon_table : Optional[CodonTable], default=None</span>
+<span class="sd">            Codon table to use for translation. If None, uses standard genetic code.</span>
+<span class="sd">        start_at_first_met : bool, default=False</span>
+<span class="sd">            Start translation at the first start codon if found.</span>
+<span class="sd">        stop_at_stop_codon : bool, default=False</span>
+<span class="sd">            Stop translation when a stop codon is encountered.</span>
+<span class="sd">        require_mod3 : bool, default=True</span>
+<span class="sd">            Whether the sequence must be a multiple of 3 in length.</span>
+<span class="sd">        start : Option[int], default=None</span>
+<span class="sd">            Custom 0-based start position. Overrides `start_at_first_met`.</span>
+<span class="sd">        end : Option[int], default=None</span>
+<span class="sd">            Custom 0-based end position. Overrides `stop_at_stop_codon`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ProteinSequence</span>
+<span class="sd">            Translated amino acid sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aa_seq</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
+            <span class="n">seq_type</span><span class="o">=</span><span class="s2">&quot;RNA&quot;</span><span class="p">,</span>
+            <span class="n">codon_table</span><span class="o">=</span><span class="n">codon_table</span><span class="p">,</span>
+            <span class="n">start_at_first_met</span><span class="o">=</span><span class="n">start_at_first_met</span><span class="p">,</span>
+            <span class="n">stop_at_stop_codon</span><span class="o">=</span><span class="n">stop_at_stop_codon</span><span class="p">,</span>
+            <span class="n">require_mod3</span><span class="o">=</span><span class="n">require_mod3</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ProteinSequence</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">aa_seq</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_translation&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DNASequence">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.DNASequence">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DNASequence</span><span class="p">(</span><span class="n">BaseSequence</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DNA sequence with nucleotide validation&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">alphabet</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">DNAAlphabet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">alphabet</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DNASequence.default_alphabet">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.DNASequence.default_alphabet">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_alphabet</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseAlphabet</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">DNAAlphabet</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DNASequence.reverse_complement">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.DNASequence.reverse_complement">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reverse_complement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;DNASequence&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get reverse complement of DNA sequence&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">rev_comp</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">DNA_BASE_COMPLEMENTS</span><span class="p">[</span><span class="n">base</span><span class="p">]</span> <span class="k">for</span> <span class="n">base</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid DNA base found: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">DNASequence</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">rev_comp</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_rc&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DNASequence.translate">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.DNASequence.translate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">codon_table</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CodonTable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">start_at_first_met</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">stop_at_stop_codon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">require_mod3</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProteinSequence</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Translate DNA sequence into amino acid sequence using this codon table.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        codon_table : Optional[CodonTable], default=None</span>
+<span class="sd">            Codon table to use for translation. If None, uses standard genetic code.</span>
+<span class="sd">        start_at_first_met : bool, default=False</span>
+<span class="sd">            Start translation at the first start codon if found.</span>
+<span class="sd">        stop_at_stop_codon : bool, default=False</span>
+<span class="sd">            Stop translation when a stop codon is encountered.</span>
+<span class="sd">        require_mod3 : bool, default=True</span>
+<span class="sd">            Whether the sequence must be a multiple of 3 in length.</span>
+<span class="sd">        start : Optional[int], default=None</span>
+<span class="sd">            Custom 0-based start position. Overrides `start_at_first_met`.</span>
+<span class="sd">        end : Optional[int], default=None</span>
+<span class="sd">            Custom 0-based end position. Overrides `stop_at_stop_codon`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ProteinSequence</span>
+<span class="sd">            Translated amino acid sequence.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">aa_seq</span> <span class="o">=</span> <span class="n">translate</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="p">,</span>
+            <span class="n">seq_type</span><span class="o">=</span><span class="s2">&quot;DNA&quot;</span><span class="p">,</span>
+            <span class="n">codon_table</span><span class="o">=</span><span class="n">codon_table</span><span class="p">,</span>
+            <span class="n">start_at_first_met</span><span class="o">=</span><span class="n">start_at_first_met</span><span class="p">,</span>
+            <span class="n">stop_at_stop_codon</span><span class="o">=</span><span class="n">stop_at_stop_codon</span><span class="p">,</span>
+            <span class="n">require_mod3</span><span class="o">=</span><span class="n">require_mod3</span><span class="p">,</span>
+            <span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span>
+            <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ProteinSequence</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">aa_seq</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_translation&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DNASequence.transcribe">
+<a class="viewcode-back" href="../../../api/generated/mutcleaner.core.sequence.html#mutcleaner.core.DNASequence.transcribe">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;RNASequence&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transcribe DNA sequence into RNA sequence&quot;&quot;&quot;</span>
+        <span class="n">rna_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">,</span> <span class="s2">&quot;U&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">RNASequence</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">rna_seq</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_transcribed&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">translate</span><span class="p">(</span>
+    <span class="n">sequence</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">seq_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;DNA&quot;</span><span class="p">,</span> <span class="s2">&quot;RNA&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;DNA&quot;</span><span class="p">,</span>
+    <span class="n">codon_table</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CodonTable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">start_at_first_met</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">stop_at_stop_codon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">require_mod3</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">start</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">end</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Translate DNA or RNA sequence into amino acid sequence using this codon table.</span>
+<span class="sd">    this function should not be called directly. Instead, use the DNASequence or RNASequence classes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    sequence : str</span>
+<span class="sd">        DNA or RNA sequence to translate.</span>
+<span class="sd">    seq_type : Literal[&quot;DNA&quot;, &quot;RNA&quot;], default=&quot;DNA&quot;</span>
+<span class="sd">    codon_table : Optional[CodonTable], default=None</span>
+<span class="sd">        Codon table to use for translation. If None, uses standard genetic code.</span>
+<span class="sd">    start_at_first_met : bool, default=False</span>
+<span class="sd">        Start translation at the first start codon if found.</span>
+<span class="sd">    stop_at_stop_codon : bool, default=False</span>
+<span class="sd">        Stop translation when a stop codon is encountered.</span>
+<span class="sd">    require_mod3 : bool, default=True</span>
+<span class="sd">        Whether the sequence must be a multiple of 3 in length.</span>
+<span class="sd">    start : Option[int], default=None</span>
+<span class="sd">        Custom 0-based start position. Overrides `start_at_first_met`.</span>
+<span class="sd">    end : Option[int], default=None</span>
+<span class="sd">        Custom 0-based end position. Overrides `stop_at_stop_codon`.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Translated amino acid sequence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sequence</span><span class="p">)</span>
+
+    <span class="c1"># Use standard table if none provided</span>
+    <span class="k">if</span> <span class="n">codon_table</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">codon_table</span> <span class="o">=</span> <span class="n">CodonTable</span><span class="o">.</span><span class="n">get_standard_table</span><span class="p">(</span><span class="n">seq_type</span><span class="o">=</span><span class="n">seq_type</span><span class="p">)</span>
+
+    <span class="c1"># Auto detect start if `start` not provided</span>
+    <span class="k">if</span> <span class="n">start</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">start_at_first_met</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">codon</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">codon_table</span><span class="o">.</span><span class="n">is_start_codon</span><span class="p">(</span><span class="n">codon</span><span class="p">):</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span>  <span class="c1"># No start codon found</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1"># Auto detect end if `end` not provided</span>
+    <span class="k">if</span> <span class="n">end</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">stop_at_stop_codon</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+                <span class="n">codon</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">codon_table</span><span class="o">.</span><span class="n">is_stop_codon</span><span class="p">(</span><span class="n">codon</span><span class="p">):</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">n</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">n</span>
+
+    <span class="n">sub_seq</span> <span class="o">=</span> <span class="n">sequence</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_seq</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">remainder</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_seq</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span>
+        <span class="k">if</span> <span class="n">require_mod3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Sequence length from start=</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2"> to end=</span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2"> is not divisible by 3 &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(remainder = </span><span class="si">{</span><span class="n">remainder</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Sequence length from start=</span><span class="si">{</span><span class="n">start</span><span class="si">}</span><span class="s2"> to end=</span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2"> is not divisible by 3. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Discarding </span><span class="si">{</span><span class="n">remainder</span><span class="si">}</span><span class="s2"> trailing nucleotide(s): </span><span class="si">{</span><span class="n">sub_seq</span><span class="p">[</span><span class="o">-</span><span class="n">remainder</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="n">sub_seq</span> <span class="o">=</span> <span class="n">sub_seq</span><span class="p">[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_seq</span><span class="p">)</span> <span class="o">-</span> <span class="n">remainder</span><span class="p">]</span>
+
+    <span class="c1"># Translate using this codon table</span>
+    <span class="n">codons</span> <span class="o">=</span> <span class="p">[</span><span class="n">sub_seq</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sub_seq</span><span class="p">),</span> <span class="mi">3</span><span class="p">)]</span>
+    <span class="n">aa_seq</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">codon_table</span><span class="o">.</span><span class="n">translate_codon</span><span class="p">(</span><span class="n">codon</span><span class="p">)</span> <span class="k">for</span> <span class="n">codon</span> <span class="ow">in</span> <span class="n">codons</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">aa_seq</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_sequences_from_fasta</span><span class="p">(</span>
+    <span class="n">fasta_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+    <span class="n">sequence_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseSequence</span><span class="p">],</span>
+    <span class="n">alphabet</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseAlphabet</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">header_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">allow_duplicates</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseSequence</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load sequences from a FASTA file into a dictionary of BaseSequence-derived objects.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fasta_path : Union[str, Path]</span>
+<span class="sd">        Path to the FASTA file</span>
+<span class="sd">    sequence_class : Type[BaseSequence]</span>
+<span class="sd">        A subclass of BaseSequence to instantiate (e.g. DNASequence)</span>
+<span class="sd">    alphabet : Optional[BaseAlphabet], default=None</span>
+<span class="sd">        Optional alphabet to validate the sequence. If None, uses default for sequence class.</span>
+<span class="sd">    header_func : Optional[Callable[[str], tuple[str, str]]], default=None</span>
+<span class="sd">        Function to process header line and extract (sequence_id, description).</span>
+<span class="sd">        If None, uses default parsing (first word as ID, rest as description).</span>
+<span class="sd">    allow_duplicates : bool, default=False</span>
+<span class="sd">        If False, raises error on duplicate sequence IDs. If True, overwrites.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Dict[str, BaseSequence]</span>
+<span class="sd">        Dictionary of {sequence_id: sequence_object}</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If FASTA file doesn&#39;t exist</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If duplicate sequence IDs found and allow_duplicates=False</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If sequence_class is not a subclass of BaseSequence</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Validate inputs</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">sequence_class</span><span class="p">,</span> <span class="n">BaseSequence</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;sequence_class must be a subclass of BaseSequence, got </span><span class="si">{</span><span class="n">sequence_class</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="n">fasta_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fasta_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">fasta_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FASTA file not found: </span><span class="si">{</span><span class="n">fasta_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Default header processing function</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">default_header_func</span><span class="p">(</span><span class="n">header_line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract ID and description from header line (without &#39;&gt;&#39;)&quot;&quot;&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">header_line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">maxsplit</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">seq_id</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">seq_id</span><span class="p">,</span> <span class="n">description</span>
+
+    <span class="c1"># Use provided header function or default</span>
+    <span class="n">process_header</span> <span class="o">=</span> <span class="n">header_func</span> <span class="ow">or</span> <span class="n">default_header_func</span>
+
+    <span class="c1"># Get default alphabet for the sequence class if not provided</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_default_alphabet</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get default alphabet for the sequence class&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">sequence_class</span> <span class="o">==</span> <span class="n">DNASequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DNAAlphabet</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">sequence_class</span> <span class="o">==</span> <span class="n">RNASequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RNAAlphabet</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">sequence_class</span> <span class="o">==</span> <span class="n">ProteinSequence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ProteinAlphabet</span><span class="p">(</span><span class="n">include_stop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># TODO: For custom sequence classes, try to instantiate with None</span>
+            <span class="c1"># and let the class handle default alphabet</span>
+            <span class="c1"># but for easy, raise an error</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;sequence_class </span><span class="si">{</span><span class="n">sequence_class</span><span class="si">}</span><span class="s2"> does not have a default alphabet, &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;please provide it with the alphabet parameter.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="n">sequences</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseSequence</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_id</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">current_description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">current_seq_lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">line_number</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">fasta_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">line_number</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="c1"># Skip empty lines</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">):</span>
+                    <span class="c1"># Save previous entry if exists</span>
+                    <span class="k">if</span> <span class="n">current_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">_save_sequence</span><span class="p">(</span>
+                            <span class="n">sequences</span><span class="p">,</span>
+                            <span class="n">current_id</span><span class="p">,</span>
+                            <span class="n">current_description</span><span class="p">,</span>
+                            <span class="n">current_seq_lines</span><span class="p">,</span>
+                            <span class="n">sequence_class</span><span class="p">,</span>
+                            <span class="n">alphabet</span> <span class="ow">or</span> <span class="n">get_default_alphabet</span><span class="p">(),</span>
+                            <span class="n">allow_duplicates</span><span class="p">,</span>
+                            <span class="n">line_number</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+                    <span class="c1"># Process new header</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">current_id</span><span class="p">,</span> <span class="n">current_description</span> <span class="o">=</span> <span class="n">process_header</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+                    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Error processing header at line </span><span class="si">{</span><span class="n">line_number</span><span class="si">}</span><span class="s2">: &#39;</span><span class="si">{</span><span class="n">line</span><span class="si">}</span><span class="s2">&#39;. </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+
+                    <span class="n">current_seq_lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Accumulate sequence lines</span>
+                    <span class="c1"># Remove any whitespace and validate characters</span>
+                    <span class="n">clean_line</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>  <span class="c1"># Remove all whitespace</span>
+                    <span class="k">if</span> <span class="n">clean_line</span><span class="p">:</span>  <span class="c1"># Only add non-empty lines</span>
+                        <span class="n">current_seq_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clean_line</span><span class="p">)</span>
+
+            <span class="c1"># Save last entry</span>
+            <span class="k">if</span> <span class="n">current_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">_save_sequence</span><span class="p">(</span>
+                    <span class="n">sequences</span><span class="p">,</span>
+                    <span class="n">current_id</span><span class="p">,</span>
+                    <span class="n">current_description</span><span class="p">,</span>
+                    <span class="n">current_seq_lines</span><span class="p">,</span>
+                    <span class="n">sequence_class</span><span class="p">,</span>
+                    <span class="n">alphabet</span> <span class="ow">or</span> <span class="n">get_default_alphabet</span><span class="p">(),</span>
+                    <span class="n">allow_duplicates</span><span class="p">,</span>
+                    <span class="n">line_number</span><span class="p">,</span>
+                <span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Unable to decode file </span><span class="si">{</span><span class="n">fasta_path</span><span class="si">}</span><span class="s2">. Please ensure it&#39;s a valid text file.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error reading FASTA file at line </span><span class="si">{</span><span class="n">line_number</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sequences</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No valid sequences found in </span><span class="si">{</span><span class="n">fasta_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sequences</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_sequence</span><span class="p">(</span>
+    <span class="n">sequences</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseSequence</span><span class="p">],</span>
+    <span class="n">seq_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">description</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">seq_lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">sequence_class</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseSequence</span><span class="p">],</span>
+    <span class="n">alphabet</span><span class="p">:</span> <span class="n">BaseAlphabet</span><span class="p">,</span>
+    <span class="n">allow_duplicates</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+    <span class="n">line_number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to save a sequence to the dictionary&quot;&quot;&quot;</span>
+    <span class="c1"># Check for duplicate IDs</span>
+    <span class="k">if</span> <span class="n">seq_id</span> <span class="ow">in</span> <span class="n">sequences</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">allow_duplicates</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Duplicate sequence ID &#39;</span><span class="si">{</span><span class="n">seq_id</span><span class="si">}</span><span class="s2">&#39; found near line </span><span class="si">{</span><span class="n">line_number</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Join sequence lines and convert to uppercase</span>
+    <span class="n">full_seq</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seq_lines</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+    <span class="c1"># Skip empty sequences</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">full_seq</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Empty sequence found for ID &#39;</span><span class="si">{</span><span class="n">seq_id</span><span class="si">}</span><span class="s2">&#39;, skipping&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Create sequence object</span>
+        <span class="n">sequences</span><span class="p">[</span><span class="n">seq_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">sequence_class</span><span class="p">(</span>
+            <span class="n">sequence</span><span class="o">=</span><span class="n">full_seq</span><span class="p">,</span>
+            <span class="n">alphabet</span><span class="o">=</span><span class="n">alphabet</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">seq_id</span><span class="p">,</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span> <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;fasta&quot;</span><span class="p">},</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error creating sequence object for ID &#39;</span><span class="si">{</span><span class="n">seq_id</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Yuxiang Tang, ZiyuShi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

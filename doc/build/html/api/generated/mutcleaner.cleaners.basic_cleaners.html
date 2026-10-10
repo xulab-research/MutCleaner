@@ -1,0 +1,1502 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>mutcleaner.cleaners.basic_cleaners &#8212; mutcleaner v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../../_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/mutcleaner.cleaners.basic_cleaners';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="mutcleaner.cleaners.cdna_proteolysis_cleaner" href="mutcleaner.cleaners.cdna_proteolysis_cleaner.html" />
+    <link rel="prev" title="mutcleaner.cleaners.base_config" href="mutcleaner.cleaners.base_config.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mutcleaner v0.1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../user_guide/index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="mutcleaner.cleaners.html">mutcleaner.cleaners</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.antitoxin_pard3_cleaner.html">mutcleaner.cleaners.antitoxin_pard3_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.antitoxin_pard3_custom_cleaners.html">mutcleaner.cleaners.antitoxin_pard3_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.archstabms_1e10_cleaner.html">mutcleaner.cleaners.archstabms_1e10_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.archstabms_1e10_custom_cleaners.html">mutcleaner.cleaners.archstabms_1e10_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.base_config.html">mutcleaner.cleaners.base_config</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">mutcleaner.cleaners.basic_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.cdna_proteolysis_cleaner.html">mutcleaner.cleaners.cdna_proteolysis_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.cdna_proteolysis_custom_cleaners.html">mutcleaner.cleaners.cdna_proteolysis_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.ctxm_cleaner.html">mutcleaner.cleaners.ctxm_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.ddg_dtm_cleaners.html">mutcleaner.cleaners.ddg_dtm_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_domainome_custom_cleaners.html">mutcleaner.cleaners.human_domainome_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_domainome_sup2_cleaner.html">mutcleaner.cleaners.human_domainome_sup2_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_myoglobin_cleaner.html">mutcleaner.cleaners.human_myoglobin_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.human_myoglobin_custom_cleaners.html">mutcleaner.cleaners.human_myoglobin_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.proteingym_dms_substitutions_cleaner.html">mutcleaner.cleaners.proteingym_dms_substitutions_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners.html">mutcleaner.cleaners.proteingym_dms_substitutions_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.rbd_ace2_cleaner.html">mutcleaner.cleaners.rbd_ace2_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.rbd_antibody_cleaner.html">mutcleaner.cleaners.rbd_antibody_cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.rbd_custom_cleaners.html">mutcleaner.cleaners.rbd_custom_cleaners</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.cleaners.trpb_cleaner.html">mutcleaner.cleaners.trpb_cleaner</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="mutcleaner.core.html">mutcleaner.core</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.alphabet.html">mutcleaner.core.alphabet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.codon.html">mutcleaner.core.codon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.constants.html">mutcleaner.core.constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.dataset.html">mutcleaner.core.dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.mutation.html">mutcleaner.core.mutation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.pipeline.html">mutcleaner.core.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.sequence.html">mutcleaner.core.sequence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.core.types.html">mutcleaner.core.types</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="mutcleaner.utils.html">mutcleaner.utils</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.cleaner_workers.html">mutcleaner.utils.cleaner_workers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.data_source.html">mutcleaner.utils.data_source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.dataset_builders.html">mutcleaner.utils.dataset_builders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.label_resolvers.html">mutcleaner.utils.label_resolvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.mutation_converter.html">mutcleaner.utils.mutation_converter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.raw_data_downloader.html">mutcleaner.utils.raw_data_downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.sequence_io.html">mutcleaner.utils.sequence_io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mutcleaner.utils.type_converter.html">mutcleaner.utils.type_converter</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="mutcleaner.cleaners.html" class="nav-link">mutcleaner.cleaners</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">mutcleaner.cleaners.basic_cleaners</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-mutcleaner.cleaners.basic_cleaners">
+<span id="mutcleaner-cleaners-basic-cleaners"></span><h1>mutcleaner.cleaners.basic_cleaners<a class="headerlink" href="#module-mutcleaner.cleaners.basic_cleaners" title="Link to this heading">#</a></h1>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.add_columns" title="mutcleaner.cleaners.basic_cleaners.add_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_columns</span></code></a>(dataset, columns_to_add[, overwrite])</p></td>
+<td><p>Add multiple constant-valued columns to a DataFrame using a dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.aggregate_labels_by_name" title="mutcleaner.cleaners.basic_cleaners.aggregate_labels_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aggregate_labels_by_name</span></code></a>(dataset, ...[, ...])</p></td>
+<td><p>Resolve/aggregate label columns for rows sharing the same (composite) name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.apply_mutations_to_sequences" title="mutcleaner.cleaners.basic_cleaners.apply_mutations_to_sequences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_mutations_to_sequences</span></code></a>(dataset[, ...])</p></td>
+<td><p>Apply mutations to sequences to generate mutated sequences.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.average_labels_by_name" title="mutcleaner.cleaners.basic_cleaners.average_labels_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">average_labels_by_name</span></code></a>(dataset, ...[, ...])</p></td>
+<td><p>Average label columns for rows sharing the same name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.convert_data_types" title="mutcleaner.cleaners.basic_cleaners.convert_data_types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_data_types</span></code></a>(dataset, type_conversions)</p></td>
+<td><p>Convert data types for specified columns.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format" title="mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_to_mutation_dataset_format</span></code></a>(df[, ...])</p></td>
+<td><p>Convert a mutation DataFrame to the format required by MutationDataset.from_dataframe().</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.extract_and_rename_columns" title="mutcleaner.cleaners.basic_cleaners.extract_and_rename_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_and_rename_columns</span></code></a>(dataset, ...[, ...])</p></td>
+<td><p>Extract useful columns and rename them to standard format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.filter_and_clean_data" title="mutcleaner.cleaners.basic_cleaners.filter_and_clean_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_and_clean_data</span></code></a>(dataset[, filters, ...])</p></td>
+<td><p>Filter and clean data based on specified conditions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.infer_mutations_from_sequences" title="mutcleaner.cleaners.basic_cleaners.infer_mutations_from_sequences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">infer_mutations_from_sequences</span></code></a>(dataset[, ...])</p></td>
+<td><p>Infer mutations by comparing wild-type sequences with mutated sequences.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.infer_wildtype_sequences" title="mutcleaner.cleaners.basic_cleaners.infer_wildtype_sequences"><code class="xref py py-obj docutils literal notranslate"><span class="pre">infer_wildtype_sequences</span></code></a>(dataset[, ...])</p></td>
+<td><p>Infer wild-type sequences from mutated sequences and add WT rows.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.merge_columns" title="mutcleaner.cleaners.basic_cleaners.merge_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_columns</span></code></a>(dataset, columns_to_merge, ...)</p></td>
+<td><p>Merge multiple columns into a single column using a separator</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.read_dataset" title="mutcleaner.cleaners.basic_cleaners.read_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_dataset</span></code></a>(file_path[, file_format])</p></td>
+<td><p>Read dataset from specified file format and return as a pandas DataFrame.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.replace_in_column" title="mutcleaner.cleaners.basic_cleaners.replace_in_column"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_in_column</span></code></a>(df, name_column, old[, new])</p></td>
+<td><p>Replace or remove a literal substring in a specified DataFrame column.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.split_columns" title="mutcleaner.cleaners.basic_cleaners.split_columns"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_columns</span></code></a>(dataset, column_to_split, ...)</p></td>
+<td><p>Split a single column into multiple columns using a separator</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.subtract_labels_by_wt" title="mutcleaner.cleaners.basic_cleaners.subtract_labels_by_wt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subtract_labels_by_wt</span></code></a>(dataset, name_column, ...)</p></td>
+<td><p>For each group defined by <code class="docutils literal notranslate"><span class="pre">name_column</span></code>, subtract the group's WT label values (where <code class="docutils literal notranslate"><span class="pre">mutation_column</span> <span class="pre">==</span> <span class="pre">wt_identifier</span></code>) from all rows' label values.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#mutcleaner.cleaners.basic_cleaners.validate_mutations" title="mutcleaner.cleaners.basic_cleaners.validate_mutations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_mutations</span></code></a>(dataset[, ...])</p></td>
+<td><p>Validate and format mutation information.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.add_columns">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">add_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_to_add</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#add_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.add_columns" title="Link to this definition">#</a></dt>
+<dd><p>Add multiple constant-valued columns to a DataFrame using a dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – The input DataFrame to which the ‘dataset_name’ will be added.</p></li>
+<li><p><strong>columns_to_add</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – A dictionary where keys are the new column names and values are the constant values to assign to all rows in those columns.</p></li>
+<li><p><strong>overwrite</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to overwrite existing columns with the same name. If False, a warning will be printed and existing columns will be skipped.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The DataFrame with the additional columns.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A0G&#39;</span><span class="p">,</span> <span class="s1">&#39;V1D&#39;</span><span class="p">,</span> <span class="s1">&#39;K2A&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_seq&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;GVKDF&#39;</span><span class="p">,</span> <span class="s1">&#39;ADKDF&#39;</span><span class="p">,</span> <span class="s1">&#39;AVADF&#39;</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">new_cols</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;protein1&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s2">&quot;wt_seq&quot;</span><span class="p">:</span> <span class="s2">&quot;AGKDF&quot;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">add_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns_to_add</span><span class="o">=</span><span class="n">new_cols</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+<span class="go">[&#39;mut_info&#39;, &#39;mut_seq&#39;, &#39;name&#39;, &#39;wt_seq&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.aggregate_labels_by_name">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">aggregate_labels_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_origin_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">nearest_by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nearest_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#aggregate_labels_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.aggregate_labels_by_name" title="Link to this definition">#</a></dt>
+<dd><p>Resolve/aggregate label columns for rows sharing the same (composite) name.
+Supports built-in strategies (‘mean’, ‘first’, ‘nearest’) or a custom callable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataframe.</p></li>
+<li><p><strong>name_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Column name(s) used for grouping. Supports one or multiple columns.</p></li>
+<li><p><strong>label_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Label column(s) to resolve/aggregate.</p></li>
+<li><p><strong>remove_origin_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, return one row per name with resolved labels using the original label column names. If False, keep original rows and merge resolved values back as extra columns (see <cite>output_suffix</cite>).</p></li>
+<li><p><strong>strategy</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>]]</span>) – <ul>
+<li><p>“mean”: per-group numeric mean for each label (NaNs ignored). - “first”: take the first row in each group for the labels. - “nearest”: pick the row minimizing a multi-criteria distance; requires <cite>nearest_by</cite>. - Callable(group_df, label_cols) -&gt; pd.Series: custom resolver that returns a single-row Series whose index includes the label columns.</p></li>
+</ul>
+</p></li>
+<li><p><strong>nearest_by</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Criteria for “nearest” strategy. Provide either: * a list of (column, target) pairs in priority order, or * a dict {column: target}. When dict is used, priority order is the insertion order (Python 3.7+ preserves dict insertion order). The distance is computed per criterion as abs(col - target), and rows are compared lexicographically by the (possibly weighted) distance tuple.</p></li>
+<li><p><strong>nearest_weights</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]</span>) – Optional weights for “nearest” strategy (same columns as in <cite>nearest_by</cite>). If provided, each distance is multiplied by its weight before comparison. Defaults to all weights = 1.0.</p></li>
+<li><p><strong>output_suffix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Suffix used when <cite>remove_origin_columns=False</cite> to name merged columns. Default depends on <cite>strategy</cite>: - “_mean_by_name”, “_first_by_name”, “_nearest_by_name”, or “_custom_by_name”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If <cite>remove_origin_columns</cite> is True: one row per group with resolved labels. Otherwise: original rows + resolved label columns (with suffix).</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – If required columns are missing.</p></li>
+<li><p><strong>ValueError</strong> – If label columns are non-numeric for “mean”, or if “nearest” is selected without <cite>nearest_by</cite>, or if custom strategy returns invalid shape/index.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Mean aggregation, one row per name:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;specie&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;hs&quot;</span><span class="p">,</span><span class="s2">&quot;hs&quot;</span><span class="p">,</span><span class="s2">&quot;hs&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;ddG&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;dTm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aggregate_labels_by_name</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">,</span><span class="s2">&quot;specie&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">label_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ddG&quot;</span><span class="p">,</span><span class="s2">&quot;dTm&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">remove_origin_columns</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">  gene specie  ddG   dTm</span>
+<span class="go">0    A     hs  2.0  20.0</span>
+<span class="go">1    B     hs  2.0  20.0</span>
+</pre></div>
+</div>
+<p>Nearest row by multiple criteria (temperature, then pH) with weights,
+keeping original rows and adding resolved columns:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">24.5</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;pH&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">7.2</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">,</span> <span class="mf">7.3</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;ddG&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;dTm&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">21.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aggregate_labels_by_name</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name_columns</span><span class="o">=</span><span class="s2">&quot;gene&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">label_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ddG&quot;</span><span class="p">,</span><span class="s2">&quot;dTm&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">strategy</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">nearest_by</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;temperature&quot;</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;pH&quot;</span><span class="p">,</span> <span class="mf">7.4</span><span class="p">)],</span>
+<span class="gp">... </span>    <span class="n">nearest_weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">&quot;pH&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="n">remove_origin_columns</span><span class="o">=</span><span class="kc">False</span>
+<span class="gp">... </span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s2">&quot;^gene$|_nearest_by_name$|^ddG$|^dTm$&quot;</span><span class="p">)</span>
+<span class="go">  gene  ddG   dTm  ddG_nearest_by_name  dTm_nearest_by_name</span>
+<span class="go">0    A  1.1   9.0                  1.9                 20.0</span>
+<span class="go">1    A  1.9  20.0                  1.9                 20.0</span>
+<span class="go">2    A  2.2  21.0                  1.9                 20.0</span>
+<span class="go">3    B  2.0  20.0                  2.0                 20.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.apply_mutations_to_sequences">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">apply_mutations_to_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_zero_based</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#apply_mutations_to_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.apply_mutations_to_sequences" title="Link to this definition">#</a></dt>
+<dd><p>Apply mutations to sequences to generate mutated sequences.</p>
+<p>This function takes mutation information and applies it to wild-type sequences
+to generate the corresponding mutated sequences. It supports parallel processing
+and can handle position-based sequence extraction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset containing mutation information and sequence data</p></li>
+<li><p><strong>sequence_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column name containing wild-type sequences</p></li>
+<li><p><strong>name_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column name containing protein identifiers</p></li>
+<li><p><strong>mutation_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column name containing mutation information</p></li>
+<li><p><strong>position_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Position column mapping {“start”: “start_col”, “end”: “end_col”} Used for extracting sequence regions</p></li>
+<li><p><strong>mutation_sep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Separator used to split multiple mutations in a single string</p></li>
+<li><p><strong>is_zero_based</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether origin mutation positions are zero-based</p></li>
+<li><p><strong>sequence_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Type of sequence (‘protein’, ‘dna’, ‘rna’)</p></li>
+<li><p><strong>num_workers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of parallel workers for processing, set to -1 for all available CPUs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(successful_dataset, failed_dataset) - datasets with and without errors</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;AKCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AKCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;FEGHIS&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A0K&#39;</span><span class="p">,</span> <span class="s1">&#39;C2D&#39;</span><span class="p">,</span> <span class="s1">&#39;E1F&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">apply_mutations_to_sequences</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">successful</span><span class="p">[</span><span class="s1">&#39;mut_seq&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="go">[&#39;KKCDEF&#39;, &#39;AKDDEF&#39;, &#39;FFGHIS&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">failed</span><span class="p">))</span>  <span class="c1"># Should be 0 if all mutations are valid</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.average_labels_by_name">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">average_labels_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_origin_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#average_labels_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.average_labels_by_name" title="Link to this definition">#</a></dt>
+<dd><p>Average label columns for rows sharing the same name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Input dataframe.</p></li>
+<li><p><strong>name_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Column name(s) used for grouping (the “name” keys). Supports a single column or multiple columns for composite keys.</p></li>
+<li><p><strong>label_cols</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Sequence</em><em>[</em><em>str</em><em>]</em><em>]</em>) – Label column(s) to average.</p></li>
+<li><p><strong>remove_origin_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, return one row per name with averaged labels using the ORIGINAL label column names (deduplicated by design). If False, keep original rows and add per-name mean columns named <code class="docutils literal notranslate"><span class="pre">&lt;label&gt;_mean_by_name</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">remove_origin_columns</span></code> is True: columns = [name_column] + label_columns (averaged), one row per unique name. - If False: same rows as input plus <code class="docutils literal notranslate"><span class="pre">&lt;label&gt;_mean_by_name</span></code> columns.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>KeyError</strong> – If <code class="docutils literal notranslate"><span class="pre">name_column</span></code> or any of <code class="docutils literal notranslate"><span class="pre">label_columns</span></code> is missing.</p></li>
+<li><p><strong>ValueError</strong> – If any label column is non-numeric.v</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s2">&quot;gene&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;specie&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;hs&quot;</span><span class="p">,</span><span class="s2">&quot;hs&quot;</span><span class="p">,</span><span class="s2">&quot;hs&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;y1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;y2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># multiple name keys</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">average_labels_by_name</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;gene&quot;</span><span class="p">,</span><span class="s2">&quot;specie&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span><span class="s2">&quot;y2&quot;</span><span class="p">],</span> <span class="n">remove_origin_columns</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">  gene specie   y1    y2</span>
+<span class="go">0    A     hs  2.0  20.0</span>
+<span class="go">1    B     hs  2.0  20.0</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># keep original rows and add means</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">average_labels_by_name</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;gene&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span><span class="s2">&quot;y2&quot;</span><span class="p">],</span> <span class="n">remove_origin_columns</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">  gene specie   y1    y2  y1_mean_by_name  y2_mean_by_name</span>
+<span class="go">0    A     hs  1.0  10.0              2.0             20.0</span>
+<span class="go">1    A     hs  3.0  30.0              2.0             20.0</span>
+<span class="go">2    B     hs  2.0  20.0              2.0             20.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.convert_data_types">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">convert_data_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_conversions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'coerce'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimize_memory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_batch_processing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunk_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#convert_data_types"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.convert_data_types" title="Link to this definition">#</a></dt>
+<dd><p>Convert data types for specified columns.</p>
+<p>This function provides unified data type conversion with error handling options.
+Supports pandas, numpy, and Python built-in types with memory optimization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset with columns to be converted</p></li>
+<li><p><strong>type_conversions</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Type</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>]]</span>) – Type conversion mapping in format {column_name: target_type} Supported formats: - String types: ‘float’, ‘int’, ‘str’, ‘category’, ‘bool’, ‘datetime’ - Numpy types: np.float32, np.float64, np.int32, np.int64, etc. - Pandas types: ‘Int64’, ‘Float64’, ‘string’, ‘boolean’ - Python types: float, int, str, bool</p></li>
+<li><p><strong>handle_errors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Error handling strategy: ‘raise’, ‘coerce’, or ‘ignore’</p></li>
+<li><p><strong>optimize_memory</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to automatically optimize memory usage by choosing smaller dtypes</p></li>
+<li><p><strong>use_batch_processing</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to use batch processing for large datasets</p></li>
+<li><p><strong>chunk_size</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Chunk size when using batch processing</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset with converted data types</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1.5&#39;</span><span class="p">,</span> <span class="s1">&#39;2.3&#39;</span><span class="p">,</span> <span class="s1">&#39;3.7&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;10&#39;</span><span class="p">,</span> <span class="s1">&#39;20&#39;</span><span class="p">,</span> <span class="s1">&#39;30&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">123</span><span class="p">,</span> <span class="mi">456</span><span class="p">,</span> <span class="mi">789</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conversions</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="s1">&#39;Int64&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;flag&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">convert_data_types</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">conversions</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">convert_to_mutation_dataset_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutated_sequence_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_seq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'score'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_wild_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_set_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'set'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_zero_based</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#convert_to_mutation_dataset_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format" title="Link to this definition">#</a></dt>
+<dd><p>Convert a mutation DataFrame to the format required by MutationDataset.from_dataframe().</p>
+<p>This function supports two input formats:
+1. Format with WT rows: Contains explicit ‘WT’ entries with wild-type sequences
+2. Format with sequence column: Each row contains the wild-type sequence</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df</strong> – Input DataFrame. Supports two formats:</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>(converted_dataframe, reference_sequences_dict)</p>
+<p>converted_dataframe: DataFrame in MutationDataset.from_dataframe() format
+reference_sequences_dict: Dictionary mapping reference_id to wild-type sequences
+(extracted from WT rows in Format 1 or sequence column in Format 2)</p>
+</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If required columns are missing or mutation strings cannot be parsed.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</pre></div>
+</div>
+<p>Format 1: With WT rows and multi-mutations</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A0S,Q1D&#39;</span><span class="p">,</span> <span class="s1">&#39;C2D&#39;</span><span class="p">,</span> <span class="s1">&#39;WT&#39;</span><span class="p">,</span> <span class="s1">&#39;E0F&#39;</span><span class="p">,</span> <span class="s1">&#39;WT&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SDCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AQDDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AQCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;FGHIGHK&#39;</span><span class="p">,</span> <span class="s1">&#39;EGHIGHK&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_df1</span><span class="p">,</span> <span class="n">ref_seqs1</span> <span class="o">=</span> <span class="n">convert_to_mutation_dataset_format</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Input has 5 rows but output has 6 rows (A0S,Q1D -&gt; 2 rows)</span>
+</pre></div>
+</div>
+<p>Format 2: With sequence column and multi-mutations</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;sequence&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;AKCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AKCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;FEGHIS&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A0K,C2D&#39;</span><span class="p">,</span> <span class="s1">&#39;Q1P&#39;</span><span class="p">,</span> <span class="s1">&#39;E1F&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;KKDDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;APCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;FFGHIS&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result_df2</span><span class="p">,</span> <span class="n">ref_seqs2</span> <span class="o">=</span> <span class="n">convert_to_mutation_dataset_format</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df2</span><span class="p">,</span> <span class="n">sequence_column</span><span class="o">=</span><span class="s1">&#39;sequence&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ref_seqs2</span><span class="p">[</span><span class="s1">&#39;prot1&#39;</span><span class="p">])</span>
+<span class="go">AKCDEF</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># First row generates 2 output rows for A0K and C2D mutations</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.extract_and_rename_columns">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">extract_and_rename_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#extract_and_rename_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.extract_and_rename_columns" title="Link to this definition">#</a></dt>
+<dd><p>Extract useful columns and rename them to standard format.</p>
+<p>This function extracts specified columns from the input dataset and renames them
+according to the provided mapping. It helps standardize column names across
+different datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset containing the data to be processed</p></li>
+<li><p><strong>column_mapping</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Column name mapping from original names to new names Format: {original_column_name: new_column_name}</p></li>
+<li><p><strong>required_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Required column names. If None, extracts all mapped columns</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset with extracted and renamed columns</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If required columns are missing from the input dataset</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;uniprot_ID&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;P12345&#39;</span><span class="p">,</span> <span class="s1">&#39;Q67890&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mutation_type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A123B&#39;</span><span class="p">,</span> <span class="s1">&#39;C456D&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score_value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.3</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;extra_col&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s1">&#39;uniprot_ID&#39;</span><span class="p">:</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;mutation_type&#39;</span><span class="p">:</span> <span class="s1">&#39;mut_info&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;score_value&#39;</span><span class="p">:</span> <span class="s1">&#39;label&#39;</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">extract_and_rename_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="go">[&#39;name&#39;, &#39;mut_info&#39;, &#39;label&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.filter_and_clean_data">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">filter_and_clean_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_na_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#filter_and_clean_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.filter_and_clean_data" title="Link to this definition">#</a></dt>
+<dd><p>Filter and clean data based on specified conditions.</p>
+<p>This function provides flexible data filtering and cleaning capabilities,
+including value-based filtering, pattern exclusion, and null value removal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset to be filtered and cleaned</p></li>
+<li><p><strong>filters</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>]]]]</span>) – Filter conditions in format {column_name: condition_value_or_function} If value is callable, it will be applied to the column</p></li>
+<li><p><strong>exclude_patterns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]]</span>) – Exclusion patterns in format {column_name: regex_pattern_or_list} Rows matching these patterns will be excluded</p></li>
+<li><p><strong>drop_na_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – List of column names where null values should be dropped</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Filtered and cleaned dataset</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A123B&#39;</span><span class="p">,</span> <span class="s1">&#39;wt&#39;</span><span class="p">,</span> <span class="s1">&#39;C456D&#39;</span><span class="p">,</span> <span class="s1">&#39;insert&#39;</span><span class="p">,</span> <span class="s1">&#39;E789F&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;quality&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">,</span> <span class="s1">&#39;bad&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exclude_patterns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;mut_type&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;wt&#39;</span><span class="p">,</span> <span class="s1">&#39;insert&#39;</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">drop_na_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;quality&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">filter_and_clean_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">filters</span><span class="p">,</span> <span class="n">exclude_patterns</span><span class="p">,</span> <span class="n">drop_na_columns</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>  <span class="c1"># Should be 2 (A123B and E789F rows)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.infer_mutations_from_sequences">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">infer_mutations_from_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wt_sequence_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wt_seq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mut_sequence_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_seq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#infer_mutations_from_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.infer_mutations_from_sequences" title="Link to this definition">#</a></dt>
+<dd><p>Infer mutations by comparing wild-type sequences with mutated sequences.</p>
+<p>This function takes wild-type and mutated sequences and identifies the
+mutations that occurred by comparing them position by position. It only
+handles sequences of equal length. Uses parallel processing for large datasets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset containing wild-type and mutated sequence data. Each dict should contain the specified column keys.</p></li>
+<li><p><strong>wt_sequence_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column key containing wild-type sequences</p></li>
+<li><p><strong>mut_sequence_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column key containing mutated sequences</p></li>
+<li><p><strong>mutation_sep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Separator used to join multiple mutations in output string</p></li>
+<li><p><strong>sequence_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Type of sequence (‘protein’, ‘dna’, ‘rna’)</p></li>
+<li><p><strong>num_workers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of parallel workers for processing, set to -1 for all available CPUs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(successful_results, failed_results) - datasets with and without errors</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;wt_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;AKCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;KKCDEF&#39;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;wt_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;AKCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;AKDDEF&#39;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;prot2&#39;</span><span class="p">,</span> <span class="s1">&#39;wt_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;FEGHIS&#39;</span><span class="p">,</span> <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;FFGHIS&#39;</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;prot3&#39;</span><span class="p">,</span> <span class="s1">&#39;wt_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;ABC&#39;</span><span class="p">,</span> <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="s1">&#39;ASC&#39;</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">infer_mutations_from_sequences</span><span class="p">(</span><span class="n">dataset</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span>
+<span class="go">    name  wt_seq mut_seq inferred_mutations</span>
+<span class="go">0  prot1  AKCDEF  KKCDEF                A0K</span>
+<span class="go">1  prot1  AKCDEF  AKDDEF                C2D</span>
+<span class="go">2  prot2  FEGHIS  FFGHIS                E1F</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">failed</span>
+<span class="go">    name wt_seq mut_seq                                  error_message</span>
+<span class="go">3  prot3    ABC    ABCD  Invalid characters in Protein sequence: {&#39;B&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.infer_wildtype_sequences">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">infer_wildtype_sequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_seq'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wt_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_zero_based</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'protein'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_multiple_wt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#infer_wildtype_sequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.infer_wildtype_sequences" title="Link to this definition">#</a></dt>
+<dd><p>Infer wild-type sequences from mutated sequences and add WT rows.</p>
+<p>This function takes mutated sequences and their corresponding mutations to
+infer the original wild-type sequences. For each protein, it adds WT row(s)
+to the dataset with the inferred wild-type sequence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset containing mutated sequences and mutation information</p></li>
+<li><p><strong>name_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column name containing protein identifiers</p></li>
+<li><p><strong>mutation_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column name containing mutation information</p></li>
+<li><p><strong>sequence_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column name containing mutated sequences</p></li>
+<li><p><strong>label_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – List of label column names to preserve</p></li>
+<li><p><strong>wt_label</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Wild type score for WT rows</p></li>
+<li><p><strong>mutation_sep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Separator used to split multiple mutations in a single string</p></li>
+<li><p><strong>is_zero_based</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether origin mutation positions are zero-based</p></li>
+<li><p><strong>sequence_type</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'protein'</span></code>, <code class="docutils literal notranslate"><span class="pre">'dna'</span></code>, <code class="docutils literal notranslate"><span class="pre">'rna'</span></code>]</span>) – Type of sequence (‘protein’, ‘dna’, ‘rna’)</p></li>
+<li><p><strong>handle_multiple_wt</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Literal</span></code>[<code class="docutils literal notranslate"><span class="pre">'error'</span></code>, <code class="docutils literal notranslate"><span class="pre">'separate'</span></code>, <code class="docutils literal notranslate"><span class="pre">'first'</span></code>]</span>) – How to handle multiple wild-type sequences: ‘separate’, ‘first’, or ‘error’</p></li>
+<li><p><strong>num_workers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of parallel workers for processing, set to -1 for all available CPUs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(successful_dataset, problematic_dataset) - datasets with added WT rows</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A0S&#39;</span><span class="p">,</span> <span class="s1">&#39;C2D&#39;</span><span class="p">,</span> <span class="s1">&#39;E0F&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SQCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AQDDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;FGHIGHK&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">success</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">infer_wildtype_sequences</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="n">label_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;score&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">success</span><span class="p">))</span>  <span class="c1"># Should have original rows + WT rows</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.merge_columns">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">merge_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns_to_merge</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_column_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_original</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">na_rep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#merge_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.merge_columns" title="Link to this definition">#</a></dt>
+<dd><p>Merge multiple columns into a single column using a separator</p>
+<p>This function combines values from multiple columns into a new column,
+with flexible formatting options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset</p></li>
+<li><p><strong>columns_to_merge</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of column names to merge</p></li>
+<li><p><strong>new_column_name</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name for the new merged column</p></li>
+<li><p><strong>separator</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Separator to use between values</p></li>
+<li><p><strong>drop_original</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to drop the original columns after merging</p></li>
+<li><p><strong>na_rep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – String representation of NaN values. If None, NaN values are skipped.</p></li>
+<li><p><strong>prefix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Prefix to add to the merged value</p></li>
+<li><p><strong>suffix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Suffix to add to the merged value</p></li>
+<li><p><strong>custom_formatter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Custom function to format each row. Takes a pd.Series and returns a string. If provided, ignores separator, prefix, suffix parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset with the new merged column</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Basic usage:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;gene&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BRCA1&#39;</span><span class="p">,</span> <span class="s1">&#39;TP53&#39;</span><span class="p">,</span> <span class="s1">&#39;EGFR&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;position&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mutation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">merge_columns</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;mutation&#39;</span><span class="p">],</span> <span class="s1">&#39;mutation_id&#39;</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;mutation_id&#39;</span><span class="p">])</span>
+<span class="go">0    BRCA1_100_A</span>
+<span class="go">1     TP53_200_T</span>
+<span class="go">2     EGFR_300_G</span>
+</pre></div>
+</div>
+<p>With prefix and suffix:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">merge_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">],</span> <span class="s1">&#39;gene_pos&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;[&#39;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;]&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;gene_pos&#39;</span><span class="p">])</span>
+<span class="go">0    [BRCA1:100]</span>
+<span class="go">1     [TP53:200]</span>
+<span class="go">2     [EGFR:300]</span>
+</pre></div>
+</div>
+<p>Handling NaN values:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df_with_nan</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;col1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;col2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;col3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">merge_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df_with_nan</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">,</span> <span class="s1">&#39;col3&#39;</span><span class="p">],</span> <span class="s1">&#39;merged&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">na_rep</span><span class="o">=</span><span class="s1">&#39;NA&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;merged&#39;</span><span class="p">])</span>
+<span class="go">0    A-X-1</span>
+<span class="go">1    B-NA-2</span>
+<span class="go">2    NA-Z-3</span>
+</pre></div>
+</div>
+<p>Custom formatter:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">format_mutation</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;position&#39;</span><span class="p">]</span><span class="si">}{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;mutation&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">merge_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;mutation&#39;</span><span class="p">],</span> <span class="s1">&#39;hgvs&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">custom_formatter</span><span class="o">=</span><span class="n">format_mutation</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;hgvs&#39;</span><span class="p">])</span>
+<span class="go">0    BRCA1:100A</span>
+<span class="go">1     TP53:200T</span>
+<span class="go">2     EGFR:300G</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.read_dataset">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">read_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#read_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.read_dataset" title="Link to this definition">#</a></dt>
+<dd><p>Read dataset from specified file format and return as a pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]</span>) – Path to the dataset file</p></li>
+<li><p><strong>file_format</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Format of the dataset file (“csv”, “tsv”, “xlsx”, etc.)</p></li>
+<li><p><strong>kwargs</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – Additional keyword arguments for file reading</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset loaded from the specified file</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Specify file_format parameter</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">read_dataset</span><span class="p">(</span><span class="s2">&quot;data.csv&quot;</span><span class="p">,</span> <span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Detect file_format automatically</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">read_dataset</span><span class="p">(</span><span class="s2">&quot;data.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.replace_in_column">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">replace_in_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#replace_in_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.replace_in_column" title="Link to this definition">#</a></dt>
+<dd><p>Replace or remove a literal substring in a specified DataFrame column.</p>
+<p>This function performs a literal (non-regex) string replacement on the specified column.
+It replaces occurrences of a target substring (‘old’) with a new substring (‘new’).
+If ‘new’ is not provided, the target substring is removed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input DataFrame containing at least one column with string identifiers.</p></li>
+<li><p><strong>name_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the column on which to perform replacements.</p></li>
+<li><p><strong>old</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Non-empty substring to be replaced or removed.</p></li>
+<li><p><strong>new</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Replacement substring. If omitted or None, occurrences of ‘old’ will be removed. Defaults to “” (deletion).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The DataFrame with the specified replacements applied.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If ‘old’ is an empty string.</p></li>
+<li><p><strong>TypeError</strong> – If ‘df’ is not a pd.DataFrame or ‘old’ is not a str</p></li>
+<li><p><strong>KeyError</strong> – If ‘name_column’ does not exist in the DataFrame.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Remove the substring “.pdb”:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;prot1.pdb&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1.pdb&#39;</span><span class="p">,</span> <span class="s1">&#39;prot1.pdb&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2.pdb&#39;</span><span class="p">,</span> <span class="s1">&#39;prot2.pdb&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A0S,Q1D&#39;</span><span class="p">,</span> <span class="s1">&#39;C2D&#39;</span><span class="p">,</span> <span class="s1">&#39;WT&#39;</span><span class="p">,</span> <span class="s1">&#39;E0F&#39;</span><span class="p">,</span> <span class="s1">&#39;WT&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_seq&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;SDCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AQDDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;AQCDEF&#39;</span><span class="p">,</span> <span class="s1">&#39;FGHIGHK&#39;</span><span class="p">,</span> <span class="s1">&#39;EGHIGHK&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">replace_in_column</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;.pdb&quot;</span><span class="p">)</span>
+<span class="go">    name mut_info  mut_seq  score</span>
+<span class="go">0  prot1  A0S,Q1D   SDCDEF    1.5</span>
+<span class="go">1  prot1      C2D   AQDDEF    2.0</span>
+<span class="go">2  prot1       WT   AQCDEF    0.0</span>
+<span class="go">3  prot2      E0F  FGHIGHK    3.0</span>
+<span class="go">4  prot2       WT  EGHIGHK    0.0</span>
+</pre></div>
+</div>
+<p>Replace “.pdb” with “.pross”:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">replace_in_column</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;.pdb&quot;</span><span class="p">,</span> <span class="s2">&quot;.pross&quot;</span><span class="p">)</span>
+<span class="go">        name mut_info  mut_seq  score</span>
+<span class="go">0  prot1.pross  A0S,Q1D   SDCDEF    1.5</span>
+<span class="go">1  prot1.pross      C2D   AQDDEF    2.0</span>
+<span class="go">2  prot1.pross       WT   AQCDEF    0.0</span>
+<span class="go">3  prot2.pross      E0F  FGHIGHK    3.0</span>
+<span class="go">4  prot2.pross       WT  EGHIGHK    0.0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.split_columns">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">split_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_to_split</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_column_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_splits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_original</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'NaN'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip_whitespace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_splitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#split_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.split_columns" title="Link to this definition">#</a></dt>
+<dd><p>Split a single column into multiple columns using a separator</p>
+<p>This function splits values from one column into multiple new columns,
+with flexible splitting options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset</p></li>
+<li><p><strong>column_to_split</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the column to split</p></li>
+<li><p><strong>new_column_names</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – List of names for the new columns</p></li>
+<li><p><strong>separator</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Separator to use for splitting. Can be regex pattern if regex=True.</p></li>
+<li><p><strong>max_splits</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – Maximum number of splits to perform. If None, splits on all occurrences.</p></li>
+<li><p><strong>drop_original</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to drop the original column after splitting</p></li>
+<li><p><strong>fill_value</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Value to use when split results have fewer parts than new_column_names. If None, uses NaN for missing parts.</p></li>
+<li><p><strong>strip_whitespace</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to strip whitespace from split results</p></li>
+<li><p><strong>regex</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to treat separator as a regex pattern</p></li>
+<li><p><strong>custom_splitter</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]]</span>) – Custom function to split each value. Takes a string and returns a list of strings. If provided, ignores separator, max_splits, regex parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dataset with the new split columns</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Basic usage:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;mutation_id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BRCA1_100_A&#39;</span><span class="p">,</span> <span class="s1">&#39;TP53_200_T&#39;</span><span class="p">,</span> <span class="s1">&#39;EGFR_300_G&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.87</span><span class="p">,</span> <span class="mf">0.92</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">split_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;mutation_id&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;mutation&#39;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;_&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Splitting column &#39;mutation_id&#39; into [&#39;gene&#39;, &#39;position&#39;, &#39;mutation&#39;]...</span>
+<span class="go">Splitting using separator: &#39;_&#39;</span>
+<span class="go">Successfully created split columns: [&#39;gene&#39;, &#39;position&#39;, &#39;mutation&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[[</span><span class="s1">&#39;gene&#39;</span><span class="p">,</span> <span class="s1">&#39;position&#39;</span><span class="p">,</span> <span class="s1">&#39;mutation&#39;</span><span class="p">]])</span>
+<span class="go">    gene position mutation</span>
+<span class="go">0  BRCA1      100        A</span>
+<span class="go">1   TP53      200        T</span>
+<span class="go">2   EGFR      300        G</span>
+</pre></div>
+</div>
+<p>With max_splits:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;home/user/documents/file.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;data/analysis/results.csv&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">split_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;path&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="s1">&#39;rest&#39;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">max_splits</span><span class="o">=</span><span class="mi">1</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Splitting column &#39;path&#39; into [&#39;root&#39;, &#39;rest&#39;]...</span>
+<span class="go">Splitting using separator: &#39;/&#39;</span>
+<span class="go">Successfully created split columns: [&#39;root&#39;, &#39;rest&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[[</span><span class="s1">&#39;root&#39;</span><span class="p">,</span> <span class="s1">&#39;rest&#39;</span><span class="p">]])</span>
+<span class="go">   root                     rest</span>
+<span class="go">0  home  user/documents/file.txt</span>
+<span class="go">1  data     analysis/results.csv</span>
+</pre></div>
+</div>
+<p>Handling insufficient splits with fill_value:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;incomplete&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A_B&#39;</span><span class="p">,</span> <span class="s1">&#39;X_Y_Z&#39;</span><span class="p">,</span> <span class="s1">&#39;M&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">split_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;incomplete&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">,</span> <span class="s1">&#39;col3&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;MISSING&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Splitting column &#39;incomplete&#39; into [&#39;col1&#39;, &#39;col2&#39;, &#39;col3&#39;]...</span>
+<span class="go">Splitting using separator: &#39;_&#39;</span>
+<span class="go">Successfully created split columns: [&#39;col1&#39;, &#39;col2&#39;, &#39;col3&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[[</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">,</span> <span class="s1">&#39;col3&#39;</span><span class="p">]])</span>
+<span class="go">  col1     col2     col3</span>
+<span class="go">0    A        B  MISSING</span>
+<span class="go">1    X        Y        Z</span>
+<span class="go">2    M  MISSING  MISSING</span>
+</pre></div>
+</div>
+<p>Using regex separator:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;word1-word2_word3&#39;</span><span class="p">,</span> <span class="s1">&#39;itemA|itemB-itemC&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">split_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;part1&#39;</span><span class="p">,</span> <span class="s1">&#39;part2&#39;</span><span class="p">,</span> <span class="s1">&#39;part3&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">separator</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;[-_|]&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Splitting column &#39;text&#39; into [&#39;part1&#39;, &#39;part2&#39;, &#39;part3&#39;]...</span>
+<span class="go">Splitting using separator: &#39;[-_|]&#39; (regex)</span>
+<span class="go">Successfully created split columns: [&#39;part1&#39;, &#39;part2&#39;, &#39;part3&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[[</span><span class="s1">&#39;part1&#39;</span><span class="p">,</span> <span class="s1">&#39;part2&#39;</span><span class="p">,</span> <span class="s1">&#39;part3&#39;</span><span class="p">]])</span>
+<span class="go">   part1  part2  part3</span>
+<span class="go">0  word1  word2  word3</span>
+<span class="go">1  itemA  itemB  itemC</span>
+</pre></div>
+</div>
+<p>Custom splitter:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">parse_coordinates</span><span class="p">(</span><span class="n">coord_str</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="c1"># Parse &quot;chr1:12345-67890&quot; format</span>
+<span class="gp">... </span>    <span class="n">parts</span> <span class="o">=</span> <span class="n">coord_str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">parts</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;coordinates&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;chr1:12345-67890&#39;</span><span class="p">,</span> <span class="s1">&#39;chr2:98765-43210&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">split_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;coordinates&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;chromosome&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">custom_splitter</span><span class="o">=</span><span class="n">parse_coordinates</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Splitting column &#39;coordinates&#39; into [&#39;chromosome&#39;, &#39;start&#39;, &#39;end&#39;]...</span>
+<span class="go">Using custom splitter...</span>
+<span class="go">100%|█████████████████████████████| 2/2 [00:00&lt;00:00, xx it/s]</span>
+<span class="go">Successfully created split columns: [&#39;chromosome&#39;, &#39;start&#39;, &#39;end&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[[</span><span class="s1">&#39;chromosome&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">]])</span>
+<span class="go">  chromosome  start    end</span>
+<span class="go">0       chr1  12345  67890</span>
+<span class="go">1       chr2  98765  43210</span>
+</pre></div>
+</div>
+<p>Handling NaN values:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A_B_C&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;X_Y&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span> <span class="o">=</span> <span class="n">split_columns</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">,</span> <span class="s1">&#39;col3&#39;</span><span class="p">],</span> <span class="n">separator</span><span class="o">=</span><span class="s1">&#39;_&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">Splitting column &#39;data&#39; into [&#39;col1&#39;, &#39;col2&#39;, &#39;col3&#39;]...</span>
+<span class="go">Splitting using separator: &#39;_&#39;</span>
+<span class="go">Successfully created split columns: [&#39;col1&#39;, &#39;col2&#39;, &#39;col3&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">[[</span><span class="s1">&#39;col1&#39;</span><span class="p">,</span> <span class="s1">&#39;col2&#39;</span><span class="p">,</span> <span class="s1">&#39;col3&#39;</span><span class="p">]])</span>
+<span class="go">   col1 col2 col3</span>
+<span class="go">0     A    B    C</span>
+<span class="go">1  None  NaN  NaN</span>
+<span class="go">2     X    Y  NaN</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.subtract_labels_by_wt">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">subtract_labels_by_wt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wt_identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_minus_wt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_place</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop_wt_row</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#subtract_labels_by_wt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.subtract_labels_by_wt" title="Link to this definition">#</a></dt>
+<dd><p>For each group defined by <code class="docutils literal notranslate"><span class="pre">name_column</span></code>, subtract the group’s WT label values
+(where <code class="docutils literal notranslate"><span class="pre">mutation_column</span> <span class="pre">==</span> <span class="pre">wt_identifier</span></code>) from all rows’ label values.</p>
+<p>Returns two dataframes via the multi-output step:
+- <strong>successful</strong>: rows of groups where subtraction succeeded</p>
+<blockquote>
+<div><p>(columns overwritten if <code class="docutils literal notranslate"><span class="pre">in_place=True</span></code>; otherwise new columns <code class="docutils literal notranslate"><span class="pre">&lt;label&gt;&lt;suffix&gt;</span></code> are added).
+If <code class="docutils literal notranslate"><span class="pre">drop_wt_row=True</span></code>, WT rows are removed in this output.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>failed</strong>: one (or more) diagnostic rows per failed group, including an
+<code class="docutils literal notranslate"><span class="pre">error_message</span></code> column describing the reason.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>)</p></li>
+<li><p><strong>name_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Grouping key column.</p></li>
+<li><p><strong>label_columns</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span>) – Numeric label column(s) to subtract by WT.</p></li>
+<li><p><strong>mutation_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Column that identifies the WT row with <code class="docutils literal notranslate"><span class="pre">wt_identifier</span></code>.</p></li>
+<li><p><strong>wt_identifier</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Token used to mark the WT row.</p></li>
+<li><p><strong>suffix</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Suffix for new columns (ignored if <code class="docutils literal notranslate"><span class="pre">in_place=True</span></code>).</p></li>
+<li><p><strong>in_place</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, overwrite original label columns with the deltas. If False, add new columns named <code class="docutils literal notranslate"><span class="pre">&lt;label&gt;&lt;suffix&gt;</span></code>.</p></li>
+<li><p><strong>drop_wt_row</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, drop WT rows from the successful output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;mut&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;wt&quot;</span><span class="p">,</span><span class="s2">&quot;A0G&quot;</span><span class="p">,</span><span class="s2">&quot;wt&quot;</span><span class="p">,</span><span class="s2">&quot;K2R&quot;</span><span class="p">,</span><span class="s2">&quot;L3F&quot;</span><span class="p">,</span><span class="s2">&quot;S1N&quot;</span><span class="p">,</span><span class="s2">&quot;T4A&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;y1&quot;</span>  <span class="p">:</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span>  <span class="mf">12.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span>  <span class="mf">22.0</span><span class="p">,</span>  <span class="mf">19.0</span><span class="p">,</span>  <span class="mf">8.0</span><span class="p">,</span>   <span class="mf">6.0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s2">&quot;y2&quot;</span>  <span class="p">:</span> <span class="p">[</span> <span class="mf">5.0</span><span class="p">,</span>   <span class="mf">4.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span>  <span class="mf">10.0</span><span class="p">,</span>  <span class="mf">18.0</span><span class="p">,</span>  <span class="mf">3.0</span><span class="p">,</span>   <span class="mf">2.0</span><span class="p">],</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">subtract_labels_by_wt</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">dataset</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">name_column</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">label_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;y1&quot;</span><span class="p">,</span> <span class="s2">&quot;y2&quot;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">mutation_column</span><span class="o">=</span><span class="s2">&quot;mut&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">wt_identifier</span><span class="o">=</span><span class="s2">&quot;wt&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">drop_wt_row</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span>
+<span class="go">  name  mut   y1   y2</span>
+<span class="go">0    A  A0G  2.0 -1.0</span>
+<span class="go">1    B  K2R  2.0 -5.0</span>
+<span class="go">2    B  L3F -1.0  3.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">failed</span><span class="p">[</span><span class="s2">&quot;failed&quot;</span><span class="p">]</span>
+<span class="go">  name  mut   y1   y2                        error_message</span>
+<span class="go">0    C  S1N  8.0  3.0  No WT row (mutation_column == &#39;wt&#39;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="mutcleaner.cleaners.basic_cleaners.validate_mutations">
+<span class="sig-prename descclassname"><span class="pre">mutcleaner.cleaners.basic_cleaners.</span></span><span class="sig-name descname"><span class="pre">validate_mutations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mut_info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_mutations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutation_sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_zero_based</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mutcleaner/cleaners/basic_cleaners.html#validate_mutations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mutcleaner.cleaners.basic_cleaners.validate_mutations" title="Link to this definition">#</a></dt>
+<dd><p>Validate and format mutation information.</p>
+<p>This function validates mutation strings, optionally formats them to a standard
+representation, and separates valid and invalid mutations into different datasets.
+It supports caching for improved performance on datasets with repeated mutations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dataset</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Input dataset containing mutation information</p></li>
+<li><p><strong>mutation_column</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of the column containing mutation information</p></li>
+<li><p><strong>format_mutations</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to format mutations to standard representation</p></li>
+<li><p><strong>mutation_sep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Separator used to split multiple mutations in a single string (e.g., ‘A123B,C456D’)</p></li>
+<li><p><strong>is_zero_based</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether origin mutation positions are zero-based</p></li>
+<li><p><strong>exclude</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>callable</em><em>, </em><em>None</em><em>]</em><em>, </em><em>default=None</em>) – Patterns to exclude from validation. Can be: - A regex pattern string (e.g., r’^WT$|^wildtype$’) - A list of exact strings to match (e.g., [‘WT’, ‘wildtype’, ‘UNKNOWN’]) - A list containing both regex patterns (starting with ‘regex:’) and exact strings - A callable that takes a string value and returns True if it should be excluded - None to validate all values</p></li>
+<li><p><strong>cache_results</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – Whether to cache formatting results for performance</p></li>
+<li><p><strong>num_workers</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of parallel workers for processing, set to -1 for all available CPUs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(successful_dataset, failed_dataset) - datasets with valid and invalid mutations</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;protein1&#39;</span><span class="p">,</span> <span class="s1">&#39;protein1&#39;</span><span class="p">,</span> <span class="s1">&#39;protein2&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A123S&#39;</span><span class="p">,</span> <span class="s1">&#39;C456D,E789F&#39;</span><span class="p">,</span> <span class="s1">&#39;InvalidMut&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">3.7</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">validate_mutations</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">mutation_column</span><span class="o">=</span><span class="s1">&#39;mut_info&#39;</span><span class="p">,</span> <span class="n">mutation_sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">successful</span><span class="p">))</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">successful</span><span class="p">[</span><span class="s1">&#39;mut_info&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>  <span class="c1"># Formatted mutations</span>
+<span class="go">[&#39;A123S&#39;, &#39;C456D,E789F&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">failed</span><span class="p">))</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">failed</span><span class="p">[</span><span class="s1">&#39;failed&#39;</span><span class="p">][</span><span class="s1">&#39;error_message&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># Error message for failed mutation</span>
+<span class="go">&#39;ValueError: No valid mutations could be parsed...&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Exclude patterns</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;protein1&#39;</span><span class="p">,</span> <span class="s1">&#39;protein1&#39;</span><span class="p">,</span> <span class="s1">&#39;protein2&#39;</span><span class="p">,</span> <span class="s1">&#39;protein3&#39;</span><span class="p">,</span> <span class="s1">&#39;protein4&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;mut_info&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A123S&#39;</span><span class="p">,</span> <span class="s1">&#39;C456D,E789F&#39;</span><span class="p">,</span> <span class="s1">&#39;WT&#39;</span><span class="p">,</span> <span class="s1">&#39;wildtype&#39;</span><span class="p">,</span> <span class="s1">&#39;UNKNOWN&#39;</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="s1">&#39;score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.3</span><span class="p">,</span> <span class="mf">3.7</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Exclude exact string matches</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">validate_mutations</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mutation_column</span><span class="o">=</span><span class="s1">&#39;mut_info&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">exclude_patterns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;WT&#39;</span><span class="p">,</span> <span class="s1">&#39;wildtype&#39;</span><span class="p">,</span> <span class="s1">&#39;UNKNOWN&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Exclude using regex pattern</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">validate_mutations</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mutation_column</span><span class="o">=</span><span class="s1">&#39;mut_info&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">exclude_patterns</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;^(WT|wildtype|UNKNOWN)$&#39;</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Mixed approach: regex patterns (prefixed with &#39;regex:&#39;) and exact strings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">validate_mutations</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mutation_column</span><span class="o">=</span><span class="s1">&#39;mut_info&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">exclude_patterns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;regex:^WT$&#39;</span><span class="p">,</span> <span class="s1">&#39;regex:.*type.*&#39;</span><span class="p">,</span> <span class="s1">&#39;UNKNOWN&#39;</span><span class="p">]</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Using a custom function</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exclude_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;WT&#39;</span><span class="p">,</span> <span class="s1">&#39;WILDTYPE&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="s1">&#39;UNKNOWN&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span><span class="p">,</span> <span class="n">failed</span> <span class="o">=</span> <span class="n">validate_mutations</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">df</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">mutation_column</span><span class="o">=</span><span class="s1">&#39;mut_info&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">exclude_patterns</span><span class="o">=</span><span class="n">exclude_func</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">successful</span>
+<span class="go">       name     mut_info  score</span>
+<span class="go">0  protein2           WT    3.7</span>
+<span class="go">1  protein3     wildtype    4.1</span>
+<span class="go">2  protein4      UNKNOWN    5.2</span>
+<span class="go">3  protein1        A122S    1.5</span>
+<span class="go">4  protein1  C455D,E788F    2.3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.add_columns"><code class="docutils literal notranslate"><span class="pre">add_columns()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.aggregate_labels_by_name"><code class="docutils literal notranslate"><span class="pre">aggregate_labels_by_name()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.apply_mutations_to_sequences"><code class="docutils literal notranslate"><span class="pre">apply_mutations_to_sequences()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.average_labels_by_name"><code class="docutils literal notranslate"><span class="pre">average_labels_by_name()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.convert_data_types"><code class="docutils literal notranslate"><span class="pre">convert_data_types()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.convert_to_mutation_dataset_format"><code class="docutils literal notranslate"><span class="pre">convert_to_mutation_dataset_format()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.extract_and_rename_columns"><code class="docutils literal notranslate"><span class="pre">extract_and_rename_columns()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.filter_and_clean_data"><code class="docutils literal notranslate"><span class="pre">filter_and_clean_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.infer_mutations_from_sequences"><code class="docutils literal notranslate"><span class="pre">infer_mutations_from_sequences()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.infer_wildtype_sequences"><code class="docutils literal notranslate"><span class="pre">infer_wildtype_sequences()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.merge_columns"><code class="docutils literal notranslate"><span class="pre">merge_columns()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.read_dataset"><code class="docutils literal notranslate"><span class="pre">read_dataset()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.replace_in_column"><code class="docutils literal notranslate"><span class="pre">replace_in_column()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.split_columns"><code class="docutils literal notranslate"><span class="pre">split_columns()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.subtract_labels_by_wt"><code class="docutils literal notranslate"><span class="pre">subtract_labels_by_wt()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mutcleaner.cleaners.basic_cleaners.validate_mutations"><code class="docutils literal notranslate"><span class="pre">validate_mutations()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/api/generated/mutcleaner.cleaners.basic_cleaners.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Yuxiang Tang, ZiyuShi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

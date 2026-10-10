@@ -1,0 +1,1676 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Data Cleaners Usage Guide &#8212; mutcleaner v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=fa47ad08"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'user_guide/cleaners';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="User Guide" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">mutcleaner v0.1.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    User Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Data Cleaners Usage Guide</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">User Guide</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Data Cleaners Usage Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="data-cleaners-usage-guide">
+<h1>Data Cleaners Usage Guide<a class="headerlink" href="#data-cleaners-usage-guide" title="Link to this heading">#</a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>This guide provides usage examples for data cleaning modules organized by dataset source:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#human-domainome-dataset"><span class="xref myst"><strong>Human Domainome Dataset</strong></span></a>: Site-saturation mutagenesis of 500 human protein domains.</p></li>
+<li><p><a class="reference internal" href="#proteingym-dms-substitutions-dataset"><span class="xref myst"><strong>ProteinGym DMS Substitutions Dataset</strong></span></a>: Large-scale benchmarks for protein design and fitness prediction.</p></li>
+<li><p><a class="reference internal" href="#cdna-proteolysis-dataset"><span class="xref myst"><strong>cDNA Proteolysis Dataset</strong></span></a>: Mega-scale experimental analysis of protein folding stability in biology and design.</p></li>
+<li><p><a class="reference internal" href="#ddg-dataset"><span class="xref myst"><strong>ddG Dataset</strong></span></a>: A collection of datasets providing single- and multiple-mutant measurements, labeled by the thermodynamic parameter ΔΔG.</p></li>
+<li><p><a class="reference internal" href="#dtm-dataset"><span class="xref myst"><strong>dTm Dataset</strong></span></a>: A collection of datasets providing single- and multiple-mutant measurements, labeled by the thermodynamic parameter ΔTm.</p></li>
+<li><p><a class="reference internal" href="#archstabms1e10-epistasis-dataset"><span class="xref myst"><strong>ArchStabMS1E10 Epistasis Dataset</strong></span></a>: High-order multi-mutant libraries (“1e10”) measuring protein stability for GRB2-SH3 and SRC.</p></li>
+<li><p><a class="reference internal" href="#antitoxin-pard3-epistasis-dataset"><span class="xref myst"><strong>Antitoxin ParD3 Epistasis Dataset</strong></span></a>: The antitoxin ParD3 3-position library is a combinatorially exhaustive dataset of 8,000 variants demonstrating that simple, independent per-residue mutation preferences are sufficient to almost perfectly predict combinatorial protein fitness.</p></li>
+<li><p><a class="reference internal" href="#trpb-epistasis-dataset"><span class="xref myst"><strong>TrpB Epistasis Dataset</strong></span></a>: A combinatorially complete sequence-fitness landscape comprising 160,000 variants across four active-site residues of the enzyme tryptophan synthase, capturing significant epistatic interactions to serve as a benchmark for model-guided enzyme engineering.</p></li>
+<li><p><a class="reference internal" href="#human-myoglobin-epistasis-dataset"><span class="xref myst"><strong>Human Myoglobin Epistasis Dataset</strong></span></a>: A deep mutational scanning library detailing the expression fitness scores for near-comprehensive single-codon mutations and a small fraction of double-codon mutations in yeast surface-displayed human myoglobin, which was used to train machine learning models for predicting epistatic effects and discovering stability-enhancing variants.</p></li>
+<li><p><a class="reference internal" href="#ctxm-epistasis-dataset"><span class="xref myst"><strong>CTXM Epistasis Dataset</strong></span></a>: A large-scale pairwise deep mutational scanning dataset of the CTX-M-14 β-lactamase active site, covering 49,096 double mutants across 17 active-site residues. Fitness measurements were obtained from functional selection under ampicillin and cefotaxime, providing substrate-dependent fitness landscapes for studying epistasis, compensatory mutations, and antibiotic resistance prediction.</p></li>
+<li><p><a class="reference internal" href="#rbd-ace2-dataset"><span class="xref myst"><strong>RBD-ACE2 Dataset</strong></span></a>: SARS-CoV-2 RBD sequences with ACE2 binding affinity scores, labeled by <code class="docutils literal notranslate"><span class="pre">log10Ka</span></code> where higher values indicate stronger ACE2 binding affinity.</p></li>
+<li><p><a class="reference internal" href="#rbd-antibody-dataset"><span class="xref myst"><strong>RBD-Antibody Dataset</strong></span></a>: SARS-CoV-2 RBD antibody escape data with <code class="docutils literal notranslate"><span class="pre">score</span></code> computed as the negative logarithm of escape. Higher scores indicate weaker escape, reflecting better binding capacity.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>mutcleaner
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="common-workflow">
+<h2>Common Workflow<a class="headerlink" href="#common-workflow" title="Link to this heading">#</a></h2>
+<section id="workflow-overview">
+<h3>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading">#</a></h3>
+<pre  class="mermaid">
+        flowchart LR
+    A[&quot;Download / prepare&lt;br/&gt;source dataset&quot;] --&gt; B[&quot;Create&lt;br/&gt;cleaner&quot;]
+    B --&gt; C[&quot;Run&lt;br/&gt;cleaning pipeline&quot;]
+    C --&gt; D[&quot;Save&lt;br/&gt;cleaned dataset&quot;]
+    D --&gt; E[&quot;Use for&lt;br/&gt;downstream analysis&quot;]
+
+    C --&gt; F[&quot;Save&lt;br/&gt;cleaning artifacts&quot;]
+    F --&gt; G[&quot;Review&lt;br/&gt;filtered records&quot;]
+    </pre></section>
+<section id="workflow-steps">
+<h3>Workflow Steps<a class="headerlink" href="#workflow-steps" title="Link to this heading">#</a></h3>
+<p>Most dataset cleaners follow the same workflow:</p>
+<ol class="arabic simple">
+<li><p>Download or prepare the source dataset.</p></li>
+<li><p>Create a dataset-specific cleaning pipeline with <code class="docutils literal notranslate"><span class="pre">create_*_cleaner</span></code>.</p></li>
+<li><p>Run the cleaning pipeline with <code class="docutils literal notranslate"><span class="pre">clean_*_dataset</span></code>.</p></li>
+<li><p>Save the cleaned standardized dataset.</p></li>
+<li><p>Save cleaning artifacts for reproducibility.</p></li>
+<li><p>Optionally export cleaning artifacts to CSV files for inspection.</p></li>
+</ol>
+</section>
+<section id="returned-objects">
+<h3>Returned Objects<a class="headerlink" href="#returned-objects" title="Link to this heading">#</a></h3>
+<p>The cleaning process usually returns two objects:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cleaning_pipeline</span></code>: the fitted cleaning pipeline, including intermediate cleaning artifacts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cleaned_dataset</span></code>: the standardized cleaned dataset that can be saved and used for downstream analysis.</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="supported-datasets">
+<h2>Supported Datasets<a class="headerlink" href="#supported-datasets" title="Link to this heading">#</a></h2>
+<section id="human-domainome-dataset">
+<h3>Human Domainome Dataset<a class="headerlink" href="#human-domainome-dataset" title="Link to this heading">#</a></h3>
+<section id="file-preparation">
+<h4>File Preparation<a class="headerlink" href="#file-preparation" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_human_domainome_source_file" title="mutcleaner.utils.download_human_domainome_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_human_domainome_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_human_domainome_source_file</span>
+
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">download_human_domainome_source_file</span><span class="p">(</span><span class="s2">&quot;dataset/Human_Domainome_Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-usage">
+<h4>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h4>
+<p><strong>Cleaning Pipeline</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_human_domainome_sup2_cleaner</span><span class="p">,</span>
+    <span class="n">clean_human_domainome_sup2_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/Human_Domainome_Dataset/SupplementaryTable2.txt&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/Human_Domainome_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/Human_Domainome_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">hd_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_human_domainome_sup2_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">hd_cleaning_pipeline</span><span class="p">,</span> <span class="n">hd_dataset</span> <span class="o">=</span> <span class="n">clean_human_domainome_sup2_dataset</span><span class="p">(</span>
+    <span class="n">hd_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">hd_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_Human_Domainome_Dataset&quot;</span><span class="p">)</span>
+<span class="n">hd_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts and read the object</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-settings">
+<h4>Advanced Settings<a class="headerlink" href="#advanced-settings" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig" title="mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.HumanDomainomeSup2CleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="proteingym-dms-substitutions-dataset">
+<h3>ProteinGym DMS Substitutions Dataset<a class="headerlink" href="#proteingym-dms-substitutions-dataset" title="Link to this heading">#</a></h3>
+<section id="id1">
+<h4>File Preparation<a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_proteingym_source_file" title="mutcleaner.utils.download_proteingym_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_proteingym_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_proteingym_source_file</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_proteingym_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/ProteinGym_DMS_Substitutions_Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h4>Basic Usage<a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
+<p><strong>Cleaning Pipeline</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_proteingym_dms_substitutions_cleaner</span><span class="p">,</span>
+    <span class="n">clean_proteingym_dms_substitutions_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/ProteinGym_DMS_Substitutions_Dataset/ProteinGym_DMS_substitutions.zip&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/ProteinGym_DMS_Substitutions_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/ProteinGym_DMS_Substitutions_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">pg_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_proteingym_dms_substitutions_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">pg_cleaning_pipeline</span><span class="p">,</span> <span class="n">pg_dataset</span> <span class="o">=</span> <span class="n">clean_proteingym_dms_substitutions_dataset</span><span class="p">(</span>
+    <span class="n">pg_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">pg_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_ProteinGym_DMS_Substitutions_Dataset&quot;</span><span class="p">)</span>
+<span class="n">pg_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts and read the object</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>Advanced Settings<a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ProteinGymCleanerConfig" title="mutcleaner.cleaners.ProteinGymCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.ProteinGymCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="cdna-proteolysis-dataset">
+<h3>cDNA Proteolysis Dataset<a class="headerlink" href="#cdna-proteolysis-dataset" title="Link to this heading">#</a></h3>
+<section id="id4">
+<h4>File Preparation<a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_cdna_proteolysis_source_file" title="mutcleaner.utils.download_cdna_proteolysis_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_cdna_proteolysis_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_cdna_proteolysis_source_file</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_cdna_proteolysis_source_file</span><span class="p">(</span><span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="g-as-label-default-pipeline">
+<h4>ΔΔG as Label (Default Pipeline)<a class="headerlink" href="#g-as-label-default-pipeline" title="Link to this heading">#</a></h4>
+<p><strong>Cleaning Pipeline</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_cdna_proteolysis_cleaner</span><span class="p">,</span>
+    <span class="n">clean_cdna_proteolysis_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/cDNA_Proteolysis_ddG_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/cDNA_Proteolysis_ddG_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">cdna_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_cdna_proteolysis_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">cdna_cleaning_pipeline</span><span class="p">,</span> <span class="n">cdna_dataset</span> <span class="o">=</span> <span class="n">clean_cdna_proteolysis_dataset</span><span class="p">(</span>
+    <span class="n">cdna_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">cdna_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_cDNA_Proteolysis_ddG_Dataset&quot;</span><span class="p">)</span>
+<span class="n">cdna_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="g-as-label">
+<h4>ΔG as Label<a class="headerlink" href="#g-as-label" title="Link to this heading">#</a></h4>
+<p><strong>Cleaning Pipeline</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CDNAProteolysisCleanerConfig</span><span class="p">,</span>
+    <span class="n">create_cdna_proteolysis_cleaner</span><span class="p">,</span>
+    <span class="n">clean_cdna_proteolysis_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Set cleaning configs</span>
+<span class="n">cdna_cleaning_config</span> <span class="o">=</span> <span class="n">CDNAProteolysisCleanerConfig</span><span class="p">()</span>
+<span class="n">cdna_cleaning_config</span><span class="o">.</span><span class="n">column_mapping</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;WT_name&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;aa_seq&quot;</span><span class="p">:</span> <span class="s2">&quot;mut_seq&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mut_type&quot;</span><span class="p">:</span> <span class="s2">&quot;mut_info&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dG_ML&quot;</span><span class="p">:</span> <span class="s2">&quot;label_cDNAProteolysis&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/cDNA_Proteolysis_dG_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/cDNA_Proteolysis_dG_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">cdna_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_cdna_proteolysis_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">,</span> <span class="n">cdna_cleaning_config</span><span class="p">)</span>
+<span class="n">cdna_cleaning_pipeline</span><span class="p">,</span> <span class="n">cdna_dataset</span> <span class="o">=</span> <span class="n">clean_cdna_proteolysis_dataset</span><span class="p">(</span>
+    <span class="n">cdna_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">cdna_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_cDNA_Proteolysis_dG_Dataset&quot;</span><span class="p">)</span>
+<span class="n">cdna_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id5">
+<h4>Advanced Settings<a class="headerlink" href="#id5" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CDNAProteolysisCleanerConfig" title="mutcleaner.cleaners.CDNAProteolysisCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.CDNAProteolysisCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="ddg-dataset">
+<h3>ddG Dataset<a class="headerlink" href="#ddg-dataset" title="Link to this heading">#</a></h3>
+<section id="id6">
+<h4>File Preparation<a class="headerlink" href="#id6" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_ddg_dtm_source_file" title="mutcleaner.utils.download_ddg_dtm_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_ddg_dtm_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_ddg_dtm_source_file</span>
+
+<span class="c1"># Download all datasets</span>
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_ddg_dtm_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/ddG_Dataset&quot;</span><span class="p">)</span>
+
+<span class="c1"># Or specify a particular dataset, e.g.</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">download_ddg_dtm_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/ddG_Dataset&quot;</span><span class="p">,</span> <span class="n">sub_dataset</span><span class="o">=</span><span class="s2">&quot;S461&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h4>Basic Usage<a class="headerlink" href="#id7" title="Link to this heading">#</a></h4>
+<p><a class="reference internal" href="../api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner" title="mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner()</span></code></a> can automatically recognize the label column ddG. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_ddg_dtm_cleaner</span><span class="p">,</span> <span class="n">clean_ddg_dtm_dataset</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/ddG_Dataset/S461.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/ddG_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/ddG_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">ddgdtm_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_ddg_dtm_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">ddgdtm_cleaning_pipeline</span><span class="p">,</span> <span class="n">ddgdtm_dataset</span> <span class="o">=</span> <span class="n">clean_ddg_dtm_dataset</span><span class="p">(</span>
+    <span class="n">ddgdtm_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">ddgdtm_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_ddG_Dataset/S461&quot;</span><span class="p">)</span>
+<span class="n">ddgdtm_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h4>Advanced Settings<a class="headerlink" href="#id8" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig" title="mutcleaner.cleaners.DdgDtmCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.DdgDtmCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="dtm-dataset">
+<h3>dTm Dataset<a class="headerlink" href="#dtm-dataset" title="Link to this heading">#</a></h3>
+<section id="id9">
+<h4>File Preparation<a class="headerlink" href="#id9" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_ddg_dtm_source_file" title="mutcleaner.utils.download_ddg_dtm_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_ddg_dtm_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_ddg_dtm_source_file</span>
+
+<span class="c1"># Download all datasets</span>
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_ddg_dtm_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/dTm_Dataset&quot;</span><span class="p">)</span>
+
+<span class="c1"># Or specify a particular dataset, e.g.</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">download_ddg_dtm_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/dTm_Dataset&quot;</span><span class="p">,</span> <span class="n">sub_dataset</span><span class="o">=</span><span class="s2">&quot;S571&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id10">
+<h4>Basic Usage<a class="headerlink" href="#id10" title="Link to this heading">#</a></h4>
+<p><a class="reference internal" href="../api/generated/mutcleaner.cleaners.ddg_dtm_cleaners.html#mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner" title="mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.cleaners.ddg_dtm_cleaners.create_ddg_dtm_cleaner()</span></code></a> can automatically recognize the label column dTm. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_ddg_dtm_cleaner</span><span class="p">,</span> <span class="n">clean_ddg_dtm_dataset</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/dTm_Dataset/S571.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/dTm_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/dTm_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">ddgdtm_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_ddg_dtm_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">ddgdtm_cleaning_pipeline</span><span class="p">,</span> <span class="n">ddgdtm_dataset</span> <span class="o">=</span> <span class="n">clean_ddg_dtm_dataset</span><span class="p">(</span>
+    <span class="n">ddgdtm_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">ddgdtm_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_dTm_Dataset/S571&quot;</span><span class="p">)</span>
+<span class="n">ddgdtm_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id11">
+<h4>Advanced Settings<a class="headerlink" href="#id11" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.DdgDtmCleanerConfig" title="mutcleaner.cleaners.DdgDtmCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.DdgDtmCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="archstabms1e10-epistasis-dataset">
+<h3>ArchStabMS1E10 Epistasis Dataset<a class="headerlink" href="#archstabms1e10-epistasis-dataset" title="Link to this heading">#</a></h3>
+<section id="id12">
+<h4>File Preparation<a class="headerlink" href="#id12" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_archstabms1e10_source_file" title="mutcleaner.utils.download_archstabms1e10_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_archstabms1e10_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_archstabms1e10_source_file</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_archstabms1e10_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/ArchStabMS1E10_Epistasis_Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id13">
+<h4>Basic Usage<a class="headerlink" href="#id13" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_archstabms_1e10_cleaner</span><span class="p">,</span>
+    <span class="n">clean_archstabms_1e10_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Dataset.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/ArchStabMS1E10_Epistasis_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/ArchStabMS1E10_Epistasis_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">archstabms_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_archstabms_1e10_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">archstabms_cleaning_pipeline</span><span class="p">,</span> <span class="n">archstabms_dataset</span> <span class="o">=</span> <span class="n">clean_archstabms_1e10_dataset</span><span class="p">(</span>
+    <span class="n">archstabms_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">archstabms_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_ArchStabMS1E10_Epistasis_Dataset&quot;</span><span class="p">)</span>
+<span class="n">archstabms_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id14">
+<h4>Advanced Settings<a class="headerlink" href="#id14" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.ArchStabMS1E10CleanerConfig" title="mutcleaner.cleaners.ArchStabMS1E10CleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.ArchStabMS1E10CleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="antitoxin-pard3-epistasis-dataset">
+<h3>Antitoxin ParD3 Epistasis Dataset<a class="headerlink" href="#antitoxin-pard3-epistasis-dataset" title="Link to this heading">#</a></h3>
+<section id="id15">
+<h4>File Preparation<a class="headerlink" href="#id15" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_antitoxin_pard3_source_file" title="mutcleaner.utils.download_antitoxin_pard3_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_antitoxin_pard3_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_antitoxin_pard3_source_file</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_antitoxin_pard3_source_file</span><span class="p">(</span><span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id16">
+<h4>Basic Usage<a class="headerlink" href="#id16" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_antitoxin_pard3_cleaner</span><span class="p">,</span>
+    <span class="n">clean_antitoxin_pard3_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/Antitoxin_ParD3_Epistasis_Dataset/Antitoxin_ParD3_Epistasis_Dataset.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/Antitoxin_ParD3_Epistasis_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/Antitoxin_ParD3_Epistasis_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">antitoxin_pard3_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_antitoxin_pard3_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">antitoxin_pard3_cleaning_pipeline</span><span class="p">,</span> <span class="n">antitoxin_pard3_dataset</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">clean_antitoxin_pard3_dataset</span><span class="p">(</span><span class="n">antitoxin_pard3_cleaning_pipeline</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">antitoxin_pard3_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_Antitoxin_ParD3_Epistasis_Dataset&quot;</span><span class="p">)</span>
+<span class="n">antitoxin_pard3_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id17">
+<h4>Advanced Settings<a class="headerlink" href="#id17" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.AntitoxinParD3CleanerConfig" title="mutcleaner.cleaners.AntitoxinParD3CleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.AntitoxinParD3CleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="trpb-epistasis-dataset">
+<h3>TrpB Epistasis Dataset<a class="headerlink" href="#trpb-epistasis-dataset" title="Link to this heading">#</a></h3>
+<section id="id18">
+<h4>File Preparation<a class="headerlink" href="#id18" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_trpb_source_file" title="mutcleaner.utils.download_trpb_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_trpb_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_trpb_source_file</span>
+
+<span class="n">file_path</span> <span class="o">=</span> <span class="n">download_trpb_source_file</span><span class="p">(</span><span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id19">
+<h4>Basic Usage<a class="headerlink" href="#id19" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_trpb_cleaner</span><span class="p">,</span>
+    <span class="n">clean_trpb_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/TrpB_Epistasis_Dataset/TrpB_Epistasis_Dataset.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/TrpB_Epistasis_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/TrpB_Epistasis_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">trpb_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_trpb_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">trpb_cleaning_pipeline</span><span class="p">,</span> <span class="n">trpb_dataset</span> <span class="o">=</span> <span class="n">clean_trpb_dataset</span><span class="p">(</span>
+    <span class="n">trpb_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">trpb_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_TrpB_Epistasis_Dataset&quot;</span><span class="p">)</span>
+<span class="n">trpb_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts and read the object</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id20">
+<h4>Advanced Settings<a class="headerlink" href="#id20" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.TrpBCleanerConfig" title="mutcleaner.cleaners.TrpBCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.TrpBCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="human-myoglobin-epistasis-dataset">
+<h3>Human Myoglobin Epistasis Dataset<a class="headerlink" href="#human-myoglobin-epistasis-dataset" title="Link to this heading">#</a></h3>
+<section id="id21">
+<h4>File Preparation<a class="headerlink" href="#id21" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_human_myoglobin_source_file" title="mutcleaner.utils.download_human_myoglobin_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_human_myoglobin_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_human_myoglobin_source_file</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_human_myoglobin_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/Human_Myoglobin_Epistasis_Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id22">
+<h4>Basic Usage<a class="headerlink" href="#id22" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_human_myoglobin_cleaner</span><span class="p">,</span>
+    <span class="n">clean_human_myoglobin_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/Human_Myoglobin_Epistasis_Dataset/Human_Myoglobin_Epistasis_Dataset.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/Human_Myoglobin_Epistasis_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/Human_Myoglobin_Epistasis_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">human_myoglobin_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_human_myoglobin_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">human_myoglobin_cleaning_pipeline</span><span class="p">,</span> <span class="n">human_myoglobin_dataset</span> <span class="o">=</span> <span class="n">clean_human_myoglobin_dataset</span><span class="p">(</span>
+    <span class="n">human_myoglobin_cleaning_pipeline</span>
+<span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">human_myoglobin_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_Human_Myoglobin_Epistasis_Dataset&quot;</span><span class="p">)</span>
+<span class="n">human_myoglobin_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts and read the object</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id23">
+<h4>Advanced Settings<a class="headerlink" href="#id23" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.HumanMyoglobinCleanerConfig" title="mutcleaner.cleaners.HumanMyoglobinCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.HumanMyoglobinCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="ctxm-epistasis-dataset">
+<h3>CTXM Epistasis Dataset<a class="headerlink" href="#ctxm-epistasis-dataset" title="Link to this heading">#</a></h3>
+<section id="id24">
+<h4>File Preparation<a class="headerlink" href="#id24" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_ctxm_source_file" title="mutcleaner.utils.download_ctxm_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_ctxm_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_ctxm_source_file</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_ctxm_source_file</span><span class="p">(</span><span class="s2">&quot;../dataset/CTXM_Epistasis_Dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id25">
+<h4>Basic Usage<a class="headerlink" href="#id25" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">create_ctxm_cleaner</span><span class="p">,</span>
+    <span class="n">clean_ctxm_dataset</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># File settings</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../dataset/CTXM_Epistasis_Dataset/CTXM_Ampicillin_Epistasis_Dataset.csv&quot;</span><span class="p">)</span>
+<span class="n">artifact_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/CTXM_Ampicillin_Epistasis_Dataset/artifacts.pkl&quot;</span><span class="p">)</span>
+<span class="n">artifact_csv_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../logs/CTXM_Ampicillin_Epistasis_Dataset&quot;</span><span class="p">)</span>
+
+<span class="n">artifact_csv_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Clean data</span>
+<span class="n">ctxm_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_ctxm_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">ctxm_cleaning_pipeline</span><span class="p">,</span> <span class="n">ctxm_dataset</span> <span class="o">=</span> <span class="n">clean_ctxm_dataset</span><span class="p">(</span><span class="n">ctxm_cleaning_pipeline</span><span class="p">)</span>
+
+<span class="c1"># Save data</span>
+<span class="n">ctxm_dataset</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;../outputs/cleaned_CTXM_Epistasis_Dataset&quot;</span><span class="p">)</span>
+<span class="n">ctxm_cleaning_pipeline</span><span class="o">.</span><span class="n">save_artifacts</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">)</span>
+
+<span class="c1"># Load cleaning artifacts</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">artifact_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">artifacts</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">artifact_name</span><span class="p">,</span> <span class="n">artifact_df</span> <span class="ow">in</span> <span class="n">artifacts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">artifact_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">artifact_csv_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">artifact_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id26">
+<h4>Advanced Settings<a class="headerlink" href="#id26" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.CTXMCleanerConfig" title="mutcleaner.cleaners.CTXMCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.CTXMCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="rbd-ace2-dataset">
+<h3>RBD-ACE2 Dataset<a class="headerlink" href="#rbd-ace2-dataset" title="Link to this heading">#</a></h3>
+<section id="id27">
+<h4>File Preparation<a class="headerlink" href="#id27" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_rbd_ace2_source_file" title="mutcleaner.utils.download_rbd_ace2_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_rbd_ace2_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_rbd_ace2_source_file</span>
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_rbd_ace2_source_file</span><span class="p">(</span><span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also download and process a specific sub-dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_rbd_ace2_source_file</span>
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_rbd_ace2_source_file</span><span class="p">(</span>
+    <span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">,</span>
+    <span class="n">sub_dataset</span><span class="o">=</span><span class="s2">&quot;Omicron_EG5_FLip_BA286&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Supported sub-datasets:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Omicron_EG5_FLip_BA286</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Omicron_XBB_BQ</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Omicron</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DMS_variants</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Delta</span></code></p></li>
+</ul>
+<p>Alternatively, you can download it from <a class="reference external" href="https://huggingface.co/datasets/Zoey13891350636/RBD_ACE2">Hugging Face</a>.</p>
+</section>
+<section id="id28">
+<h4>Basic Usage<a class="headerlink" href="#id28" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_rbd_ace2_source_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_rbd_ace2_dataset</span><span class="p">,</span> <span class="n">create_rbd_ace2_cleaner</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_rbd_ace2_source_file</span><span class="p">(</span>
+    <span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">,</span>
+    <span class="n">sub_dataset</span><span class="o">=</span><span class="s2">&quot;Omicron_EG5_FLip_BA286&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">file_paths</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+<span class="n">rbd_ace2_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_rbd_ace2_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">rbd_ace2_cleaning_pipeline</span><span class="p">,</span> <span class="n">rbd_ace2_dataset</span> <span class="o">=</span> <span class="n">clean_rbd_ace2_dataset</span><span class="p">(</span>
+    <span class="n">rbd_ace2_cleaning_pipeline</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id29">
+<h4>Advanced Settings<a class="headerlink" href="#id29" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDACE2CleanerConfig" title="mutcleaner.cleaners.RBDACE2CleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.RBDACE2CleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+<section id="rbd-antibody-dataset">
+<h3>RBD-Antibody Dataset<a class="headerlink" href="#rbd-antibody-dataset" title="Link to this heading">#</a></h3>
+<section id="id30">
+<h4>File Preparation<a class="headerlink" href="#id30" title="Link to this heading">#</a></h4>
+<p>You can download the source file directly by running (see <a class="reference internal" href="../api/generated/mutcleaner.utils.html#mutcleaner.utils.download_rbd_antibody_source_file" title="mutcleaner.utils.download_rbd_antibody_source_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">mutcleaner.utils.download_rbd_antibody_source_file()</span></code></a> for details):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_rbd_antibody_source_file</span>
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_rbd_antibody_source_file</span><span class="p">(</span><span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also download and process a specific sub-dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_rbd_antibody_source_file</span>
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_rbd_antibody_source_file</span><span class="p">(</span>
+    <span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">,</span>
+    <span class="n">sub_dataset</span><span class="o">=</span><span class="s2">&quot;AZ_Abs&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Supported sub-datasets:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AZ_Abs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">HAARVI_sera</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Moderna</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Rockefeller</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Vir_mAbs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clinical_Abs</span></code></p></li>
+</ul>
+<p>Alternatively, you can download it from <a class="reference external" href="https://huggingface.co/datasets/Zoey13891350636/RBD_Antibody">Hugging Face</a>.</p>
+</section>
+<section id="id31">
+<h4>Basic Usage<a class="headerlink" href="#id31" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_rbd_antibody_source_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mutcleaner.cleaners</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_rbd_antibody_dataset</span><span class="p">,</span> <span class="n">create_rbd_antibody_cleaner</span>
+
+<span class="n">file_paths</span> <span class="o">=</span> <span class="n">download_rbd_antibody_source_file</span><span class="p">(</span>
+    <span class="s2">&quot;path/to/target/folder&quot;</span><span class="p">,</span>
+    <span class="n">sub_dataset</span><span class="o">=</span><span class="s2">&quot;AZ_Abs&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">dataset_file_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">file_paths</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+<span class="n">rbd_antibody_cleaning_pipeline</span> <span class="o">=</span> <span class="n">create_rbd_antibody_cleaner</span><span class="p">(</span><span class="n">dataset_file_path</span><span class="p">)</span>
+<span class="n">rbd_antibody_cleaning_pipeline</span><span class="p">,</span> <span class="n">rbd_antibody_dataset</span> <span class="o">=</span> <span class="n">clean_rbd_antibody_dataset</span><span class="p">(</span>
+    <span class="n">rbd_antibody_cleaning_pipeline</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id32">
+<h4>Advanced Settings<a class="headerlink" href="#id32" title="Link to this heading">#</a></h4>
+<p>See <a class="reference internal" href="../api/generated/mutcleaner.cleaners.html#mutcleaner.cleaners.RBDAntibodyCleanerConfig" title="mutcleaner.cleaners.RBDAntibodyCleanerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">mutcleaner.cleaners.RBDAntibodyCleanerConfig</span></code></a> for details.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#overview">Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-workflow">Common Workflow</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-overview">Workflow Overview</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-steps">Workflow Steps</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#returned-objects">Returned Objects</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#supported-datasets">Supported Datasets</a><ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#human-domainome-dataset">Human Domainome Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#file-preparation">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-usage">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-settings">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proteingym-dms-substitutions-dataset">ProteinGym DMS Substitutions Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cdna-proteolysis-dataset">cDNA Proteolysis Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#g-as-label-default-pipeline">ΔΔG as Label (Default Pipeline)</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#g-as-label">ΔG as Label</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ddg-dataset">ddG Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id8">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dtm-dataset">dTm Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id9">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id10">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id11">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#archstabms1e10-epistasis-dataset">ArchStabMS1E10 Epistasis Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id12">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id13">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id14">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#antitoxin-pard3-epistasis-dataset">Antitoxin ParD3 Epistasis Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id15">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id16">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id17">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#trpb-epistasis-dataset">TrpB Epistasis Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id18">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id19">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id20">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#human-myoglobin-epistasis-dataset">Human Myoglobin Epistasis Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id21">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id22">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id23">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ctxm-epistasis-dataset">CTXM Epistasis Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id24">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id25">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id26">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rbd-ace2-dataset">RBD-ACE2 Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id27">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id28">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id29">Advanced Settings</a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rbd-antibody-dataset">RBD-Antibody Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id30">File Preparation</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id31">Basic Usage</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id32">Advanced Settings</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/user_guide/cleaners.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2026, Yuxiang Tang, ZiyuShi.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
