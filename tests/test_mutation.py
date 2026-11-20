@@ -120,7 +120,7 @@ class TestAminoAcidMutation:
 
     def test_amino_acid_mutation_from_string_one_letter(self):
         """Test parsing an amino acid mutation from a one-letter string."""
-        mutation = AminoAcidMutation.from_string("A123V")
+        mutation = AminoAcidMutation.from_string("A123V", offset=1)
 
         assert mutation.wild_amino_acid == "A"
         assert mutation.position == 122
@@ -128,7 +128,7 @@ class TestAminoAcidMutation:
 
     def test_amino_acid_mutation_from_string_three_letter(self):
         """Test parsing an amino acid mutation from a three-letter string."""
-        mutation = AminoAcidMutation.from_string("Ala123Val")
+        mutation = AminoAcidMutation.from_string("Ala123Val", offset=1)
 
         assert mutation.wild_amino_acid == "A"
         assert mutation.position == 122
@@ -136,12 +136,25 @@ class TestAminoAcidMutation:
 
     def test_amino_acid_mutation_from_string_with_stop(self):
         """Test parsing an amino acid mutation containing a stop codon."""
-        mutation = AminoAcidMutation.from_string("A123*")
+        mutation = AminoAcidMutation.from_string("A123*", offset=1)
 
         assert mutation.wild_amino_acid == "A"
         assert mutation.position == 122
         assert mutation.mutant_amino_acid == "*"
         assert mutation.is_nonsense()
+
+    @pytest.mark.parametrize("offset", [0, 1, 2])
+    def test_first_residue_at_offset(self, offset):
+        """Both amino acid notations identify the first residue at the input origin."""
+        one_letter = AminoAcidMutation.from_string(f"A{offset}V", offset=offset)
+        three_letter = AminoAcidMutation.from_string(f"Ala{offset}Val", offset=offset)
+
+        assert one_letter.position == three_letter.position == 0
+
+    def test_position_below_offset(self):
+        """Reject an annotation that falls before the reference sequence."""
+        with pytest.raises(ValueError, match="Position must be non-negative"):
+            AminoAcidMutation.from_string("A1V", offset=2)
 
     def test_amino_acid_mutation_from_string_invalid_format(self):
         """Test parsing invalid amino acid mutation formats."""
@@ -156,16 +169,23 @@ class TestAminoAcidMutation:
 
         for invalid_format in invalid_formats:
             with pytest.raises(ValueError, match="Invalid mutation format"):
-                AminoAcidMutation.from_string(invalid_format)
+                AminoAcidMutation.from_string(invalid_format, offset=1)
 
     def test_amino_acid_mutation_from_string_invalid_amino_acid(self):
         """Test parsing invalid amino acid codes."""
         with pytest.raises(ValueError, match="Unknown three-letter amino acid code"):
-            AminoAcidMutation.from_string("Xxx123Val")
+            AminoAcidMutation.from_string("Xxx123Val", offset=1)
 
 
 class TestCodonMutation:
     """Test the codon mutation class."""
+
+    def test_offset_uses_codon_positions(self):
+        """Apply the offset in codons before deriving the nucleotide interval."""
+        mutation = CodonMutation.from_string("ATG3GTG", offset=2)
+
+        assert mutation.position == 1
+        assert (mutation.nucleotide_start, mutation.nucleotide_end) == (3, 6)
 
     def test_codon_mutation_creation_dna(self):
         """Test DNA codon mutation creation."""
@@ -248,7 +268,7 @@ class TestCodonMutation:
 
     def test_codon_mutation_from_string(self):
         """Test parsing a codon mutation from a string."""
-        mutation = CodonMutation.from_string("ATG123TAA")
+        mutation = CodonMutation.from_string("ATG123TAA", offset=1)
 
         assert mutation.wild_codon == "ATG"
         assert mutation.position == 122
@@ -256,7 +276,7 @@ class TestCodonMutation:
 
     def test_codon_mutation_from_string_rna(self):
         """Test parsing a codon mutation from an RNA string."""
-        mutation = CodonMutation.from_string("AUG123UAA")
+        mutation = CodonMutation.from_string("AUG123UAA", offset=1)
 
         assert mutation.wild_codon == "AUG"
         assert mutation.position == 122
@@ -276,7 +296,7 @@ class TestCodonMutation:
 
         for invalid_format in invalid_formats:
             with pytest.raises(ValueError, match="Invalid codon mutation format"):
-                CodonMutation.from_string(invalid_format)
+                CodonMutation.from_string(invalid_format, offset=1)
 
 
 class TestMutationSet:
@@ -471,7 +491,7 @@ class TestMutationSet:
 
     def test_mutation_set_from_string_single(self):
         """Test creating a single-mutation set from a string."""
-        mutation_set = MutationSet.from_string("A123V")
+        mutation_set = MutationSet.from_string("A123V", offset=1)
 
         assert len(mutation_set) == 1
         assert mutation_set.mutation_type == AminoAcidMutation
@@ -479,7 +499,7 @@ class TestMutationSet:
 
     def test_mutation_set_from_string_multiple_comma(self):
         """Test creating a mutation set from a comma-separated string."""
-        mutation_set = MutationSet.from_string("A123V,L456P,G789S")
+        mutation_set = MutationSet.from_string("A123V,L456P,G789S", offset=1)
 
         assert len(mutation_set) == 3
         assert mutation_set.mutation_type == AminoAcidMutation
@@ -488,7 +508,7 @@ class TestMutationSet:
 
     def test_mutation_set_from_string_multiple_semicolon(self):
         """Test creating a mutation set from a semicolon-separated string."""
-        mutation_set = MutationSet.from_string("A123V;L456P;G789S")
+        mutation_set = MutationSet.from_string("A123V;L456P;G789S", offset=1)
 
         assert len(mutation_set) == 3
         positions = [m.position for m in mutation_set.mutations]
@@ -496,19 +516,19 @@ class TestMutationSet:
 
     def test_mutation_set_from_string_with_spaces(self):
         """Test strings containing spaces."""
-        mutation_set = MutationSet.from_string(" A123V , L456P , G789S ")
+        mutation_set = MutationSet.from_string(" A123V , L456P , G789S ", offset=1)
 
         assert len(mutation_set) == 3
 
     def test_mutation_set_from_string_custom_separator(self):
         """Test custom separators."""
-        mutation_set = MutationSet.from_string("A123V|L456P|G789S", sep="|")
+        mutation_set = MutationSet.from_string("A123V|L456P|G789S", sep="|", offset=1)
 
         assert len(mutation_set) == 3
 
     def test_mutation_set_from_string_specified_type(self):
         """Test specifying a mutation type."""
-        mutation_set = MutationSet.from_string("ATG123TAA", mutation_type=CodonMutation)
+        mutation_set = MutationSet.from_string("ATG123TAA", mutation_type=CodonMutation, offset=1)
 
         assert len(mutation_set) == 1
         assert mutation_set.mutation_type == CodonMutation
@@ -517,7 +537,7 @@ class TestMutationSet:
         """Test string-based creation with a name and metadata."""
         metadata = {"source": "test"}
         mutation_set = MutationSet.from_string(
-            "A123V", name="test_set", metadata=metadata
+            "A123V", name="test_set", metadata=metadata, offset=1
         )
 
         assert mutation_set.name == "test_set"
@@ -526,20 +546,20 @@ class TestMutationSet:
     def test_mutation_set_from_string_empty_error(self):
         """Test the error raised for an empty input string."""
         with pytest.raises(ValueError, match="Input string cannot be empty"):
-            MutationSet.from_string("")
+            MutationSet.from_string("", offset=1)
 
         with pytest.raises(ValueError, match="Input string cannot be empty"):
-            MutationSet.from_string("   ")
+            MutationSet.from_string("   ", offset=1)
 
     def test_mutation_set_from_string_parse_error(self):
         """Test parsing errors."""
         with pytest.raises(ValueError, match="Some mutations could not be parsed"):
-            MutationSet.from_string("A123V,INVALID,L456P")
+            MutationSet.from_string("A123V,INVALID,L456P", offset=1)
 
     def test_mutation_set_from_string_no_valid_mutations(self):
         """Test input strings with no valid mutations."""
         with pytest.raises(ValueError, match="No valid mutations could be parsed"):
-            MutationSet.from_string("INVALID1,INVALID2")
+            MutationSet.from_string("INVALID1,INVALID2", offset=1)
 
     def test_mutation_set_str_repr(self):
         """Test string representations."""
@@ -697,18 +717,18 @@ class TestMutationInference:
 
     def test_infer_amino_acid_mutation(self):
         """Test inferring an amino acid mutation."""
-        mutation = MutationSet._infer_and_create_mutation("A123V")
+        mutation = MutationSet._infer_and_create_mutation("A123V", offset=1)
         assert isinstance(mutation, AminoAcidMutation)
 
     def test_infer_codon_mutation(self):
         """Test inferring a codon mutation."""
-        mutation = MutationSet._infer_and_create_mutation("ATG123TAA")
+        mutation = MutationSet._infer_and_create_mutation("ATG123TAA", offset=1)
         assert isinstance(mutation, CodonMutation)
 
     def test_infer_unknown_mutation(self):
         """Test inferring an unknown mutation format."""
         with pytest.raises(ValueError, match="Could not parse mutation string"):
-            MutationSet._infer_and_create_mutation("INVALID_FORMAT")
+            MutationSet._infer_and_create_mutation("INVALID_FORMAT", offset=1)
 
 
 class TestSeparatorGuessing:

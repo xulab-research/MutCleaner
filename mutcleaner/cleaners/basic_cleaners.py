@@ -17,7 +17,7 @@ from ..core.codon import CodonTable
 from ..core.alphabet import ProteinAlphabet, DNAAlphabet, RNAAlphabet, BaseAlphabet
 from ..core.pipeline import pipeline_step, multiout_step
 from ..core.sequence import ProteinSequence, DNASequence, RNASequence
-from ..core.mutation import BaseMutation, AminoAcidMutation, CodonMutation, MutationSet
+from ..core.mutation import AminoAcidMutation, BaseMutation, CodonMutation, MutationSet
 from ..utils.cleaner_workers import (
     valid_single_mutation,
     apply_single_mutation,
@@ -810,12 +810,13 @@ def validate_mutations(
     mutation_column: str = "mut_info",
     format_mutations: bool = True,
     mutation_sep: str = ",",
-    is_zero_based: bool = False,
     mutation_type=None,
     alphabet=None,
     exclude_patterns=None,
     cache_results: bool = True,
     num_workers: int = 4,
+    *,
+    offset: int,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Validate and format mutation information.
@@ -831,11 +832,10 @@ def validate_mutations(
     mutation_column : str, default='mut_info'
         Name of the column containing mutation information
     format_mutations : bool, default=True
-        Whether to format mutations to standard representation
+        If True, write zero-based mutation strings to the output column.
+        If False, validate with the supplied offset and retain the input strings.
     mutation_sep : str, default=','
         Separator used to split multiple mutations in a single string (e.g., 'A123B,C456D')
-    is_zero_based : bool, default=False
-        Whether origin mutation positions are zero-based
     mutation_type : str, optional
         Type of mutation (e.g., 'CodonMutation', 'AminoAcidMutation')
     alphabet : BaseAlphabet, optional
@@ -851,6 +851,8 @@ def validate_mutations(
         Whether to cache formatting results for performance
     num_workers : int, default=4
         Number of parallel workers for processing
+    offset : int
+        Input position of the first residue or codon. Subtract this value to obtain a zero-based index.
 
     Returns
     -------
@@ -865,15 +867,15 @@ def validate_mutations(
     ...     'mut_info': ['A123S', 'C456D,E789F', 'InvalidMut'],
     ...     'score': [1.5, 2.3, 3.7]
     ... })
-    >>> successful, failed = validate_mutations(df, mutation_column='mut_info', mutation_sep=',')
+    >>> successful, failed = validate_mutations(df, mutation_column='mut_info', mutation_sep=',', offset=1)
     >>> print(len(successful))
     2
     >>> print(successful['mut_info'].tolist())  # Formatted mutations
-    ['A123S', 'C456D,E789F']
-    >>> print(len(failed))
+    ['A122S', 'C455D,E788F']
+    >>> print(len(failed['failed']))
     1
-    >>> print(failed['failed']['error_message'].iloc[0])  # Error message for failed mutation
-    'ValueError: No valid mutations could be parsed...'
+    >>> failed['failed']['mut_info'].tolist()
+    ['InvalidMut']
     >>> # Exclude patterns
     >>> df = pd.DataFrame({
     ...     'name': ['protein1', 'protein1', 'protein2', 'protein3', 'protein4'],
@@ -885,6 +887,7 @@ def validate_mutations(
     >>> successful, failed = validate_mutations(
     ...     df,
     ...     mutation_column='mut_info',
+    ...     offset=1,
     ...     exclude_patterns=['WT', 'wildtype', 'UNKNOWN']
     ... )
     >>>
@@ -892,6 +895,7 @@ def validate_mutations(
     >>> successful, failed = validate_mutations(
     ...     df,
     ...     mutation_column='mut_info',
+    ...     offset=1,
     ...     exclude_patterns=r'^(WT|wildtype|UNKNOWN)$'
     ... )
     >>>
@@ -899,6 +903,7 @@ def validate_mutations(
     >>> successful, failed = validate_mutations(
     ...     df,
     ...     mutation_column='mut_info',
+    ...     offset=1,
     ...     exclude_patterns=['regex:^WT$', 'regex:.*type.*', 'UNKNOWN']
     ... )
     >>>
@@ -907,6 +912,7 @@ def validate_mutations(
     >>> successful, failed = validate_mutations(
     ...     df,
     ...     mutation_column='mut_info',
+    ...     offset=1,
     ...     exclude_patterns=exclude_func
     ... )
     >>> successful
@@ -917,7 +923,6 @@ def validate_mutations(
     3  protein1        A122S    1.5
     4  protein1  C455D,E788F    2.3
     """
-
     tqdm.write("Validating and formatting mutations...")
 
     if mutation_column not in dataset.columns:
@@ -1002,7 +1007,7 @@ def validate_mutations(
             mut_info,
             format_mutations,
             mutation_sep,
-            is_zero_based,
+            offset,
             mutation_type,
             alphabet,
             None,
@@ -1089,11 +1094,12 @@ def apply_mutations_to_sequences(
     mutation_column: str = "mut_info",
     position_columns: Optional[Dict[str, str]] = None,
     mutation_sep: str = ",",
-    is_zero_based: bool = True,
     sequence_type: str = "protein",
     mutation_type: Optional[Type[BaseMutation]] = None,
     alphabet: Optional[BaseAlphabet] = None,
     num_workers: int = 4,
+    *,
+    offset: int,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Apply mutations to sequences to generate mutated sequences.
@@ -1117,12 +1123,12 @@ def apply_mutations_to_sequences(
         Used for extracting sequence regions
     mutation_sep : str, default=','
         Separator used to split multiple mutations in a single string
-    is_zero_based : bool, default=True
-        Whether origin mutation positions are zero-based
     sequence_type : str, default='protein'
         Type of sequence ('protein', 'dna', 'rna')
     num_workers : int, default=4
         Number of parallel workers for processing, set to -1 for all available CPUs
+    offset : int
+        Input position of the first residue or codon. Subtract this value to obtain a zero-based index.
 
     Returns
     -------
@@ -1138,10 +1144,10 @@ def apply_mutations_to_sequences(
     ...     'mut_info': ['A0K', 'C2D', 'E1F'],
     ...     'score': [1.0, 2.0, 3.0]
     ... })
-    >>> successful, failed = apply_mutations_to_sequences(df)
+    >>> successful, failed = apply_mutations_to_sequences(df, offset=0)
     >>> print(successful['mut_seq'].tolist())
     ['KKCDEF', 'AKDDEF', 'FFGHIS']
-    >>> print(len(failed))  # Should be 0 if all mutations are valid
+    >>> print(len(failed['failed']))
     0
     """
     tqdm.write("Applying mutations to sequences...")
@@ -1171,7 +1177,7 @@ def apply_mutations_to_sequences(
         mutation_column=mutation_column,
         position_columns=position_columns,
         mutation_sep=mutation_sep,
-        is_zero_based=is_zero_based,
+        offset=offset,
         sequence_class=SequenceClass,
         mutation_type=mutation_type,
         alphabet=alphabet,
@@ -1302,10 +1308,11 @@ def infer_wildtype_sequences(
     label_columns: Optional[List[str]] = None,
     wt_label: float = 0.0,
     mutation_sep: str = ",",
-    is_zero_based: bool = False,
     sequence_type: Literal["protein", "dna", "rna"] = "protein",
     handle_multiple_wt: Literal["error", "separate", "first"] = "error",
     num_workers: int = 4,
+    *,
+    offset: int,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Infer wild-type sequences from mutated sequences and add WT rows.
@@ -1330,14 +1337,14 @@ def infer_wildtype_sequences(
         Wild type score for WT rows
     mutation_sep : str, default=','
         Separator used to split multiple mutations in a single string
-    is_zero_based : bool, default=False
-        Whether origin mutation positions are zero-based
     sequence_type : str, default='protein'
         Type of sequence ('protein', 'dna', 'rna')
     handle_multiple_wt : Literal["error", "separate", "first"], default='error'
         How to handle multiple wild-type sequences: 'separate', 'first', or 'error'
     num_workers : int, default=4
         Number of parallel workers for processing, set to -1 for all available CPUs
+    offset : int
+        Input position of the first residue or codon. Subtract this value to obtain a zero-based index.
 
     Returns
     -------
@@ -1354,7 +1361,7 @@ def infer_wildtype_sequences(
     ...     'score': [1.0, 2.0, 3.0]
     ... })
     >>> success, failed = infer_wildtype_sequences(
-    ...     df, label_columns=['score']
+    ...     df, label_columns=['score'], offset=0
     ... )
     >>> print(len(success))  # Should have original rows + WT rows
     """
@@ -1384,7 +1391,7 @@ def infer_wildtype_sequences(
         label_columns=label_columns,
         wt_label=wt_label,
         mutation_sep=mutation_sep,
-        is_zero_based=is_zero_based,
+        offset=offset,
         handle_multiple_wt=handle_multiple_wt,
         sequence_class=SequenceClass,
         alphabet_class=AlphabetClass,
@@ -1764,8 +1771,9 @@ def convert_to_mutation_dataset_format(
     label_column: str = "score",
     include_wild_type: bool = False,
     mutation_set_prefix: str = "set",
-    is_zero_based: bool = False,
     additional_metadata: Optional[Dict[str, Any]] = None,
+    *,
+    offset: int,
 ) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """
     Convert a mutation DataFrame to the format required by MutationDataset.from_dataframe().
@@ -1817,11 +1825,11 @@ def convert_to_mutation_dataset_format(
     mutation_set_prefix : str, default='set'
         Prefix used for generating mutation set IDs.
 
-    is_zero_based : bool, default=False
-        Whether mutation positions are zero-based.
 
     additional_metadata : Optional[Dict[str, Any]], default=None
         Additional metadata to add to all mutation sets.
+    offset : int
+        Input position of the first residue or codon. Subtract this value to obtain a zero-based index.
 
     Returns
     -------
@@ -1849,20 +1857,21 @@ def convert_to_mutation_dataset_format(
     ...     'mut_seq': ['SDCDEF', 'AQDDEF', 'AQCDEF', 'FGHIGHK', 'EGHIGHK'],
     ...     'score': [1.5, 2.0, 0.0, 3.0, 0.0]
     ... })
-    >>> result_df1, ref_seqs1 = convert_to_mutation_dataset_format(df1)
-    >>> # Input has 5 rows but output has 6 rows (A0S,Q1D -> 2 rows)
+    >>> result_df1, ref_seqs1 = convert_to_mutation_dataset_format(df1, offset=0)
+    >>> result_df1['position'].tolist()
+    [0, 1, 2, 0]
 
     Format 2: With sequence column and multi-mutations
 
     >>> df2 = pd.DataFrame({
     ...     'name': ['prot1', 'prot1', 'prot2'],
     ...     'sequence': ['AKCDEF', 'AKCDEF', 'FEGHIS'],
-    ...     'mut_info': ['A0K,C2D', 'Q1P', 'E1F'],
+    ...     'mut_info': ['A0K,C2D', 'K1P', 'E1F'],
     ...     'score': [1.5, 2.0, 3.0],
     ...     'mut_seq': ['KKDDEF', 'APCDEF', 'FFGHIS']
     ... })
     >>> result_df2, ref_seqs2 = convert_to_mutation_dataset_format(
-    ...     df2, sequence_column='sequence'
+    ...     df2, sequence_column='sequence', offset=0
     ... )
     >>> print(ref_seqs2['prot1'])
     AKCDEF
@@ -1919,11 +1928,11 @@ def convert_to_mutation_dataset_format(
             sequence_column,
             label_column,
             mutation_set_prefix,
-            is_zero_based,
-            additional_metadata,
-            SequenceClass,
-            MutationClass,
-            alphabet,
+            offset=offset,
+            additional_metadata=additional_metadata,
+            sequence_class=SequenceClass,
+            mutation_type=MutationClass,
+            alphabet=alphabet,
         )
     elif has_wt_rows and not has_sequence_column:
         # Clearly Format 1: has WT rows, no sequence column
@@ -1936,11 +1945,11 @@ def convert_to_mutation_dataset_format(
             label_column,
             include_wild_type,
             mutation_set_prefix,
-            is_zero_based,
-            additional_metadata,
-            SequenceClass,
-            MutationClass,
-            alphabet,
+            offset=offset,
+            additional_metadata=additional_metadata,
+            sequence_class=SequenceClass,
+            mutation_type=MutationClass,
+            alphabet=alphabet,
         )
     elif has_sequence_column and has_wt_rows:
         # Ambiguous: has both sequence column and WT rows
@@ -1954,11 +1963,11 @@ def convert_to_mutation_dataset_format(
                 sequence_column,
                 label_column,
                 mutation_set_prefix,
-                is_zero_based,
-                additional_metadata,
-                SequenceClass,
-                MutationClass,
-                alphabet,
+                offset=offset,
+                additional_metadata=additional_metadata,
+                sequence_class=SequenceClass,
+                mutation_type=MutationClass,
+                alphabet=alphabet,
             )
         else:
             tqdm.write("Warning: Found WT rows but sequence column exists. Using Format 1.")
@@ -1970,11 +1979,11 @@ def convert_to_mutation_dataset_format(
                 label_column,
                 include_wild_type,
                 mutation_set_prefix,
-                is_zero_based,
-                additional_metadata,
-                SequenceClass,
-                MutationClass,
-                alphabet,
+                offset=offset,
+                additional_metadata=additional_metadata,
+                sequence_class=SequenceClass,
+                mutation_type=MutationClass,
+                alphabet=alphabet,
             )
     else:
         # Neither format detected
@@ -2550,8 +2559,9 @@ def filter_stop_codon_mutations(
     dataset: pd.DataFrame,
     mutation_column: str = "mut_info",
     mutation_sep: str = ",",
-    is_zero_based: bool = True,
     alphabet: Optional[BaseAlphabet] = None,
+    *,
+    offset: int,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Filter records containing mutations that introduce stop codons.
@@ -2564,16 +2574,16 @@ def filter_stop_codon_mutations(
     Parameters
     ----------
     dataset : pd.DataFrame
-        Input dataset containing validated and standardized codon mutations.
+        Input dataset containing codon mutation strings.
     mutation_column : str, default="mut_info"
         Column containing codon mutation annotations.
     mutation_sep : str, default=","
         Separator between multiple codon mutations.
-    is_zero_based : bool, default=True
-        Whether mutation positions are zero-based.
     alphabet : Optional[BaseAlphabet], default=None
         Alphabet used to parse codon mutations. If None, ``DNAAlphabet()`` is
         used.
+    offset : int
+        Input position of the first codon. Subtract this value to obtain a zero-based codon index.
 
     Returns
     -------
@@ -2598,7 +2608,7 @@ def filter_stop_codon_mutations(
             for mutation in MutationSet.from_string(
                 str(mut_info),
                 sep=mutation_sep,
-                is_zero_based=is_zero_based,
+                offset=offset,
                 mutation_type=CodonMutation,
                 alphabet=alphabet,
             )

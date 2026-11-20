@@ -247,7 +247,7 @@ def create_rbd_ace2_cleaner(
             mutation_column=mutation_column,
             format_mutations=True,
             mutation_sep=" ",
-            is_zero_based=False,
+            offset=1,
             exclude_patterns="WT",
             cache_results=False,
             num_workers=final_config.validate_mut_workers,
@@ -278,7 +278,7 @@ def create_rbd_ace2_cleaner(
             name_column=target_name_column,
             mutation_column=mutation_column,
             mutation_sep=",",
-            is_zero_based=True,
+            offset=0,
             sequence_type="protein",
             num_workers=final_config.process_workers,
         )
@@ -290,7 +290,7 @@ def create_rbd_ace2_cleaner(
             mutated_sequence_column="mut_seq",
             label_column=final_config.primary_label_column,
             include_wild_type=False,
-            is_zero_based=True,
+            offset=0,
         )
     )
 

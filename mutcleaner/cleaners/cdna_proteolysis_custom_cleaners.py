@@ -33,7 +33,7 @@ def _infer_wt_sequence(
     mutation_set = MutationSet.from_string(
         mut_info,
         sep=",",
-        is_zero_based=True,
+        offset=0,
         mutation_type=AminoAcidMutation,
         alphabet=ProteinAlphabet(include_stop=True),
     )
@@ -96,7 +96,7 @@ def validate_wt_sequence(
         Column that identifies a protein/name group for validation.
     mutation_column : str
         Column containing mutation annotations. Its format must be parsable by
-        ``MutationSet.from_string(sep=",", is_zero_based=True)``.
+        ``MutationSet.from_string(sep=",", offset=0)``.
     sequence_column : str
         Column containing the amino-acid sequence for that row (treated as the
         mutated sequence for mutants and the WT sequence for the WT row).

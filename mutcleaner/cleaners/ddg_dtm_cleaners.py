@@ -262,7 +262,7 @@ def create_ddg_dtm_cleaner(
                 sequence_column=final_config.column_mapping.get("wt_seq", "wt_seq"),
                 mutated_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

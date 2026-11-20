@@ -1,21 +1,14 @@
-import pytest
-import pandas as pd
-from pathlib import Path
-import tempfile
 import json
+import tempfile
+from pathlib import Path
 
+import pandas as pd
+import pytest
+
+from mutcleaner.cleaners.basic_cleaners import apply_mutations_to_sequences, convert_to_mutation_dataset_format, validate_mutations
 from mutcleaner.core.dataset import MutationDataset
-from mutcleaner.core.mutation import (
-    AminoAcidMutation,
-    CodonMutation,
-    AminoAcidMutationSet,
-    CodonMutationSet,
-)
-from mutcleaner.core.sequence import (
-    ProteinSequence,
-    DNASequence,
-    RNASequence,
-)
+from mutcleaner.core.mutation import AminoAcidMutation, AminoAcidMutationSet, CodonMutation, CodonMutationSet
+from mutcleaner.core.sequence import DNASequence, ProteinSequence, RNASequence
 
 
 class TestMutationDatasetInit:
@@ -439,6 +432,39 @@ class TestStatistics:
 class TestSaveLoad:
     """Test save and load functionality."""
 
+    @pytest.mark.parametrize("format_mutations, expected_annotation, next_offset", [(True, "A0V,G2S", 0), (False, "A2V,G4S", 2)])
+    def test_offset_through_cleaning_and_save_load(self, format_mutations, expected_annotation, next_offset, tmp_path):
+        """Preserve both sites when cleaning and reloading mutations numbered from 2."""
+        raw = pd.DataFrame({"name": ["example"], "sequence": ["ACG"], "mut_info": ["A2V,G4S"], "score": [1.0]})
+        validated = validate_mutations(raw, format_mutations=format_mutations, offset=2, num_workers=1)
+        assert validated.side["failed"].empty
+        assert validated.main["mut_info"].tolist() == [expected_annotation]
+
+        applied = apply_mutations_to_sequences(validated.main, offset=next_offset, num_workers=1)
+        assert applied.side["failed"].empty
+        assert applied.main["mut_seq"].tolist() == ["VCS"]
+
+        variants, references = convert_to_mutation_dataset_format(applied.main, sequence_column="sequence", offset=next_offset)
+        assert variants["position"].tolist() == [0, 2]
+        dataset = MutationDataset.from_dataframe(variants, references)
+        dataset.save_by_reference(tmp_path)
+
+        loaded = MutationDataset.load(str(tmp_path))
+        assert len(loaded) == 1
+        assert str(loaded.mutation_sets[0]) == "A0V,G2S"
+
+    def test_load_by_reference_with_external_offset(self, tmp_path):
+        """Read annotations numbered from 2 from a reference directory."""
+        reference_dir = tmp_path / "example"
+        reference_dir.mkdir()
+        (reference_dir / "wt.fasta").write_text(">example\nACG\n")
+        variants = pd.DataFrame({"mutation_name": ["A2V,G4S"], "mutated_sequence": ["VCS"], "label": [1.0]})
+        variants.to_csv(reference_dir / "data.csv", index=False)
+
+        dataset = MutationDataset.load_by_reference(tmp_path, offset=2)
+        assert len(dataset) == 1
+        assert dataset.mutation_sets[0].get_positions() == [0, 2]
+
     def test_save_load_pickle(self):
         """Test saving and loading in pickle format."""
         # Create a dataset
@@ -562,7 +588,7 @@ class TestSaveLoad:
                         assert field in metadata, f"Missing field {field} in metadata"
 
             # Load the dataset
-            loaded_dataset = MutationDataset.load_by_reference(tmpdir, "loaded_dataset")
+            loaded_dataset = MutationDataset.load_by_reference(tmpdir, "loaded_dataset", offset=0)
 
         # Validate basic attributes
         assert loaded_dataset.name == "loaded_dataset"
@@ -635,14 +661,14 @@ class TestSaveLoad:
         # Test an empty directory
         with tempfile.TemporaryDirectory() as tmpdir:
             try:
-                MutationDataset.load_by_reference(tmpdir)
+                MutationDataset.load_by_reference(tmpdir, offset=0)
                 assert False, "Should raise ValueError for empty directory"
             except ValueError as e:
                 assert "No reference directories found" in str(e)
 
         # Test a nonexistent directory
         try:
-            MutationDataset.load_by_reference("/nonexistent/path")
+            MutationDataset.load_by_reference("/nonexistent/path", offset=0)
             assert False, "Should raise FileNotFoundError"
         except FileNotFoundError:
             pass

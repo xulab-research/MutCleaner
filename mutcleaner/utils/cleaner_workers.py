@@ -38,7 +38,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
     Parameters
     ----------
     args : Tuple
-        (mut_info, format_mutations, mutation_sep, is_zero_based, cache)
+        (mut_info, format_mutations, mutation_sep, offset, mutation_type, alphabet, shared_cache)
 
     Returns
     -------
@@ -49,7 +49,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
         mut_info,
         format_mutations,
         mutation_sep,
-        is_zero_based,
+        offset,
         mutation_type,
         alphabet,
         shared_cache,
@@ -68,7 +68,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
             mutation_set = MutationSet.from_string(
                 mut_info,
                 sep=mutation_sep,
-                is_zero_based=is_zero_based,
+                offset=offset,
                 mutation_type=mutation_type,
                 alphabet=alphabet,
             )
@@ -83,7 +83,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
             MutationSet.from_string(
                 mut_info,
                 sep=mutation_sep,
-                is_zero_based=is_zero_based,
+                offset=offset,
                 mutation_type=mutation_type,
                 alphabet=alphabet,
             )
@@ -115,7 +115,7 @@ def apply_single_mutation(
     mutation_column: str,
     position_columns: Optional[Dict[str, str]],
     mutation_sep: str,
-    is_zero_based: bool,
+    offset: int,
     mutation_type: Optional[Type[BaseMutation]],
     alphabet: Optional[BaseAlphabet],
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
@@ -139,8 +139,8 @@ def apply_single_mutation(
         Position column mapping for sequence extraction
     mutation_sep : str
         Separator for splitting multiple mutations
-    is_zero_based : bool
-        Whether the mutation position is zero-based.
+    offset : int
+        Input position of the first residue or codon.
     sequence_class : Type[Union[ProteinSequence, DNASequence, RNASequence]]
         Sequence class to use for mutation application
 
@@ -173,7 +173,7 @@ def apply_single_mutation(
         mutation_set = MutationSet.from_string(
             mut_info,
             sep=mutation_sep,
-            is_zero_based=is_zero_based,
+            offset=offset,
             mutation_type=mutation_type,
             alphabet=alphabet,
         )
@@ -193,7 +193,7 @@ def infer_wt_sequence_grouped(
     label_columns: List[str],
     wt_label: float,
     mutation_sep: str,
-    is_zero_based: bool,
+    offset: int,
     handle_multiple_wt: Literal["error", "separate", "first"],
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
     alphabet_class: Type[Union[ProteinAlphabet, DNAAlphabet, RNAAlphabet]],
@@ -224,7 +224,7 @@ def infer_wt_sequence_grouped(
             mutation_set = MutationSet.from_string(
                 mut_info,
                 sep=mutation_sep,
-                is_zero_based=is_zero_based,
+                offset=offset,
                 alphabet=alphabet_class(),
             )
             sequence = sequence_class(str(mut_seq).strip(), name=str(protein_name))
@@ -372,7 +372,7 @@ def validate_single_mutation_and_sequence(
     mutation_column: str,
     mut_sequence_column: str,
     mutation_sep: str,
-    is_zero_based: bool,
+    offset: int,
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
 ) -> Tuple[Optional[str], Optional[str]]:
 
@@ -391,7 +391,7 @@ def validate_single_mutation_and_sequence(
             return None, f"Missing wildtype sequence or mutant sequence for {name}"
 
         wt_sequence = sequence_class(wt_sequence_str, name=name)
-        mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, is_zero_based=is_zero_based)
+        mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, offset=offset)
         mut_sequence = sequence_class(mut_sequence_str, name=name)
         inferred_mutated_sequence = wt_sequence.apply_mutation(mutation_set)
         if str(inferred_mutated_sequence) != str(mut_sequence):

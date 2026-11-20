@@ -73,10 +73,10 @@ class BaseMutation(ABC):
     def from_string(
         cls,
         mutation_string: str,
-        is_zero_based: bool,
+        offset: int,
         alphabet: Optional[BaseAlphabet] = None,
     ) -> "BaseMutation":
-        """Parse mutation from string format like 'A123V' or 'Ala123Val'"""
+        """Parse a mutation string by subtracting offset from its input position."""
         pass
 
     def __eq__(self, other) -> bool:
@@ -153,10 +153,21 @@ class AminoAcidMutation(BaseMutation):
     def from_string(
         cls,
         mutation_str: str,
-        is_zero_based: bool = False,
+        offset: int,
         alphabet: Optional[ProteinAlphabet] = None,
     ) -> "AminoAcidMutation":
-        """Parse mutation from string format like 'A123V' or 'Ala123Val'"""
+        """Parse an amino acid substitution.
+
+        Parameters
+        ----------
+        mutation_str : str
+            Mutation in one- or three-letter notation, such as 'A2V' or 'Ala2Val'.
+        offset : int
+            Input number of the first reference residue. Subtracting it from
+            the annotated position gives the zero-based residue index.
+        alphabet : ProteinAlphabet, optional
+            Alphabet used to interpret the amino acid symbols.
+        """
         mutation_str = mutation_str.strip()
 
         # Handle three-letter codes first
@@ -172,10 +183,7 @@ class AminoAcidMutation(BaseMutation):
                 mutant_amino_acid = alphabet.get_one_letter_code(mutant_three)
             except KeyError as e:
                 raise ValueError(f"Unknown three-letter amino acid code: {e}")
-            if is_zero_based:
-                return cls(wild_amino_acid, int(position), mutant_amino_acid, alphabet)
-            else:
-                return cls(wild_amino_acid, int(position) - 1, mutant_amino_acid, alphabet)
+            return cls(wild_amino_acid, int(position) - offset, mutant_amino_acid, alphabet)
 
         # Handle one-letter codes
         one_letter_pattern = r"^([A-Z\*])(\d+)([A-Z\*])$"
@@ -185,10 +193,7 @@ class AminoAcidMutation(BaseMutation):
             raise ValueError(f"Invalid mutation format: {mutation_str}. " f"Expected formats: 'A123V' or 'Ala123Val'")
 
         wild_amino_acid, position, mutant_amino_acid = match.groups()
-        if is_zero_based:
-            return cls(wild_amino_acid, int(position), mutant_amino_acid, alphabet)
-        else:
-            return cls(wild_amino_acid, int(position) - 1, mutant_amino_acid, alphabet)
+        return cls(wild_amino_acid, int(position) - offset, mutant_amino_acid, alphabet)
 
 
 class CodonMutation(BaseMutation):
@@ -283,10 +288,21 @@ class CodonMutation(BaseMutation):
     def from_string(
         cls,
         mutation_str: str,
-        is_zero_based: bool = False,
+        offset: int,
         alphabet: Optional[BaseAlphabet] = None,
     ) -> "CodonMutation":
-        """Parse mutation from string format like 'ATG123TAA' or 'AUG123UAA'"""
+        """Parse a codon substitution.
+
+        Parameters
+        ----------
+        mutation_str : str
+            Codon mutation in DNA or RNA notation, such as 'ATG2GTG' or 'AUG2GUG'.
+        offset : int
+            Input number of the first reference codon. Subtracting it from
+            the annotated position gives the zero-based codon index.
+        alphabet : BaseAlphabet, optional
+            Alphabet used to validate the codons.
+        """
         mutation_str = mutation_str.strip()
 
         # Handle codon format first
@@ -296,10 +312,7 @@ class CodonMutation(BaseMutation):
         if match:
             wild_codon, position, mutant_codon = match.groups()
             alphabet = alphabet if alphabet is not None else (RNAAlphabet() if cls._detect_seq_type(wild_codon, mutant_codon) == "RNA" else DNAAlphabet())
-            if is_zero_based:
-                return cls(wild_codon, int(position), mutant_codon, alphabet)
-            else:
-                return cls(wild_codon, int(position) - 1, mutant_codon, alphabet)
+            return cls(wild_codon, int(position) - offset, mutant_codon, alphabet)
 
         raise ValueError(f"Invalid codon mutation format: {mutation_str}")
 
@@ -473,13 +486,14 @@ class MutationSet(Generic[MutationType]):
         cls,
         string: str,
         sep: Optional[str] = None,
-        is_zero_based: bool = False,
         reject_redundant: bool = True,
         reject_nonsense: bool = True,
         mutation_type: Optional[Type[MutationType]] = None,
         alphabet: Optional[BaseAlphabet] = None,
         name: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
+        *,
+        offset: int,
     ) -> "MutationSet":
         """
         Create a mutation set from a string
@@ -490,8 +504,6 @@ class MutationSet(Generic[MutationType]):
             String containing mutations separated by delimiter
         sep : Optional[str], default=None
             Separator to use. If None, will try to guess
-        is_zero_based : bool, default=False
-            Whether origin mutation positions are zero-based
         reject_redundant : bool, default=True
             Whether to reject synonymous/no-op mutations
         reject_nonsense : bool, default=True
@@ -504,6 +516,9 @@ class MutationSet(Generic[MutationType]):
             Optional name for the mutation set
         metadata : Optional[Dict[str, Any]], default=None
             Optional metadata for the mutation set
+        offset : int
+            Input number of the first reference residue or codon. This value
+            is subtracted from every annotated position.
 
         Returns
         -------
@@ -548,12 +563,12 @@ class MutationSet(Generic[MutationType]):
             try:
                 if mutation_type is None:
                     # Try to infer mutation type from the first mutation string
-                    mutation = cls._infer_and_create_mutation(mutation_str, is_zero_based, alphabet)
+                    mutation = cls._infer_and_create_mutation(mutation_str, offset=offset, alphabet=alphabet)
                     mutation_type = type(mutation)
                 else:
                     # Use specified mutation type
                     if hasattr(mutation_type, "from_string"):
-                        mutation = mutation_type.from_string(mutation_str, is_zero_based, alphabet)
+                        mutation = mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet)
                     else:
                         raise NotImplementedError(f"Mutation type {mutation_type.__name__} does not have from_string method")
 
@@ -606,7 +621,7 @@ class MutationSet(Generic[MutationType]):
     def _infer_and_create_mutation(
         cls,
         mutation_str: str,
-        is_zero_based: bool = False,
+        offset: int,
         alphabet: Optional[BaseAlphabet] = None,
     ) -> MutationType:
         """
@@ -618,8 +633,8 @@ class MutationSet(Generic[MutationType]):
         ----------
         mutation_str : str
             Mutation string to parse
-        is_zero_based : bool, default=False
-            Whether origin mutation positions are zero-based
+        offset : int
+            Input number of the first reference residue or codon.
         alphabet : Optional[BaseAlphabet]
             Optional alphabet to use for parsing
 
@@ -638,7 +653,7 @@ class MutationSet(Generic[MutationType]):
 
         for mutation_type in mutation_types:
             try:
-                return mutation_type.from_string(mutation_str, is_zero_based, alphabet)
+                return mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet)
             except Exception as e:
                 last_error = e
                 continue
@@ -651,10 +666,10 @@ class MutationSet(Generic[MutationType]):
         cls,
         mutation_str: str,
         mutation_type: Type[BaseMutation],
-        is_zero_based: bool = False,
+        offset: int,
         alphabet: Optional[BaseAlphabet] = None,
     ) -> BaseMutation:
-        return mutation_type.from_string(mutation_str, is_zero_based, alphabet)
+        return mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet)
 
     @staticmethod
     def _guess_sep(string: str) -> Optional[str]:

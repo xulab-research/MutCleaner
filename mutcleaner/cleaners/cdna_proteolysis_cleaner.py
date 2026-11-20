@@ -192,7 +192,7 @@ def create_cdna_proteolysis_cleaner(
                 validate_mutations,
                 mutation_column=final_config.column_mapping.get("mut_type", "mut_type"),
                 mutation_sep=":",
-                is_zero_based=False,
+                offset=1,
                 mutation_type=AminoAcidMutation,
                 alphabet=ProteinAlphabet(include_stop=True),
                 exclude_patterns=["wt"],
@@ -225,7 +225,7 @@ def create_cdna_proteolysis_cleaner(
                 mutation_column=final_config.column_mapping.get("mut_type", "mut_type"),
                 mutated_sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

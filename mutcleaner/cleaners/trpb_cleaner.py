@@ -62,8 +62,6 @@ class TrpBCleanerConfig(BaseCleanerConfig):
         Filter conditions for data cleaning
     type_conversions : Dict[str, str]
         Data type conversion specifications
-    is_zero_based : bool
-        Whether mutation positions are zero-based
     validation_workers : int
         Number of workers for mutation validation
     infer_wt_workers : int
@@ -199,7 +197,7 @@ def create_trpb_cleaner(
             .delayed_then(
                 validate_mutations,
                 mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
-                is_zero_based=True,
+                offset=0,
                 num_workers=final_config.num_workers,
                 exclude_patterns=["WT"],
             )
@@ -220,7 +218,7 @@ def create_trpb_cleaner(
                 apply_mutations_to_sequences,
                 sequence_column="wt_seq",
                 mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
-                is_zero_based=True,
+                offset=0,
                 num_workers=final_config.num_workers,
             )
             .delayed_then(
@@ -230,7 +228,7 @@ def create_trpb_cleaner(
                 sequence_column="wt_seq",
                 mutated_sequence_column="mut_seq",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

@@ -208,11 +208,13 @@ def create_protein_human_myoglobin_cleaner(
             .delayed_then(
                 validate_mutations,
                 mutation_column="mut_info",
+                offset=1,
                 num_workers=final_config.validate_mut_workers,
             )
             .delayed_then(
                 apply_mutations_to_sequences,
                 sequence_column="wt_seq",
+                offset=0,
                 num_workers=final_config.process_workers,
             )
             .delayed_then(
@@ -226,7 +228,7 @@ def create_protein_human_myoglobin_cleaner(
                 mutation_column="mut_info",
                 sequence_column="wt_seq",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

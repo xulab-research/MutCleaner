@@ -69,7 +69,7 @@ def compute_mutations(
                 continue
             muts = [f"{wt_array[pos]}{pos}{row[pos]}" for pos in positions]
             mut_str = ",".join(muts)
-            mut_info_list.append(str(MutationSet.from_string(mut_str, is_zero_based=True)) if mut_str else "")
+            mut_info_list.append(str(MutationSet.from_string(mut_str, offset=0)) if mut_str else "")
         return pd.Series(mut_info_list, index=group.index)
 
     dataset["mut_info"] = dataset.groupby(name_column, group_keys=False).apply(get_mut_info)

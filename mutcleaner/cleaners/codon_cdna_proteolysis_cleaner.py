@@ -206,7 +206,7 @@ def create_codon_cdna_proteolysis_cleaner(
                 validate_mutations,
                 mutation_column=mutation_column,
                 mutation_sep=",",
-                is_zero_based=True,
+                offset=0,
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
                 num_workers=final_config.validate_mut_workers,
@@ -229,6 +229,7 @@ def create_codon_cdna_proteolysis_cleaner(
                 mutation_column=mutation_column,
                 sequence_column="sequence",
                 sequence_type="dna",
+                offset=0,
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
                 num_workers=final_config.process_workers,
@@ -241,7 +242,7 @@ def create_codon_cdna_proteolysis_cleaner(
                 mutated_sequence_column="mut_seq",
                 sequence_type="dna",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

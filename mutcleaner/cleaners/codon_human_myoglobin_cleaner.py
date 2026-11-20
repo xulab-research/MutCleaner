@@ -206,6 +206,7 @@ def create_codon_human_myoglobin_cleaner(
                 mutation_column=final_config.column_mapping.get("COD", "COD"),
                 num_workers=final_config.validate_mut_workers,
                 mutation_sep=",",
+                offset=1,
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
             )
@@ -213,7 +214,7 @@ def create_codon_human_myoglobin_cleaner(
                 filter_stop_codon_mutations,
                 mutation_column=final_config.column_mapping.get("COD", "COD"),
                 mutation_sep=",",
-                is_zero_based=True,
+                offset=0,
                 alphabet=DNAAlphabet(),
             )
             .delayed_then(
@@ -221,6 +222,7 @@ def create_codon_human_myoglobin_cleaner(
                 mutation_column=final_config.column_mapping.get("COD", "COD"),
                 sequence_column="wt_seq",
                 sequence_type="dna",
+                offset=0,
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
                 num_workers=final_config.process_workers,
@@ -238,7 +240,7 @@ def create_codon_human_myoglobin_cleaner(
                 mutated_sequence_column="mut_seq",
                 sequence_type="dna",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

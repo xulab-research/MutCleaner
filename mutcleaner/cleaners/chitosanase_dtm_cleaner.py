@@ -162,7 +162,7 @@ def create_chitosanase_dtm_cleaner(
                 sequence_column=sequence_column,
                 mutation_column=mutation_column,
                 sequence_type="protein",
-                is_zero_based=False,
+                offset=1,
                 num_workers=final_config.infer_mut_workers,
             )
             .delayed_then(
@@ -172,7 +172,7 @@ def create_chitosanase_dtm_cleaner(
                 sequence_column=sequence_column,
                 mutated_sequence_column="mut_seq",
                 label_column=label_column,
-                is_zero_based=False,
+                offset=1,
             )
         )
         return pipeline

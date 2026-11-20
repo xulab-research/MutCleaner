@@ -951,22 +951,13 @@ class MutationDataset:
                 "dataset_name": self.name,
             }
 
-            with open(
-                ref_dir / "metadata.json",
-                "w",
-                encoding="utf-8",
-            ) as metadata_file:
-                json.dump(
-                    metadata,
-                    metadata_file,
-                    indent=2,
-                    default=str,
-                )
+            with open(ref_dir / "metadata.json", "w", encoding="utf-8") as metadata_file:
+                json.dump(metadata, metadata_file, indent=2, default=str)
 
     def save(
         self,
         filepath: str,
-        save_type: Optional[Literal["mutcleaner", "pickle", "dataframe"]] = "mutcleaner",
+        save_type: Optional[Literal["mutcleaner", " ", "dataframe"]] = "mutcleaner",
     ):
         """
         Save the dataset to files.
@@ -1044,7 +1035,8 @@ class MutationDataset:
         cls,
         base_dir: Union[str, Path],
         dataset_name: Optional[str] = None,
-        is_zero_based: bool = True,
+        *,
+        offset: int,
     ) -> "MutationDataset":
         """
         Load a dataset from mutcleaner reference-based format.
@@ -1068,8 +1060,9 @@ class MutationDataset:
             Base directory containing reference folders
         dataset_name : Optional[str], default=None
             Optional name for the loaded dataset
-        is_zero_based : bool, default=True
-            Whether origin mutation positions are zero-based
+        offset : int
+            Input number of the first reference residue or codon in the mutation
+            annotations. Use 0 for directories written by ``save_by_reference``.
 
         Returns
         -------
@@ -1173,7 +1166,7 @@ class MutationDataset:
                         mutation_set = MutationSet.from_string(
                             mutation_name,
                             sep=",",
-                            is_zero_based=is_zero_based,
+                            offset=offset,
                             mutation_type=mutation_type,
                             alphabet=alphabet,
                         )
@@ -1306,7 +1299,7 @@ class MutationDataset:
             return dataset
 
         elif load_type == "mutcleaner":
-            return cls.load_by_reference(base_path)
+            return cls.load_by_reference(base_path, offset=0)
 
         else:
             raise ValueError(f"Unsupported load_type: {load_type}. Use 'dataframe', 'pickle' or 'mutcleaner'")
@@ -1589,7 +1582,7 @@ class MutationDataset:
                     mutation = MutationSet._create_mutation(
                         mutation_string,
                         mutation_type=specific_mutation_type,
-                        is_zero_based=True,
+                        offset=0,
                     )
                 except Exception as error:
                     raise ValueError(f"Cannot create mutation from row: {error}") from error
@@ -1704,7 +1697,7 @@ class MutationDataset:
                 return MutationSet._create_mutation(
                     mutation_string,
                     mutation_type=specific_mutation_type,
-                    is_zero_based=True,
+                    offset=0,
                 )
             except Exception as e:
                 raise ValueError(f"Cannot create mutation from row: {e}")

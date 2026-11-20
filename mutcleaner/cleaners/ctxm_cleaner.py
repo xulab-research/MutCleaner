@@ -238,6 +238,7 @@ def create_ctxm_cleaner(
             .delayed_then(
                 validate_mutations,
                 mutation_column=final_config.column_mapping.get("mut_info", "mut_info"),
+                offset=1,
                 num_workers=final_config.validate_mut_workers,
             )
             .delayed_then(
@@ -250,7 +251,7 @@ def create_ctxm_cleaner(
                 sequence_column="wt_seq",
                 name_column="name",
                 mutation_column=final_config.column_mapping.get("mut_info", "mut_info"),
-                is_zero_based=True,
+                offset=0,
                 num_workers=final_config.process_workers,
             )
             .delayed_then(
@@ -260,7 +261,7 @@ def create_ctxm_cleaner(
                 sequence_column="wt_seq",
                 mutated_sequence_column="mut_seq",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

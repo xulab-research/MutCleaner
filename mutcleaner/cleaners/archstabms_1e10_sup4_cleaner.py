@@ -188,7 +188,7 @@ def create_archstabms_1e10_sup4_cleaner(
                 convert_to_mutation_dataset_format,
                 mutated_sequence_column=final_config.column_mapping.get("full_aa_seq", "full_aa_seq"),
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

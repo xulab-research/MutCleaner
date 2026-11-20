@@ -59,8 +59,6 @@ class ProteinGymCleanerConfig(BaseCleanerConfig):
         Filter conditions for data cleaning
     type_conversions : Dict[str, str]
         Data type conversion specifications
-    is_zero_based : bool
-        Whether mutation positions are zero-based
     validation_workers : int
         Number of workers for mutation validation
     infer_wt_workers : int
@@ -241,7 +239,7 @@ def create_proteingym_dms_substitutions_cleaner(
                 validate_mutations,
                 mutation_column=final_config.column_mapping.get("mutant", "mutant"),
                 mutation_sep=":",
-                is_zero_based=False,
+                offset=1,
                 num_workers=final_config.validation_workers,
             )
             .delayed_then(
@@ -251,7 +249,7 @@ def create_proteingym_dms_substitutions_cleaner(
                 sequence_column=final_config.column_mapping.get("mutated_sequence", "mutated_sequence"),
                 label_columns=final_config.label_columns,
                 mutation_sep=",",
-                is_zero_based=True,
+                offset=0,
                 handle_multiple_wt=final_config.handle_multiple_wt,
                 num_workers=final_config.infer_wt_workers,
             )
@@ -261,7 +259,7 @@ def create_proteingym_dms_substitutions_cleaner(
                 mutation_column=final_config.column_mapping.get("mutant", "mutant"),
                 mutated_sequence_column=final_config.column_mapping.get("mutated_sequence", "mutated_sequence"),
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

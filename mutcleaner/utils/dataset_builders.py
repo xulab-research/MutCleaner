@@ -59,7 +59,7 @@ def convert_format_1(
     score_column: str,
     include_wild_type: bool,
     mutation_set_prefix: str,
-    is_zero_based: bool,
+    offset: int,
     additional_metadata: Optional[Dict[str, Any]],
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
     mutation_type: Type[BaseMutation],
@@ -103,7 +103,7 @@ def convert_format_1(
         try:
             mutations = _parse_mutations_string(
                 mut_info,
-                is_zero_based=is_zero_based,
+                offset=offset,
                 mutation_type=mutation_type,
                 alphabet=alphabet,
             )
@@ -136,7 +136,7 @@ def convert_format_2(
     sequence_column: str,
     score_column: str,
     mutation_set_prefix: str,
-    is_zero_based: bool,
+    offset: int,
     additional_metadata: Optional[Dict[str, Any]],
     sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
     mutation_type: Type[BaseMutation],
@@ -166,7 +166,7 @@ def convert_format_2(
         try:
             mutations = _parse_mutations_string(
                 mut_info,
-                is_zero_based=is_zero_based,
+                offset=offset,
                 mutation_type=mutation_type,
                 alphabet=alphabet,
             )
@@ -243,7 +243,7 @@ def _create_output_row_from_mutation(
 
 def _parse_mutations_string(
     mutation_string: str,
-    is_zero_based: bool,
+    offset: int,
     mutation_type: Type[BaseMutation],
     alphabet: BaseAlphabet,
 ) -> List[BaseMutation]:
@@ -253,8 +253,8 @@ def _parse_mutations_string(
     ----------
     mutation_string : str
         String containing one or more mutations.
-    is_zero_based : bool
-        Whether positions in the input string are zero-based.
+    offset : int
+        Input position of the first residue or codon.
     mutation_type : Type[BaseMutation]
         Mutation class used for parsing.
     alphabet : BaseAlphabet
@@ -270,7 +270,7 @@ def _parse_mutations_string(
 
     mutation_set = MutationSet.from_string(
         mutation_string.strip(),
-        is_zero_based=is_zero_based,
+        offset=offset,
         mutation_type=mutation_type,
         alphabet=alphabet,
     )

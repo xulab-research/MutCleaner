@@ -57,8 +57,8 @@ class CodonDMSSubstitutionsCleanerConfig(BaseCleanerConfig):
         Data type conversion specifications.
     mutation_sep : str
         Separator used between multiple codon mutations.
-    is_zero_based : bool
-        Whether mutation positions in the source dataset are zero-based.
+    offset : int
+        Number of the first codon in the source annotations. Subtracted from each codon position.
     validate_mut_workers : int
         Number of workers used for mutation validation.
     process_workers : int
@@ -83,7 +83,7 @@ class CodonDMSSubstitutionsCleanerConfig(BaseCleanerConfig):
     type_conversions: Dict[str, str] = field(default_factory=lambda: {"label": "float64"})
 
     mutation_sep: str = ","
-    is_zero_based: bool = True
+    offset: int = 0
 
     validate_mut_workers: int = 16
     process_workers: int = 16
@@ -179,7 +179,7 @@ def create_codon_dms_substitutions_cleaner(
                 validate_mutations,
                 mutation_column="mut_info",
                 mutation_sep=final_config.mutation_sep,
-                is_zero_based=final_config.is_zero_based,
+                offset=final_config.offset,
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
                 num_workers=final_config.validate_mut_workers,
@@ -188,7 +188,7 @@ def create_codon_dms_substitutions_cleaner(
                 filter_stop_codon_mutations,
                 mutation_column="mut_info",
                 mutation_sep=",",
-                is_zero_based=True,
+                offset=0,
                 alphabet=DNAAlphabet(),
             )
             .delayed_then(
@@ -201,6 +201,7 @@ def create_codon_dms_substitutions_cleaner(
                 mutation_column="mut_info",
                 sequence_column="wt_seq",
                 sequence_type="dna",
+                offset=0,
                 mutation_type=CodonMutation,
                 alphabet=DNAAlphabet(),
                 num_workers=final_config.process_workers,
@@ -213,7 +214,7 @@ def create_codon_dms_substitutions_cleaner(
                 mutated_sequence_column="mut_seq",
                 sequence_type="dna",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

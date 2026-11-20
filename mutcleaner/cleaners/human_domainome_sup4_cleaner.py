@@ -64,8 +64,6 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
         Data type conversion specifications
     drop_na_columns: List[str]
         List of column names where null values should be dropped
-    is_zero_based : bool
-        Whether mutation positions are zero-based
     process_workers : int
         Number of workers for parallel processing
     label_columns : List[str]
@@ -99,7 +97,6 @@ class HumanDomainomeSup4CleanerConfig(BaseCleanerConfig):
     drop_na_columns: List = field(default_factory=lambda: ["name", "PFAM_entry", "pos", "wt_aa", "mut_aa"])
 
     # Processing parameters
-    is_zero_based: bool = False
     process_workers: int = 16
 
     # Score columns configuration
@@ -287,7 +284,7 @@ def create_human_domainome_sup4_cleaner(
                 name_column=final_config.column_mapping.get("uniprot_ID", "uniprot_ID"),
                 mutation_column="mut_info",
                 mutation_sep=",",
-                is_zero_based=True,
+                offset=0,
                 sequence_type="protein",
                 num_workers=final_config.process_workers,
             )
@@ -297,7 +294,7 @@ def create_human_domainome_sup4_cleaner(
                 mutation_column="mut_info",
                 sequence_column="sequence",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,  # After process_domain_positions, positions are 0-based
+                offset=0,  # After process_domain_positions, positions are 0-based
             )
         )
 

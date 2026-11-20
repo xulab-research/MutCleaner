@@ -216,7 +216,7 @@ def create_antitoxin_pard3_cleaner(
                 validate_mutations,
                 mutation_column=final_config.column_mapping.get("mutation", "mutation"),
                 mutation_sep=",",
-                is_zero_based=True,
+                offset=0,
                 exclude_patterns="WT",
                 num_workers=final_config.validate_mut_workers,
             )
@@ -241,7 +241,7 @@ def create_antitoxin_pard3_cleaner(
                 sequence_column="wt_seq",
                 name_column="name",
                 mutation_column=final_config.column_mapping.get("mutation", "mutation"),
-                is_zero_based=True,
+                offset=0,
                 sequence_type="protein",
                 num_workers=final_config.process_workers,
             )
@@ -251,7 +251,7 @@ def create_antitoxin_pard3_cleaner(
                 mutation_column=final_config.column_mapping.get("mutation", "mutation"),
                 sequence_column="wt_seq",
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 

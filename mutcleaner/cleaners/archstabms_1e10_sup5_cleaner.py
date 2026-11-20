@@ -208,6 +208,7 @@ def create_archstabms_1e10_sup5_cleaner(
             .delayed_then(
                 validate_mutations,
                 mutation_sep="_",
+                offset=1,
             )
             .delayed_then(
                 remap_mutation_positions_by_name,
@@ -229,6 +230,7 @@ def create_archstabms_1e10_sup5_cleaner(
                 apply_mutations_to_sequences,
                 mutation_column=final_config.column_mapping.get("id_ref", "id_ref"),
                 sequence_column="wt_sequence",
+                offset=0,
             )
             .delayed_then(
                 convert_to_mutation_dataset_format,
@@ -237,7 +239,7 @@ def create_archstabms_1e10_sup5_cleaner(
                 sequence_column=final_config.column_mapping.get("wt_sequence", "wt_sequence"),
                 mutated_sequence_column=final_config.column_mapping.get("mut_seq", "mut_seq"),
                 label_column=final_config.column_mapping.get("mean_kcal/mol", "mean_kcal/mol"),
-                is_zero_based=True,
+                offset=0,
             )
         )
 

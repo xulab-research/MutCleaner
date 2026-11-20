@@ -254,7 +254,7 @@ def create_human_domainome_sup2_cleaner(
                 validate_mutations,
                 mutation_column="mut_info",
                 format_mutations=False,
-                is_zero_based=True,
+                offset=0,
                 num_workers=final_config.validation_workers,
             )
             .delayed_then(
@@ -264,7 +264,7 @@ def create_human_domainome_sup2_cleaner(
                 sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_columns=final_config.label_columns,
                 handle_multiple_wt=final_config.handle_multiple_wt,
-                is_zero_based=True,
+                offset=0,
                 num_workers=final_config.infer_wt_workers,
             )
             .delayed_then(
@@ -273,7 +273,7 @@ def create_human_domainome_sup2_cleaner(
                 mutation_column="mut_info",
                 mutated_sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_column=final_config.primary_label_column,
-                is_zero_based=True,
+                offset=0,
             )
         )
 
