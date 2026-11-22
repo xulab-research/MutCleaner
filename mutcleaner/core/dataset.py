@@ -752,8 +752,18 @@ class MutationDataset:
         For each reference_id, creates:
 
         - {base_dir}/{reference_id}/data.csv: mutation data with columns [mutation_name, mutated_sequence, label]
+        - {base_dir}/{reference_id}/failed_data.csv: records whose mutated sequence could not be generated
         - {base_dir}/{reference_id}/wt.fasta: wild-type reference sequence
         - {base_dir}/{reference_id}/metadata.json: statistics and metadata for this reference
+
+        Coverage fields without a ``submitted_`` prefix (``covered_positions``,
+        ``uncovered_positions`` and ``coverage_percentage``) describe the rows
+        written to ``data.csv``. ``submitted_covered_positions`` and
+        ``submitted_coverage_percentage`` describe every mutation set offered
+        for the reference. ``num_successful_mutation_sets`` and
+        ``num_failed_mutation_sets`` match the rows in ``data.csv`` and
+        ``failed_data.csv`` respectively, while ``num_mutation_sets`` and
+        ``total_mutations`` count all submitted mutation sets and mutations.
 
         Parameters
         ----------
@@ -761,6 +771,7 @@ class MutationDataset:
             Base directory to create reference folders in
         """
         base_path = Path(base_dir)
+
         base_path.mkdir(parents=True, exist_ok=True)
 
         tqdm.write(f"Saving dataset by reference to: {base_path}")
@@ -779,7 +790,7 @@ class MutationDataset:
                 ref_data[ref_id] = {
                     "mutation_sets": [],
                     "total_mutations": 0,
-                    "covered_positions": set(),
+                    "submitted_positions": set(),
                     "mutation_types": set(),
                     "unique_labels": set(),
                 }
@@ -788,7 +799,7 @@ class MutationDataset:
 
             data["mutation_sets"].append((i, mutation_set))
             data["total_mutations"] += len(mutation_set)
-            data["covered_positions"].update(mutation_set.get_positions())
+            data["submitted_positions"].update(mutation_set.get_positions())
             data["mutation_types"].update(type(mutation) for mutation in mutation_set.mutations)
 
             label = self.mutation_set_labels.get(i)
@@ -839,20 +850,20 @@ class MutationDataset:
 
             # Validate that all positions are within the corresponding
             # residue or codon coordinate space.
-            all_positions = data["covered_positions"]
+            submitted_positions = data["submitted_positions"]
 
-            invalid_positions = sorted(position for position in all_positions if position < 0 or position >= position_space_length)
+            invalid_positions = sorted(position for position in submitted_positions if position < 0 or position >= position_space_length)
 
             if invalid_positions:
                 raise ValueError(f"Reference {ref_id!r} contains out-of-range " f"{position_unit} positions: " f"{invalid_positions[:10]}")
 
-            covered_positions = len(all_positions)
-            uncovered_positions = position_space_length - covered_positions
+            submitted_covered_positions = len(submitted_positions)
 
-            coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
+            submitted_coverage_percentage = submitted_covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             successful_rows = []
             failed_rows = []
+            successful_positions = set()
 
             # Apply each mutation set to the reference sequence.
             for set_index, mutation_set in data["mutation_sets"]:
@@ -864,6 +875,8 @@ class MutationDataset:
 
                 try:
                     mutated_sequence = ref_sequence.apply_mutation(mutation_set)
+
+                    successful_positions.update(mutation_set.get_positions())
 
                     successful_rows.append(
                         {
@@ -885,6 +898,12 @@ class MutationDataset:
                     )
 
                     tqdm.write(f"Warning: Could not apply mutation " f"{mutation_name!r} for reference {ref_id!r}: " f"{error_message}")
+
+            # Coverage of the rows actually written to data.csv.
+            covered_positions = len(successful_positions)
+            uncovered_positions = position_space_length - covered_positions
+
+            coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             # Save only successfully generated sequences to data.csv.
             data_columns = [
@@ -943,9 +962,14 @@ class MutationDataset:
                 "sequence_length": len(ref_sequence),
                 "position_unit": position_unit,
                 "num_mutation_sets": len(data["mutation_sets"]),
+                "num_successful_mutation_sets": len(successful_rows),
+                "num_failed_mutation_sets": len(failed_rows),
                 "total_mutations": data["total_mutations"],
                 "covered_positions": covered_positions,
+                "uncovered_positions": uncovered_positions,
                 "coverage_percentage": coverage_percentage,
+                "submitted_covered_positions": submitted_covered_positions,
+                "submitted_coverage_percentage": submitted_coverage_percentage,
                 "num_unique_labels": len(data["unique_labels"]),
                 "has_unlabeled": ("unlabeled" in data["unique_labels"]),
                 "dataset_name": self.name,
