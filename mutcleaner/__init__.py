@@ -82,7 +82,6 @@ __all__ = [
     "archstabms_1e10_sup4_cleaner",
     "archstabms_1e10_sup5_cleaner",
     "protein_human_myoglobin_cleaner",
-    "human_myoglobin_cleaner",
     "ctxm_cleaner",
     "trpb_cleaner",
     "antitoxin_pard3_cleaner",
