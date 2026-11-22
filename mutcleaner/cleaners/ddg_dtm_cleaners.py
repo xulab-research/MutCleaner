@@ -1,6 +1,7 @@
 # mutcleaner/cleaners/ddg_dtm_cleaners.py
 from __future__ import annotations
 
+import copy
 import pandas as pd
 from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
@@ -172,7 +173,7 @@ def create_ddg_dtm_cleaner(
     if config is None:
         final_config = DdgDtmCleanerConfig()
     elif isinstance(config, DdgDtmCleanerConfig):
-        final_config = config
+        final_config = copy.deepcopy(config)
     elif isinstance(config, dict):
         # Partial configuration - merge with defaults
         default_config = DdgDtmCleanerConfig()
