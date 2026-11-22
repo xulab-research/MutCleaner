@@ -258,6 +258,7 @@ class Pipeline:
                 self.logger.info(f"Step '{step_name}' produced {len(step.side_outputs)} side outputs")
 
         except Exception as e:
+            self.results.append(None)  # Keep results aligned with steps on failure
             self.logger.error(f"Step '{step_name}' failed: {str(e)}")
             raise RuntimeError(f"Pipeline failed at step '{step_name}': {str(e)}") from e
 
@@ -403,6 +404,14 @@ class Pipeline:
         -------
         Pipeline
             Self for method chaining
+
+        Notes
+        -----
+        A step is removed from the delayed queue when its execution starts, and the
+        failure is raised after it is recorded in `steps` with `success=False`. Steps
+        that were selected but never executed stay in the queue, so calling
+        `execute()` again resumes from the first unexecuted step. A failed step gets a
+        None placeholder in `results`, keeping `results` aligned with `steps`.
         """
         if not self.delayed_steps:
             self.logger.info("No delayed steps to execute")
@@ -415,21 +424,12 @@ class Pipeline:
         if steps is None:
             # Execute all delayed steps
             steps_to_execute = self.delayed_steps.copy()
-            self.delayed_steps = []
         elif isinstance(steps, int):
             # Execute first N steps
             steps_to_execute = self.delayed_steps[:steps]
-            self.delayed_steps = self.delayed_steps[steps:]
         elif isinstance(steps, list):
             # Execute specific steps by index
-            steps_to_execute = []
-            remaining_steps = []
-            for i, delayed_step in enumerate(self.delayed_steps):
-                if i in steps:
-                    steps_to_execute.append(delayed_step)
-                else:
-                    remaining_steps.append(delayed_step)
-            self.delayed_steps = remaining_steps
+            steps_to_execute = [delayed_step for i, delayed_step in enumerate(self.delayed_steps) if i in steps]
         else:
             raise ValueError("steps parameter must be None, int, or List[int]")
 
@@ -440,6 +440,9 @@ class Pipeline:
             # Convert delayed step to pipeline step and execute
             step = delayed_step.to_pipeline_step()
             self.steps.append(step)
+
+            # Consume the step from the delayed queue now, so unexecuted steps survive a failure
+            self.delayed_steps = [queued_step for queued_step in self.delayed_steps if queued_step is not delayed_step]
 
             self.logger.info(f"Executing delayed step: {step.name}")
 
@@ -466,6 +469,7 @@ class Pipeline:
                     self.logger.info(f"Delayed step '{step.name}' produced {len(step.side_outputs)} side outputs")
 
             except Exception as e:
+                self.results.append(None)  # Keep results aligned with steps on failure
                 self.logger.error(f"Delayed step '{step.name}' failed: {str(e)}")
                 raise RuntimeError(f"Pipeline failed at delayed step '{step.name}': {str(e)}") from e
 
@@ -592,7 +596,10 @@ class Pipeline:
         return self.artifacts.copy()
 
     def get_step_result(self, step_index: Union[int, str]) -> Any:
-        """Get result from a specific step by index or name"""
+        """Get result from a specific step by index or name
+
+        Results stay aligned with `steps`, so a step that failed returns None.
+        """
         if isinstance(step_index, int):
             if 0 <= step_index < len(self.results):
                 return self.results[step_index]
