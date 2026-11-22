@@ -1377,6 +1377,7 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
     else:
         raise ValueError(f"Unsupported sequence type: {sequence_type.lower()}. Must be 'protein', 'dna', or 'rna'")
 
+    reserved_names = set(dataset[name_column].dropna().astype(str))
     _process_protein_group = partial(
         infer_wt_sequence_grouped,
         name_column=name_column,
@@ -1387,6 +1388,7 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
         mutation_sep=mutation_sep,
         offset=offset,
         handle_multiple_wt=handle_multiple_wt,
+        reserved_names=reserved_names,
         sequence_class=SequenceClass,
         alphabet=alphabet,
         include_ambiguous=include_ambiguous,
@@ -1415,48 +1417,15 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
                     name_column: str(protein_name),
                     "error_message": f"Sequential processing error: {type(group_e).__name__}: {str(group_e)}",
                 }
-                results.append(([error_row], "failed"))
-
-    # Filter out None results and validate structure
-    valid_results = []
-    invalid_count = 0
-
-    for i, result in enumerate(results):
-        if result is None:
-            invalid_count += 1
-            tqdm.write(f"Warning: Result {i} is None, skipping")
-            continue
-
-        if not isinstance(result, tuple) or len(result) != 2:
-            invalid_count += 1
-            tqdm.write(f"Warning: Result {i} has invalid format, skipping: {result}")
-            continue
-
-        rows_list, category = result
-        if category not in ("success", "failed"):
-            invalid_count += 1
-            tqdm.write(f"Warning: Result {i} has invalid category '{category}', skipping")
-            continue
-
-        if not isinstance(rows_list, list):
-            invalid_count += 1
-            tqdm.write(f"Warning: Result {i} has invalid rows format, skipping")
-            continue
-
-        valid_results.append(result)
-
-    if invalid_count > 0:
-        tqdm.write(f"Warning: {invalid_count} invalid results were skipped")
+                results.append(([], [error_row]))
 
     # Collect all rows
     successful_rows = []
     failed_rows = []
 
-    for rows_list, category in valid_results:
-        if category == "success":
-            successful_rows.extend(rows_list)
-        else:
-            failed_rows.extend(rows_list)
+    for successful_group, failed_group in results:
+        successful_rows.extend(successful_group)
+        failed_rows.extend(failed_group)
 
     # Convert to DataFrame format
     successful_df = pd.DataFrame(successful_rows) if successful_rows else pd.DataFrame()

@@ -7,13 +7,13 @@ import pandas as pd
 from tqdm import tqdm
 
 from ..core.alphabet import BaseAlphabet
-from ..core.mutation import BaseMutation, MutationSet
+from ..core.mutation import AminoAcidMutation, BaseMutation, CodonMutation, MutationSet
 from ..core.sequence import ProteinSequence
 from ..core.types import SequenceType
 from .mutation_converter import invert_mutation_set
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Literal, Optional, Tuple, Type, Union
+    from typing import Any, Dict, List, Literal, Optional, Set, Tuple, Type, Union
 
     from pandas import Index
 
@@ -155,169 +155,166 @@ def apply_single_mutation(row_data: Tuple, dataset_columns: Index, sequence_colu
         return None, f"{type(e).__name__}: {str(e)}"
 
 
-def infer_wt_sequence_grouped(group_data: Tuple[Any, pd.DataFrame], name_column: str, mutation_column: str, sequence_column: str, label_columns: List[str], wt_label: float, mutation_sep: str, offset: int, handle_multiple_wt: Literal["error", "separate", "first"], sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]], *, alphabet: Optional[BaseAlphabet], include_ambiguous: bool, include_sec_pyl: bool, include_stop: bool, reject_redundant: bool) -> Tuple[List[Dict[str, Any]], str]:
-    """Infer wild-type sequences by reversing the substitutions in one group.
+def _build_wt_row(
+    measurement_row: Dict[str, Any],
+    wt_sequence: str,
+    mutation_column: str,
+    sequence_column: str,
+    label_columns: List[str],
+    wt_label: float,
+) -> Dict[str, Any]:
+    """Build one wild-type row from the first measurement of its reference group."""
+    wt_row = measurement_row.copy()
+    wt_row[mutation_column] = "WT"
+    wt_row[sequence_column] = wt_sequence
+    for label_col in label_columns:
+        if label_col in wt_row:
+            wt_row[label_col] = wt_label
+    return wt_row
 
-    Each row supplies a mutated sequence and its mutation annotation. If all
-    rows yield the same wild type, append one ``WT`` row to the original rows.
-    Each appended row copies the group's first row and replaces its mutation
-    annotation, sequence, and specified labels.
 
-    Parameters
-    ----------
-    group_data : tuple
-        Group key and a pandas DataFrame containing that group's variant rows.
-    name_column : str
-        Column containing the group identifier.
-    mutation_column : str
-        Column containing the substitutions from wild type to mutant.
-    sequence_column : str
-        Column containing the mutated sequence for each annotation.
-    label_columns : list of str
-        Label columns to set in appended wild-type rows, if present.
-    wt_label : float
-        Value assigned to those label columns.
-    mutation_sep : str
-        Delimiter between substitutions in a multi-site annotation.
-    offset : int
-        Annotated position of the first reference residue or codon. Subtract
-        this value from each annotated position to obtain its zero-based index.
-    handle_multiple_wt : {'error', 'separate', 'first'}
-        Policy when the group yields several distinct wild types. 'error'
-        returns one error row. 'separate' appends all candidates as ``WT``,
-        ``WT_variant1``, etc., and marks the group as failed. 'first' appends
-        one candidate as ``WT`` and marks the group as successful. Candidate
-        order is unspecified because distinct sequences are stored in a set.
-    sequence_class : type
-        Sequence class for the group (ProteinSequence, DNASequence, or RNASequence).
-    alphabet : BaseAlphabet or None
-        Alphabet used for the sequence and its annotation. An explicit alphabet
-        takes precedence over the three protein options below.
-    include_ambiguous : bool
-        Accept B, Z, J, and X when building the protein alphabet.
-    include_sec_pyl : bool
-        Accept selenocysteine (U) and pyrrolysine (O) when building the protein alphabet.
-    include_stop : bool
-        Accept the stop symbol (``*``) when building the protein alphabet.
-    reject_redundant : bool
-        Reject the group if an annotation contains an amino acid substitution
-        that leaves the residue unchanged.
+def _rewrite_mutation_annotation(
+    reference_sequence: str,
+    mutated_sequence: str,
+    mutation_type: Type[BaseMutation],
+    alphabet: BaseAlphabet,
+    mutation_sep: str,
+    offset: int,
+) -> str:
+    """Rewrite a mutated sequence as a mutation annotation relative to a reference sequence."""
+    if len(reference_sequence) != len(mutated_sequence):
+        raise ValueError(f"sequence length differs from the reference: {len(mutated_sequence)} != {len(reference_sequence)}")
 
-    Returns
-    -------
-    rows : list of dict
-        Original rows followed by any appended wild-type rows. If sequence
-        validation, mutation parsing, or reverse application fails for any row,
-        or the 'error' policy detects multiple wild types, return only the
-        group's first row with ``error_message``. For an empty group, the
-        error row contains the group identifier and ``error_message``.
-    status : {'success', 'failed'}
-        Outcome for the entire group.
+    if issubclass(mutation_type, AminoAcidMutation):
+        mutations = [AminoAcidMutation(wild, position, mutant, alphabet) for position, (wild, mutant) in enumerate(zip(reference_sequence, mutated_sequence)) if wild != mutant]
+        if not mutations:
+            raise ValueError("mutated sequence equals the reference sequence")
+        return mutation_sep.join(f"{mutation.wild_amino_acid}{mutation.position + offset}{mutation.mutant_amino_acid}" for mutation in mutations)
+
+    if issubclass(mutation_type, CodonMutation):
+        if len(reference_sequence) % 3 != 0:
+            raise ValueError(f"sequence length {len(reference_sequence)} is not a whole number of codons")
+        mutations = []
+        for position in range(len(reference_sequence) // 3):
+            wild_codon = reference_sequence[position * 3 : position * 3 + 3]
+            mutant_codon = mutated_sequence[position * 3 : position * 3 + 3]
+            if wild_codon != mutant_codon:
+                mutations.append(CodonMutation(wild_codon, position, mutant_codon, alphabet))
+        if not mutations:
+            raise ValueError("mutated sequence equals the reference sequence")
+        return mutation_sep.join(f"{mutation.wild_codon}{mutation.position + offset}{mutation.mutant_codon}" for mutation in mutations)
+
+    raise TypeError(f"unsupported mutation type: {mutation_type.__name__}")
+
+
+def infer_wt_sequence_grouped(
+    group_data: Tuple[Any, pd.DataFrame],
+    name_column: str,
+    mutation_column: str,
+    sequence_column: str,
+    label_columns: List[str],
+    wt_label: float,
+    mutation_sep: str,
+    offset: int,
+    handle_multiple_wt: Literal["error", "separate", "first"],
+    reserved_names: Set[str],
+    sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
+    *,
+    alphabet: Optional[BaseAlphabet],
+    include_ambiguous: bool,
+    include_sec_pyl: bool,
+    include_stop: bool,
+    reject_redundant: bool,
+) -> Tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
+    """Infer wild-type sequences by reversing each row's substitutions.
+
+    ``handle_multiple_wt`` decides what happens when a group yields several wild
+    types: ``error`` fails the group, ``first`` keeps every measurement by
+    rewriting annotations relative to the first inferred reference, and
+    ``separate`` splits the group per reference and names the additional
+    references ``{name}_variant{index}`` (skipping names in ``reserved_names``).
+
+    Returns the rows kept for the dataset (plus appended wild-type rows) and the
+    rows that could not be mapped to a reference, each carrying ``error_message``.
     """
     protein_name = group_data[0]
     group = group_data[1]
 
     try:
-        # Infer wild-type sequences
-        inferred_wt_seqs = set()
-        result_rows = []
-
-        # First, add all original rows to result
+        measurements: List[Tuple[Dict[str, Any], str, Type[BaseMutation], Any]] = []
         for _, row in group.iterrows():
-            result_rows.append(row.to_dict())
-
-        # Then, infer WT sequences
-        for _, row in group.iterrows():
-            mut_info = row[mutation_column]
-            mut_seq = str(row[sequence_column]).strip()
+            mutated_sequence = str(row[sequence_column]).strip()
             if sequence_class is ProteinSequence:
-                sequence = ProteinSequence(mut_seq, alphabet=alphabet, name=str(protein_name), include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
+                sequence = ProteinSequence(mutated_sequence, alphabet=alphabet, name=str(protein_name), include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
             else:
-                sequence = sequence_class(mut_seq, alphabet=alphabet, name=str(protein_name))
-            mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, offset=offset, alphabet=sequence.alphabet, reject_redundant=reject_redundant)
+                sequence = sequence_class(mutated_sequence, alphabet=alphabet, name=str(protein_name))
+            mutation_set = MutationSet.from_string(row[mutation_column], sep=mutation_sep, offset=offset, alphabet=sequence.alphabet, reject_redundant=reject_redundant)
+            wt_sequence = str(sequence.apply_mutation(invert_mutation_set(mutation_set)))
+            measurements.append((row.to_dict(), wt_sequence, mutation_set.mutation_type, sequence))
 
-            # Infer wild-type sequence by applying inverted mutations
-            inverted_mutation_set = invert_mutation_set(mutation_set)
-            wt_seq = sequence.apply_mutation(inverted_mutation_set)
-            inferred_wt_seqs.add(str(wt_seq))
+        reference_sequences = list(dict.fromkeys(wt_sequence for _, wt_sequence, _, _ in measurements))
 
-        # Handle wild-type sequences
-        if len(inferred_wt_seqs) == 1:
-            # Single wild-type sequence - add one WT row
-            wt_seq_str = inferred_wt_seqs.pop()
+        if len(reference_sequences) == 1:
+            success_rows = [measurement_row for measurement_row, _, _, _ in measurements]
+            success_rows.append(_build_wt_row(measurements[0][0], reference_sequences[0], mutation_column, sequence_column, label_columns, wt_label))
+            return success_rows, []
 
-            # Create WT row based on first row of the group
-            first_row = group.iloc[0].to_dict()
-            wt_row = first_row.copy()
+        if handle_multiple_wt == "first":
+            selected_reference = reference_sequences[0]
+            success_rows = []
+            failed_rows = []
+            for measurement_row, wt_sequence, mutation_type, sequence in measurements:
+                if wt_sequence == selected_reference:
+                    success_rows.append(measurement_row)
+                    continue
 
-            # Update WT-specific fields
-            wt_row[mutation_column] = "WT"
-            wt_row[sequence_column] = wt_seq_str
+                try:
+                    measurement_row[mutation_column] = _rewrite_mutation_annotation(selected_reference, str(sequence), mutation_type, sequence.alphabet, mutation_sep, offset)
+                except (TypeError, ValueError) as error:
+                    failed_row = measurement_row.copy()
+                    failed_row["error_message"] = f"Cannot rewrite the measurement as a mutation of the first reference selected by handle_multiple_wt='first' for {protein_name}: {type(error).__name__}: {error}"
+                    failed_rows.append(failed_row)
+                    continue
 
-            # Set labels to `wt_label` for WT
-            for label_col in label_columns:
-                if label_col in wt_row:
-                    wt_row[label_col] = wt_label
+                success_rows.append(measurement_row)
 
-            result_rows.append(wt_row)
-            return result_rows, "success"
+            success_rows.append(_build_wt_row(measurements[0][0], selected_reference, mutation_column, sequence_column, label_columns, wt_label))
+            return success_rows, failed_rows
 
-        elif len(inferred_wt_seqs) > 1:
-            # Multiple wild-type sequences
-            if handle_multiple_wt == "first":
-                # Take the first WT sequence
-                wt_seq_str = list(inferred_wt_seqs)[0]
+        if handle_multiple_wt == "separate":
+            success_rows = []
+            for index, reference_sequence in enumerate(reference_sequences):
+                reference_rows = []
+                for measurement_row, wt_sequence, _, _ in measurements:
+                    if wt_sequence == reference_sequence:
+                        reference_rows.append(measurement_row.copy())
 
-                first_row = group.iloc[0].to_dict()
-                wt_row = first_row.copy()
-                wt_row[mutation_column] = "WT"
-                wt_row[sequence_column] = wt_seq_str
+                if index == 0:
+                    reference_name = reference_rows[0][name_column]
+                else:
+                    variant_index = 1
+                    reference_name = f"{protein_name}_variant{variant_index}"
+                    while reference_name in reserved_names:
+                        variant_index += 1
+                        reference_name = f"{protein_name}_variant{variant_index}"
+                    reserved_names.add(reference_name)
 
-                for label_col in label_columns:
-                    if label_col in wt_row:
-                        wt_row[label_col] = wt_label
+                for reference_row in reference_rows:
+                    reference_row[name_column] = reference_name
+                wt_row = _build_wt_row(reference_rows[0], reference_sequence, mutation_column, sequence_column, label_columns, wt_label)
+                wt_row[name_column] = reference_name
+                success_rows.extend(reference_rows)
+                success_rows.append(wt_row)
+            return success_rows, []
 
-                result_rows.append(wt_row)
-                return result_rows, "success"
-
-            elif handle_multiple_wt == "separate":
-                # Add multiple WT rows
-                for i, wt_seq_str in enumerate(inferred_wt_seqs):
-                    first_row = group.iloc[0].to_dict()
-                    wt_row = first_row.copy()
-
-                    if i == 0:
-                        wt_row[mutation_column] = "WT"
-                    else:
-                        wt_row[mutation_column] = f"WT_variant{i}"
-
-                    wt_row[sequence_column] = wt_seq_str
-
-                    for label_col in label_columns:
-                        if label_col in wt_row:
-                            wt_row[label_col] = wt_label
-
-                    result_rows.append(wt_row)
-
-                return result_rows, "failed"
-
-            else:
-                # Add error information to the first row
-                error_row = group.iloc[0].to_dict()
-                error_row["error_message"] = f"Multiple wildtype sequences inferred for {protein_name}: {len(inferred_wt_seqs)}"
-                return [error_row], "failed"
-
-        else:
-            # No wild-type sequences inferred
-            error_row = group.iloc[0].to_dict()
-            error_row["error_message"] = f"No wildtype sequences could be inferred for {protein_name}"
-            return [error_row], "failed"
+        error_row = group.iloc[0].to_dict()
+        error_row["error_message"] = f"Multiple wildtype sequences inferred for {protein_name}: {len(reference_sequences)}"
+        return [], [error_row]
 
     except Exception as e:
-        # Save error information in first row
         error_row = group.iloc[0].to_dict() if len(group) > 0 else {name_column: str(protein_name)}
         error_row["error_message"] = f"{type(e).__name__}: {str(e)}"
-        return [error_row], "failed"
+        return [], [error_row]
 
 
 def infer_single_mutationset(row_data: Tuple, dataset_columns: Index, wt_sequence_column: str, mut_sequence_column: str, mutation_sep: str, sequence_class: Type[SequenceType], *, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> Tuple[Optional[str], Optional[str]]:
