@@ -1,4 +1,7 @@
 import mutcleaner
+import mutcleaner.utils
+
+from mutcleaner.utils import raw_data_downloader
 
 
 class TestPackageWildcardImport:
@@ -34,3 +37,26 @@ class TestPackageWildcardImport:
         assert Pipeline is mutcleaner.Pipeline
         assert protein_human_myoglobin_cleaner is mutcleaner.protein_human_myoglobin_cleaner
         assert codon_human_myoglobin_cleaner is mutcleaner.codon_human_myoglobin_cleaner
+
+
+class TestSubmoduleWildcardImport:
+    """Test submodule wildcard imports against their __all__ lists"""
+
+    def test_raw_data_downloader_wildcard_import(self):
+        """Test `from mutcleaner.utils.raw_data_downloader import *` imports exactly __all__"""
+        namespace = {}
+        exec("from mutcleaner.utils.raw_data_downloader import *", namespace)
+        imported_names = {name for name in namespace if name != "__builtins__"}
+        assert imported_names == set(raw_data_downloader.__all__)
+
+    def test_raw_data_downloader_all_names_resolve(self):
+        """Test every downloader __all__ entry resolves on the module"""
+        missing_names = [name for name in raw_data_downloader.__all__ if not hasattr(raw_data_downloader, name)]
+        assert missing_names == []
+
+    def test_utils_wildcard_import(self):
+        """Test `from mutcleaner.utils import *` imports exactly its __all__"""
+        namespace = {}
+        exec("from mutcleaner.utils import *", namespace)
+        imported_names = {name for name in namespace if name != "__builtins__"}
+        assert imported_names == set(mutcleaner.utils.__all__)
