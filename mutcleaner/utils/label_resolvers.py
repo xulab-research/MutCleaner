@@ -116,6 +116,34 @@ def first_resolver(group: pd.DataFrame, label_cols: List[str]) -> pd.Series:
     return group.iloc[0][label_cols]
 
 
+def _nearest_position(group: pd.DataFrame, crit_pairs: List[Tuple[str, float]], weight_map: Dict[str, float]) -> int:
+    """
+    Return the positional index of the row minimizing the criteria distance.
+
+    Selection works on row positions, so duplicated DataFrame index labels do
+    not affect the result. With no criteria, the first row is selected.
+    """
+    if not crit_pairs:
+        return 0
+
+    for col, _ in crit_pairs:
+        if col not in group.columns:
+            raise KeyError(f"nearest_by column '{col}' not found in group")
+        if not pd.api.types.is_numeric_dtype(group[col]):
+            raise ValueError(f"nearest_by column '{col}' must be numeric")
+
+    distance_columns: List[np.ndarray] = []
+    for col, target in crit_pairs:
+        weight = float(weight_map.get(col, 1.0))
+        values = group[col].to_numpy(dtype=float, na_value=np.nan)
+        distances = np.abs(values - float(target)) * weight
+        distances[pd.isna(values)] = np.inf
+        distance_columns.append(distances)
+
+    order = np.lexsort(tuple(reversed(distance_columns)))
+    return int(order[0])
+
+
 def nearest_resolver_factory(
     criteria: Mapping[str, float] | Sequence[Tuple[str, float]],
     weights: Mapping[str, float] | Sequence[Tuple[str, float]] | None = None,
@@ -169,28 +197,13 @@ def nearest_resolver_factory(
     if weights is not None:
         weight_map = dict(weights.items()) if isinstance(weights, Mapping) else dict(weights)
 
+    def select_position(group: pd.DataFrame) -> int:
+        return _nearest_position(group, crit_pairs, weight_map)
+
     def _resolver(group: pd.DataFrame, label_cols: List[str]) -> pd.Series:
-        # validate columns & numeric types
-        for col, _ in crit_pairs:
-            if col not in group.columns:
-                raise KeyError(f"nearest_by column '{col}' not found in group")
-            if not pd.api.types.is_numeric_dtype(group[col]):
-                raise ValueError(f"nearest_by column '{col}' must be numeric")
+        return cast(pd.Series, group.iloc[select_position(group)].loc[list(label_cols)])
 
-        # build a distance tuple for each row
-        def dist_tuple(idx) -> Tuple[float, ...]:
-            row = group.loc[idx]
-            parts: List[float] = []
-            for col, target in crit_pairs:
-                w = float(weight_map.get(col, 1.0))
-                val = row[col]
-                parts.append(np.inf if pd.isna(val) else abs(float(val) - float(target)) * w)
-            return tuple(parts)
-
-        distances = group.index.to_series().apply(dist_tuple)
-        best_idx = distances.idxmin()
-        return cast(pd.Series, group.loc[best_idx].loc[list(label_cols)])
-
+    setattr(_resolver, "select_position", select_position)
     return _resolver
 
 

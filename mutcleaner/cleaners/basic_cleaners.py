@@ -1612,6 +1612,13 @@ def aggregate_labels_by_name(
 
     # Make resolver (string -> callable; pass nearest params through)
     resolver = make_resolver(strategy, nearest_by=nearest_by, nearest_weights=nearest_weights)
+    select_position = getattr(resolver, "select_position", None)
+    keep_cols = list(dict.fromkeys(name_cols + [c for c in dataset.columns if c not in set(label_cols)]))
+
+    if remove_origin_columns and select_position is not None:
+        group_positions = sorted(dataset.groupby(name_cols, dropna=False, sort=False).indices.values(), key=lambda positions: positions[0])
+        selected_positions = [positions[select_position(dataset.iloc[positions])] for positions in group_positions]
+        return dataset.iloc[selected_positions].reset_index(drop=True)[keep_cols + label_cols]
 
     # Compute per-group resolved labels
     g = dataset.groupby(name_cols, dropna=False)
@@ -1624,8 +1631,6 @@ def aggregate_labels_by_name(
     # Merge to desired shape
     if remove_origin_columns:
         reps = dataset.drop_duplicates(subset=name_cols, keep="first")
-        # Keep name cols + any non-label columns (to preserve metadata) from reps
-        keep_cols = list(dict.fromkeys(name_cols + [c for c in dataset.columns if c not in set(label_cols)]))
         reps = reps[keep_cols]
         out = pd.merge(
             reps,
