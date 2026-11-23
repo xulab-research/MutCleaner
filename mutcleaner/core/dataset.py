@@ -987,18 +987,21 @@ class MutationDataset:
         base_path = Path(filepath)
 
         if save_type == "dataframe":
+            if base_path.suffix == ".csv":
+                base_path = base_path.with_suffix("")
+
             # Save mutations as CSV
             df = self.to_dataframe()
-            csv_path = base_path.with_suffix(".csv")
+            csv_path = base_path.parent / f"{base_path.name}.csv"
             df.to_csv(csv_path, index=False)
 
             # Save reference sequences as pickle
-            refs_path = base_path.with_suffix("").with_name(f"{base_path.name}_refs.pkl")
+            refs_path = base_path.parent / f"{base_path.name}_refs.pkl"
             with open(refs_path, "wb") as f:
                 pickle.dump(self.reference_sequences, f)
 
             # Save dataset metadata as JSON
-            meta_path = base_path.with_suffix("").with_name(f"{base_path.name}_meta.json")
+            meta_path = base_path.parent / f"{base_path.name}_meta.json"
             dataset_meta = {
                 "name": self.name,
                 "metadata": self.metadata,
@@ -1251,16 +1254,15 @@ class MutationDataset:
             else:
                 # Try dataframe format first
                 load_type = "dataframe"
-                base_path = base_path.with_suffix("")  # Remove any extension
 
         if load_type == "dataframe":
             # Remove extension to get base path
             if base_path.suffix == ".csv":
                 base_path = base_path.with_suffix("")
 
-            csv_path = base_path.with_suffix(".csv")
-            refs_path = base_path.with_suffix("").with_name(f"{base_path.name}_refs.pkl")
-            meta_path = base_path.with_suffix("").with_name(f"{base_path.name}_meta.json")
+            csv_path = base_path.parent / f"{base_path.name}.csv"
+            refs_path = base_path.parent / f"{base_path.name}_refs.pkl"
+            meta_path = base_path.parent / f"{base_path.name}_meta.json"
 
             # Check if files exist
             if not csv_path.exists():
