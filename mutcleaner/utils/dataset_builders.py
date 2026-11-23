@@ -90,11 +90,7 @@ def convert_format_1(
     # Process mutations (now supporting multi-mutations)
     output_rows = []
     total_rows = len(input_df)
-    for idx, row in tqdm(enumerate(input_df.itertuples()), total=total_rows):
-        mut_info = getattr(row, mutation_column)
-        name = getattr(row, name_column)
-        score = getattr(row, score_column)
-
+    for idx, (mut_info, name, score) in tqdm(enumerate(zip(input_df[mutation_column], input_df[name_column], input_df[score_column])), total=total_rows):
         # Skip wild-type if it somehow made it through filtering
         if mut_info == "WT":
             continue
@@ -157,11 +153,7 @@ def convert_format_2(
     # Process mutations (now supporting multi-mutations)
     output_rows = []
     total_rows = len(input_df)
-    for idx, row in tqdm(enumerate(input_df.itertuples()), total=total_rows):
-        mut_info = getattr(row, mutation_column)
-        name = getattr(row, name_column)
-        score = getattr(row, score_column)
-
+    for idx, (mut_info, name, score) in tqdm(enumerate(zip(input_df[mutation_column], input_df[name_column], input_df[score_column])), total=total_rows):
         # Parse mutations (single or multiple)
         try:
             mutations = _parse_mutations_string(
