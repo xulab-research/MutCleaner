@@ -1271,11 +1271,11 @@ class MutationDataset:
                 raise FileNotFoundError(f"References file not found: {refs_path}")
 
             # Load mutations DataFrame
-            df = pd.read_csv(csv_path)
+            df = pd.read_csv(csv_path, dtype={"reference_id": str})
 
             # Load reference sequences
             with open(refs_path, "rb") as f:
-                reference_sequences = pickle.load(f)
+                reference_sequences = {str(reference_id): sequence for reference_id, sequence in pickle.load(f).items()}
 
             # Load metadata if available
             dataset_name = None
