@@ -1032,13 +1032,7 @@ class MutationDataset:
 
     # ====== load ======
     @classmethod
-    def load_by_reference(
-        cls,
-        base_dir: Union[str, Path],
-        dataset_name: Optional[str] = None,
-        *,
-        offset: int,
-    ) -> "MutationDataset":
+    def load_by_reference(cls, base_dir: Union[str, Path], dataset_name: Optional[str] = None, *, offset: int, sequence_type: Literal["protein", "dna", "rna"] = "protein", include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> "MutationDataset":
         """
         Load a dataset from mutcleaner reference-based format.
 
@@ -1064,6 +1058,15 @@ class MutationDataset:
         offset : int
             Input number of the first reference residue or codon in the mutation
             annotations. Use 0 for directories written by ``save_by_reference``.
+        sequence_type : {"protein", "dna", "rna"}, default="protein"
+            Sequence type shared by all reference directories. If a directory
+            declares a different type in its metadata, loading raises ValueError.
+        include_ambiguous : bool, default=False
+            Accept B, Z, J, and X in protein sequences and mutations.
+        include_sec_pyl : bool, default=False
+            Accept U and O in protein sequences and mutations.
+        include_stop : bool, default=False
+            Accept the stop symbol (*) in protein sequences and mutations.
 
         Returns
         -------
@@ -1082,6 +1085,22 @@ class MutationDataset:
         ref_dirs = [d for d in base_path.iterdir() if d.is_dir()]
         if not ref_dirs:
             raise ValueError(f"No reference directories found in {base_path}")
+
+        sequence_type = sequence_type.lower()
+        if sequence_type == "protein":
+            sequence_class = ProteinSequence
+            mutation_type = AminoAcidMutation
+            alphabet = ProteinAlphabet(include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
+        elif sequence_type == "dna":
+            sequence_class = DNASequence
+            mutation_type = CodonMutation
+            alphabet = DNAAlphabet()
+        elif sequence_type == "rna":
+            sequence_class = RNASequence
+            mutation_type = CodonMutation
+            alphabet = RNAAlphabet()
+        else:
+            raise ValueError(f"Unsupported sequence type: {sequence_type!r}. Must be 'protein', 'dna', or 'rna'")
 
         # Create new dataset
         dataset = cls(name=dataset_name)
@@ -1106,43 +1125,29 @@ class MutationDataset:
                 skipped_dirs.append(f"{ref_dir.name} (missing: {', '.join(missing_files)})")
                 continue
 
-            # Load metadata to get original reference_id and sequence_type
+            # Restore the original reference ID and check the declared sequence type.
             original_ref_id = ref_dir.name  # Default to directory name
-            sequence_type = ProteinSequence  # Default sequence type
 
             if metadata_path.exists():
                 try:
                     with open(metadata_path, "r") as f:
                         metadata = json.load(f)
                     original_ref_id = metadata.get("reference_id", ref_dir.name)
-                    sequence_type_name = metadata.get("sequence_type", "ProteinSequence")
-                    sequence_type = SEQUENCE_TYPE_MAP.get(sequence_type_name, ProteinSequence)
+                    stored_type = metadata.get("sequence_type")
                 except Exception as e:
                     print(f"Warning: Could not load metadata for {ref_dir.name}: {e}")
+                else:
+                    if stored_type is not None and SEQUENCE_TYPE_MAP.get(stored_type) is not sequence_class:
+                        raise ValueError(f"Reference directory {ref_dir.name!r} declares sequence type {stored_type!r}, but {sequence_type!r} was requested")
 
             try:
                 # Load reference sequence from FASTA
-                sequences = load_sequences_from_fasta(fasta_path, sequence_type, header_func=lambda x: (x, ""))
+                sequences = load_sequences_from_fasta(fasta_path, sequence_class, alphabet=alphabet, header_func=lambda x: (x, ""))
                 if not sequences:
                     skipped_dirs.append(f"{ref_dir.name} (empty FASTA)")
                     continue
 
                 ref_sequence = list(sequences.values())[0]  # Get first sequence
-                if isinstance(ref_sequence, ProteinSequence):
-                    mutation_type = AminoAcidMutation
-                    alphabet = ProteinAlphabet(include_stop=True)
-
-                elif isinstance(ref_sequence, DNASequence):
-                    mutation_type = CodonMutation
-                    alphabet = DNAAlphabet()
-
-                elif isinstance(ref_sequence, RNASequence):
-                    mutation_type = CodonMutation
-                    alphabet = RNAAlphabet()
-
-                else:
-                    raise TypeError(f"Unsupported reference sequence type: " f"{type(ref_sequence).__name__}")
-
                 dataset.add_reference_sequence(original_ref_id, ref_sequence)
 
                 # Load mutation data
@@ -1164,13 +1169,7 @@ class MutationDataset:
 
                     # Parse mutation from mutation_name
                     try:
-                        mutation_set = MutationSet.from_string(
-                            mutation_name,
-                            sep=",",
-                            offset=offset,
-                            mutation_type=mutation_type,
-                            alphabet=alphabet,
-                        )
+                        mutation_set = MutationSet.from_string(mutation_name, sep=",", offset=offset, mutation_type=mutation_type, alphabet=alphabet)
                         dataset.add_mutation_set(mutation_set, original_ref_id, label)
                         mutation_sets_added += 1
                     except Exception:
@@ -1205,7 +1204,7 @@ class MutationDataset:
         return dataset
 
     @classmethod
-    def load(cls, filepath: str, load_type: Optional[str] = None) -> "MutationDataset":
+    def load(cls, filepath: str, load_type: Optional[str] = None, *, sequence_type: Literal["protein", "dna", "rna"] = "protein", include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> "MutationDataset":
         """
         Load a dataset from files.
 
@@ -1216,6 +1215,15 @@ class MutationDataset:
         load_type : Optional[str], default=None
             Type of load format ("mutcleaner", "dataframe" or "pickle").
             If None, auto-detect from file extension.
+        sequence_type : {"protein", "dna", "rna"}, default="protein"
+            Reference sequence type for the mutcleaner format. The dataframe
+            and pickle formats restore sequence types from their saved objects.
+        include_ambiguous : bool, default=False
+            Accept B, Z, J, and X when loading mutcleaner protein directories.
+        include_sec_pyl : bool, default=False
+            Accept U and O when loading mutcleaner protein directories.
+        include_stop : bool, default=False
+            Accept the stop symbol (*) when loading mutcleaner protein directories.
 
         Returns
         -------
@@ -1227,8 +1235,8 @@ class MutationDataset:
         >>> dataset = MutationDataset.load("my_study.csv")
         >>> dataset = MutationDataset.load("my_study.pkl")
 
-        >>> # Explicit type
-        >>> dataset = MutationDataset.load("my_study", "dataframe")
+        >>> # Load a protein directory containing selenocysteine or pyrrolysine
+        >>> dataset = MutationDataset.load("my_study", "mutcleaner", sequence_type="protein", include_sec_pyl=True)
         """
         base_path = Path(filepath)
 
@@ -1300,7 +1308,7 @@ class MutationDataset:
             return dataset
 
         elif load_type == "mutcleaner":
-            return cls.load_by_reference(base_path, offset=0)
+            return cls.load_by_reference(base_path, offset=0, sequence_type=sequence_type, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
 
         else:
             raise ValueError(f"Unsupported load_type: {load_type}. Use 'dataframe', 'pickle' or 'mutcleaner'")
