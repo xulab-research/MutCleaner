@@ -958,7 +958,7 @@ class MutationDataset:
     def save(
         self,
         filepath: str,
-        save_type: Optional[Literal["mutcleaner", " ", "dataframe"]] = "mutcleaner",
+        save_type: Optional[Literal["mutcleaner", "pickle", "dataframe"]] = "mutcleaner",
     ):
         """
         Save the dataset to files.
