@@ -78,7 +78,7 @@ def convert_format_1(
     for _, row in wt_rows.iterrows():
         name = row[name_column]
         sequence = row[mutated_sequence_column]
-        reference_sequences[name] = sequence_class(sequence)
+        reference_sequences[name] = sequence_class(sequence, alphabet=alphabet)
 
     # Filter out wild-type entries if requested
     if not include_wild_type:
@@ -152,7 +152,7 @@ def convert_format_2(
         sequences = group[sequence_column].unique()
         if len(sequences) > 1:
             raise ValueError(f"Multiple different sequences found for protein '{name}': {sequences}")
-        reference_sequences[name] = sequence_class(sequences[0])
+        reference_sequences[name] = sequence_class(sequences[0], alphabet=alphabet)
 
     # Process mutations (now supporting multi-mutations)
     output_rows = []

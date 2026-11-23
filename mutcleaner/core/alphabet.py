@@ -5,14 +5,15 @@ from abc import ABC
 from typing import TYPE_CHECKING
 
 from .constants import (
-    STANDARD_DNA_BASES,
-    AMBIGUOUS_DNA_BASES,
-    STANDARD_RNA_BASES,
-    AMBIGUOUS_RNA_BASES,
-    STANDARD_AMINO_ACIDS,
-    AMBIGUOUS_AMINO_ACIDS,
     AA1_TO_3,
     AA3_TO_1,
+    AMBIGUOUS_AMINO_ACIDS,
+    AMBIGUOUS_DNA_BASES,
+    AMBIGUOUS_RNA_BASES,
+    SEC_PYL_AMINO_ACIDS,
+    STANDARD_AMINO_ACIDS,
+    STANDARD_DNA_BASES,
+    STANDARD_RNA_BASES
 )
 
 if TYPE_CHECKING:
@@ -59,7 +60,16 @@ class BaseAlphabet(ABC):
 
 
 class DNAAlphabet(BaseAlphabet):
-    """DNA alphabet (A, T, C, G)"""
+    """By default, the DNA alphabet accepts the four standard bases A, C, G, and T.
+
+    The alphabet can also include IUPAC ambiguity codes for positions where
+    more than one base is possible.
+
+    Parameters
+    ----------
+    include_ambiguous : bool, default=False
+        Also accept the IUPAC ambiguity codes R, Y, S, W, K, M, B, D, H, V, and N.
+    """
 
     def __init__(self, include_ambiguous: bool = False):
         standard = STANDARD_DNA_BASES
@@ -75,7 +85,16 @@ class DNAAlphabet(BaseAlphabet):
 
 
 class RNAAlphabet(BaseAlphabet):
-    """RNA alphabet (A, U, C, G)"""
+    """By default, the RNA alphabet accepts the four standard bases A, C, G, and U.
+
+    The alphabet can also include IUPAC ambiguity codes for positions where
+    more than one base is possible.
+
+    Parameters
+    ----------
+    include_ambiguous : bool, default=False
+        Also accept the IUPAC ambiguity codes R, Y, S, W, K, M, B, D, H, V, and N.
+    """
 
     def __init__(self, include_ambiguous: bool = False):
         standard = STANDARD_RNA_BASES
@@ -90,24 +109,37 @@ class RNAAlphabet(BaseAlphabet):
 
 
 class ProteinAlphabet(BaseAlphabet):
-    """Protein alphabet (20 standard amino acids + stop codon)"""
+    """By default, the protein alphabet accepts the 20 standard amino acids and the stop symbol (``*``).
 
-    def __init__(self, include_stop: bool = True, include_ambiguous: bool = False):
-        # 20 standard amino acids
-        standard = STANDARD_AMINO_ACIDS
+    The alphabet can also include selenocysteine and pyrrolysine, ambiguous
+    residue symbols, or both.
 
-        letters = standard.copy()
+    Parameters
+    ----------
+    include_stop : bool, default=True
+        Accept the stop symbol (``*``).
+    include_ambiguous : bool, default=False
+        Accept the ambiguous residue symbols B, Z, J, and X.
+    include_sec_pyl : bool, default=False
+        Accept selenocysteine (U) and pyrrolysine (O).
+    """
+
+    def __init__(self, include_stop: bool = True, include_ambiguous: bool = False, include_sec_pyl: bool = False):
+        letters = STANDARD_AMINO_ACIDS.copy()
 
         if include_stop:
             letters.add("*")
 
         if include_ambiguous:
-            # Ambiguous amino acids
             letters.update(AMBIGUOUS_AMINO_ACIDS)
+
+        if include_sec_pyl:
+            letters.update(SEC_PYL_AMINO_ACIDS)
 
         super().__init__(letters, "Protein")
         self.include_stop = include_stop
         self.include_ambiguous = include_ambiguous
+        self.include_sec_pyl = include_sec_pyl
 
     def get_three_letter_code(self, one_letter: str, strict: bool = True) -> str:
         """Convert one-letter to three-letter amino acid code"""

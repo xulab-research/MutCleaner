@@ -33,7 +33,9 @@ AMBIGUOUS_RNA_BASES : set of str
 STANDARD_AMINO_ACIDS : set of str
     20 standard amino-acid one-letter codes.
 AMBIGUOUS_AMINO_ACIDS : set of str
-    Ambiguous/non-standard amino-acid symbols (e.g. ``'B','Z','X','J','U','O'``).
+    Symbols for Asp or Asn (B), Glu or Gln (Z), Leu or Ile (J), and an unknown residue (X).
+SEC_PYL_AMINO_ACIDS : set of str
+    One-letter codes for selenocysteine (U) and pyrrolysine (O).
 
 DNA_BASE_COMPLEMENTS : dict[str, str]
     DNA Watson-Crick complements.
@@ -66,7 +68,8 @@ STANDARD_AMINO_ACIDS = {
     "A", "C", "D", "E", "F", "G", "H", "I", "K", "L", 
     "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y"
 }
-AMBIGUOUS_AMINO_ACIDS = {"B", "Z", "X", "J", "U", "O"}
+AMBIGUOUS_AMINO_ACIDS = {"B", "Z", "J", "X"}
+SEC_PYL_AMINO_ACIDS = {"U", "O"}
 
 # ==== Base Conversion ====
 DNA_BASE_COMPLEMENTS = {"A": "T", "T": "A", "C": "G", "G": "C", "N": "N"}

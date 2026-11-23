@@ -286,20 +286,34 @@ class BaseSequence(ABC):
 
 
 class ProteinSequence(BaseSequence):
-    """Protein sequence with amino acid validation"""
+    """Protein sequence validated against an amino acid alphabet.
 
-    def __init__(
-        self,
-        sequence: str,
-        alphabet: Optional[ProteinAlphabet] = None,
-        name: Optional[str] = None,
-        metadata: Optional[Dict] = None,
-    ):
+    Parameters
+    ----------
+    sequence : str
+        Protein sequence in one-letter notation.
+    alphabet : ProteinAlphabet, optional
+        Explicit alphabet that takes precedence over the three inclusion options.
+    name : str, optional
+        Sequence name.
+    metadata : dict, optional
+        Metadata associated with the sequence.
+    include_ambiguous : bool, default=False
+        Accept the ambiguous residue symbols B, Z, J, and X.
+    include_sec_pyl : bool, default=False
+        Accept selenocysteine (U) and pyrrolysine (O).
+    include_stop : bool, default=False
+        Accept the stop symbol (``*``).
+    """
+
+    def __init__(self, sequence: str, alphabet: Optional[ProteinAlphabet] = None, name: Optional[str] = None, metadata: Optional[Dict] = None, *, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False):
+        if alphabet is None and (include_ambiguous or include_sec_pyl or include_stop):
+            alphabet = ProteinAlphabet(include_stop=include_stop, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl)
         super().__init__(sequence, alphabet, name, metadata)
 
     @classmethod
     def default_alphabet(cls) -> Optional[BaseAlphabet]:
-        return ProteinAlphabet(include_stop=True)
+        return ProteinAlphabet(include_stop=False)
 
     def get_residue(self, position: int) -> str:
         """Get amino acid at specific position (0-indexed)"""
@@ -400,11 +414,7 @@ class RNASequence(BaseSequence):
             start=start,
             end=end,
         )
-        return ProteinSequence(
-            sequence=aa_seq,
-            name=f"{self.name}_translation" if self.name else None,
-            metadata=self.metadata,
-        )
+        return ProteinSequence(sequence=aa_seq, name=f"{self.name}_translation" if self.name else None, metadata=self.metadata, include_stop=True)
 
 
 class DNASequence(BaseSequence):
@@ -477,11 +487,7 @@ class DNASequence(BaseSequence):
             start=start,
             end=end,
         )
-        return ProteinSequence(
-            sequence=aa_seq,
-            name=f"{self.name}_translation" if self.name else None,
-            metadata=self.metadata,
-        )
+        return ProteinSequence(sequence=aa_seq, name=f"{self.name}_translation" if self.name else None, metadata=self.metadata, include_stop=True)
 
     def transcribe(self) -> "RNASequence":
         """Transcribe DNA sequence into RNA sequence"""

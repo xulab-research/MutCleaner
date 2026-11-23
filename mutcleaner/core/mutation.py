@@ -150,12 +150,7 @@ class AminoAcidMutation(BaseMutation):
             return "missense"
 
     @classmethod
-    def from_string(
-        cls,
-        mutation_str: str,
-        offset: int,
-        alphabet: Optional[ProteinAlphabet] = None,
-    ) -> "AminoAcidMutation":
+    def from_string(cls, mutation_str: str, offset: int, alphabet: Optional[ProteinAlphabet] = None, *, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = True) -> "AminoAcidMutation":
         """Parse an amino acid substitution.
 
         Parameters
@@ -166,16 +161,23 @@ class AminoAcidMutation(BaseMutation):
             Input number of the first reference residue. Subtracting it from
             the annotated position gives the zero-based residue index.
         alphabet : ProteinAlphabet, optional
-            Alphabet used to interpret the amino acid symbols.
+            Alphabet used to interpret the amino acid symbols. If supplied, it
+            takes precedence over the alphabet options below.
+        include_ambiguous : bool, default=False
+            Include the ambiguous residue symbols B, Z, J, and X when creating the alphabet.
+        include_sec_pyl : bool, default=False
+            Include selenocysteine (U) and pyrrolysine (O) when creating the alphabet.
+        include_stop : bool, default=True
+            Accept the stop symbol (``*``) on either side when creating the alphabet.
         """
         mutation_str = mutation_str.strip()
+        alphabet = alphabet or ProteinAlphabet(include_stop=include_stop, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl)
 
         # Handle three-letter codes first
         three_letter_pattern = r"^([A-Za-z]{3})(\d+)([A-Za-z]{3})$"
         match = re.match(three_letter_pattern, mutation_str)
 
         if match:
-            alphabet = alphabet or ProteinAlphabet(include_stop=True)
             wild_three, position, mutant_three = match.groups()
 
             try:
@@ -482,19 +484,7 @@ class MutationSet(Generic[MutationType]):
         return sorted(self.mutations, key=lambda m: m.position)
 
     @classmethod
-    def from_string(
-        cls,
-        string: str,
-        sep: Optional[str] = None,
-        reject_redundant: bool = True,
-        reject_nonsense: bool = True,
-        mutation_type: Optional[Type[MutationType]] = None,
-        alphabet: Optional[BaseAlphabet] = None,
-        name: Optional[str] = None,
-        metadata: Optional[Dict[str, Any]] = None,
-        *,
-        offset: int,
-    ) -> "MutationSet":
+    def from_string(cls, string: str, sep: Optional[str] = None, reject_redundant: bool = True, mutation_type: Optional[Type[MutationType]] = None, alphabet: Optional[BaseAlphabet] = None, name: Optional[str] = None, metadata: Optional[Dict[str, Any]] = None, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> "MutationSet":
         """
         Create a mutation set from a string
 
@@ -506,12 +496,11 @@ class MutationSet(Generic[MutationType]):
             Separator to use. If None, will try to guess
         reject_redundant : bool, default=True
             Whether to reject synonymous/no-op mutations
-        reject_nonsense : bool, default=True
-            Whether to reject nonsense mutations.
         mutation_type : Type[MutationType], default=None
             The type of mutations to create. If None, will infer from first mutation
         alphabet : Optional[BaseAlphabet], default=None
-            Alphabet to use for mutation parsing (if applicable)
+            Alphabet used for parsing. If supplied, it takes precedence over
+            the amino acid options below.
         name : str, default=None
             Optional name for the mutation set
         metadata : Optional[Dict[str, Any]], default=None
@@ -519,6 +508,12 @@ class MutationSet(Generic[MutationType]):
         offset : int
             Input number of the first reference residue or codon. This value
             is subtracted from every annotated position.
+        include_ambiguous : bool, default=False
+            Accept B, Z, J, and X when parsing amino acid substitutions.
+        include_sec_pyl : bool, default=False
+            Accept selenocysteine (U) and pyrrolysine (O) when parsing amino acid substitutions.
+        include_stop : bool, default=False
+            Accept the stop symbol (``*``) on either side of an amino acid substitution.
 
         Returns
         -------
@@ -563,14 +558,12 @@ class MutationSet(Generic[MutationType]):
             try:
                 if mutation_type is None:
                     # Try to infer mutation type from the first mutation string
-                    mutation = cls._infer_and_create_mutation(mutation_str, offset=offset, alphabet=alphabet)
+                    mutation = cls._infer_and_create_mutation(mutation_str, offset=offset, alphabet=alphabet, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
                     mutation_type = type(mutation)
+                elif hasattr(mutation_type, "from_string"):
+                    mutation = cls._create_mutation(mutation_str, mutation_type, offset=offset, alphabet=alphabet, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
                 else:
-                    # Use specified mutation type
-                    if hasattr(mutation_type, "from_string"):
-                        mutation = mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet)
-                    else:
-                        raise NotImplementedError(f"Mutation type {mutation_type.__name__} does not have from_string method")
+                    raise NotImplementedError(f"Mutation type {mutation_type.__name__} does not have from_string method")
 
                 mutations.append(mutation)
 
@@ -591,10 +584,7 @@ class MutationSet(Generic[MutationType]):
             redundant = [str(m) for m in mutations if hasattr(m, "is_synonymous") and callable(getattr(m, "is_synonymous")) and m.is_synonymous()]
             if redundant:
                 raise ValueError(f"Redundant/no-op mutations detected:{', '.join(redundant)}")
-        if reject_nonsense:
-            nonsense = [str(m) for m in mutations if hasattr(m, "is_nonsense") and callable(getattr(m, "is_nonsense")) and m.is_nonsense()]
-            if nonsense:
-                raise ValueError(f"Nonsense/stop-gain mutations detected: {', '.join(nonsense)}")
+
         # Return appropriate mutation set type based on detected mutation type
         if mutation_type == AminoAcidMutation:
             return AminoAcidMutationSet(
@@ -618,12 +608,7 @@ class MutationSet(Generic[MutationType]):
             )
 
     @classmethod
-    def _infer_and_create_mutation(
-        cls,
-        mutation_str: str,
-        offset: int,
-        alphabet: Optional[BaseAlphabet] = None,
-    ) -> MutationType:
+    def _infer_and_create_mutation(cls, mutation_str: str, offset: int, alphabet: Optional[BaseAlphabet] = None, *, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = True) -> MutationType:
         """
         Infer mutation type and create mutation from string
 
@@ -637,6 +622,12 @@ class MutationSet(Generic[MutationType]):
             Input number of the first reference residue or codon.
         alphabet : Optional[BaseAlphabet]
             Optional alphabet to use for parsing
+        include_ambiguous : bool, default=False
+            Accept B, Z, J, and X when trying the amino acid parser.
+        include_sec_pyl : bool, default=False
+            Accept U and O when trying the amino acid parser.
+        include_stop : bool, default=True
+            Accept the stop symbol (``*``) when trying the amino acid parser.
 
         Returns
         -------
@@ -653,7 +644,7 @@ class MutationSet(Generic[MutationType]):
 
         for mutation_type in mutation_types:
             try:
-                return mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet)
+                return cls._create_mutation(mutation_str, mutation_type, offset=offset, alphabet=alphabet, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
             except Exception as e:
                 last_error = e
                 continue
@@ -662,13 +653,9 @@ class MutationSet(Generic[MutationType]):
         raise ValueError(f"Could not parse mutation string '{mutation_str}' with any known mutation type. " f"Last error: {last_error}")
 
     @classmethod
-    def _create_mutation(
-        cls,
-        mutation_str: str,
-        mutation_type: Type[BaseMutation],
-        offset: int,
-        alphabet: Optional[BaseAlphabet] = None,
-    ) -> BaseMutation:
+    def _create_mutation(cls, mutation_str: str, mutation_type: Type[BaseMutation], offset: int, alphabet: Optional[BaseAlphabet] = None, *, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = True) -> BaseMutation:
+        if mutation_type is AminoAcidMutation:
+            return mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
         return mutation_type.from_string(mutation_str, offset=offset, alphabet=alphabet)
 
     @staticmethod

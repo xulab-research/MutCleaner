@@ -119,13 +119,13 @@ class TestDNASequence:
     @patch("mutcleaner.core.sequence.translate")
     def test_dna_translate(self, mock_translate):
         """Test DNA translation."""
-        mock_translate.return_value = "MET"
+        mock_translate.return_value = "M*"
 
-        seq = DNASequence("ATGATG", name="test")
+        seq = DNASequence("ATGTGA", name="test")
         protein = seq.translate()
 
         mock_translate.assert_called_once_with(
-            sequence="ATGATG",
+            sequence="ATGTGA",
             seq_type="DNA",
             codon_table=None,
             start_at_first_met=False,
@@ -134,7 +134,7 @@ class TestDNASequence:
             start=None,
             end=None,
         )
-        assert str(protein) == "MET"
+        assert str(protein) == "M*"
         assert protein.name == "test_translation"
 
 
@@ -168,13 +168,13 @@ class TestRNASequence:
     @patch("mutcleaner.core.sequence.translate")
     def test_rna_translate(self, mock_translate):
         """Test RNA translation."""
-        mock_translate.return_value = "MET"
+        mock_translate.return_value = "M*"
 
-        seq = RNASequence("AUGUGAUG", name="test")
+        seq = RNASequence("AUGUGA", name="test")
         protein = seq.translate(start_at_first_met=True)
 
         mock_translate.assert_called_once_with(
-            sequence="AUGUGAUG",
+            sequence="AUGUGA",
             seq_type="RNA",
             codon_table=None,
             start_at_first_met=True,
@@ -183,6 +183,7 @@ class TestRNASequence:
             start=None,
             end=None,
         )
+        assert str(protein) == "M*"
 
 
 class TestProteinSequence:
@@ -193,6 +194,22 @@ class TestProteinSequence:
         seq = ProteinSequence("METALA")
         assert str(seq) == "METALA"
         assert isinstance(seq.alphabet, ProteinAlphabet)
+        with pytest.raises(ValueError, match="Invalid characters"):
+            ProteinSequence("M*")
+
+    @pytest.mark.parametrize("ambiguous, sec_pyl, stop, extra", [
+        (False, False, False, ""), (True, False, False, "BZJX"), (False, True, False, "UO"),
+        (False, False, True, "*"), (True, True, True, "BZJXUO*")
+    ])
+    def test_protein_sequence_alphabet_options(self, ambiguous, sec_pyl, stop, extra):
+        seq = ProteinSequence("M" + extra, include_ambiguous=ambiguous, include_sec_pyl=sec_pyl, include_stop=stop)
+        assert seq.alphabet.letters == set("ACDEFGHIKLMNPQRSTVWY" + extra)
+
+    def test_explicit_protein_alphabet_takes_precedence(self):
+        alphabet = ProteinAlphabet(include_stop=False, include_ambiguous=True, include_sec_pyl=False)
+        assert ProteinSequence("MX", alphabet=alphabet, include_sec_pyl=True).alphabet is alphabet
+        with pytest.raises(ValueError, match="Invalid characters"):
+            ProteinSequence("MU", alphabet=alphabet, include_sec_pyl=True)
 
     def test_get_residue(self):
         """Test retrieving the amino acid at a specific position."""

@@ -26,6 +26,7 @@ from .alphabet import ProteinAlphabet, DNAAlphabet, RNAAlphabet
 if TYPE_CHECKING:
     from typing import List, Literal, Optional, Sequence, Type, Union
 
+    from .alphabet import BaseAlphabet
     from .mutation import BaseMutation
     from .sequence import BaseSequence
 
@@ -1343,6 +1344,8 @@ class MutationDataset:
         reference_sequences : Dict[str, BaseSequence]
             Dictionary mapping reference sequence IDs to their corresponding BaseSequence
             objects. Must contain all reference sequences referenced in the DataFrame.
+            All supplied protein references must allow the same symbols. Their shared
+            alphabet is used to reconstruct amino acid substitutions.
 
         name : Optional[str], default=None
             Optional name for the created MutationDataset.
@@ -1361,7 +1364,8 @@ class MutationDataset:
         ------
         ValueError
             If the DataFrame is empty, missing required columns, or references
-            sequences not provided in reference_sequences dict.
+            sequences not provided in reference_sequences, or if the supplied
+            protein references allow different symbols.
 
         Notes
         -----
@@ -1427,8 +1431,13 @@ class MutationDataset:
         # Create new dataset
         dataset = cls(name=name)
 
-        # Add reference sequences
+        alphabet = None
         for ref_id, sequence in tqdm(reference_sequences.items(), desc="Adding reference sequences"):
+            if isinstance(sequence, ProteinSequence):
+                if alphabet is None:
+                    alphabet = sequence.alphabet
+                elif sequence.alphabet.letters != alphabet.letters:
+                    raise ValueError(f"Protein reference {ref_id!r} has a different alphabet. All protein references must allow the same symbols.")
             if ref_id in df_ref_ids:
                 dataset.add_reference_sequence(ref_id, sequence)
 
@@ -1451,13 +1460,7 @@ class MutationDataset:
         # exactly one mutation set. This avoids constructing tens of thousands
         # of one-row DataFrames through ``groupby``.
         if df["mutation_set_id"].notna().all() and df["mutation_set_id"].is_unique:
-            cls._reconstruct_unique_mutation_sets(
-                dataset,
-                df,
-                set_metadata_cols,
-                mutation_metadata_cols,
-                specific_mutation_type,
-            )
+            cls._reconstruct_unique_mutation_sets(dataset, df, set_metadata_cols, mutation_metadata_cols, specific_mutation_type, alphabet=alphabet)
             return dataset
 
         # General path for multi-mutation sets.
@@ -1478,7 +1481,7 @@ class MutationDataset:
             columns = list(group.columns)
             for values in group.values:
                 row_dict = dict(zip(columns, values))
-                mutation = cls._create_mutation_from_dict(row_dict, mutation_metadata_cols, specific_mutation_type)
+                mutation = cls._create_mutation_from_dict(row_dict, mutation_metadata_cols, specific_mutation_type, alphabet=alphabet)
                 mutations.append(mutation)
 
             # Create appropriate mutation set type
@@ -1503,14 +1506,7 @@ class MutationDataset:
         return dataset
 
     @classmethod
-    def _reconstruct_unique_mutation_sets(
-        cls,
-        dataset: "MutationDataset",
-        df: pd.DataFrame,
-        set_metadata_cols: List[str],
-        mutation_metadata_cols: List[str],
-        specific_mutation_type: Optional[Type[BaseMutation]] = None,
-    ) -> None:
+    def _reconstruct_unique_mutation_sets(cls, dataset: "MutationDataset", df: pd.DataFrame, set_metadata_cols: List[str], mutation_metadata_cols: List[str], specific_mutation_type: Optional[Type[BaseMutation]], *, alphabet: Optional[BaseAlphabet]) -> None:
         """Reconstruct single-mutation sets without pandas ``groupby`` overhead.
 
         This is a performance-oriented path for flattened DataFrames in which
@@ -1552,6 +1548,7 @@ class MutationDataset:
                     wild_type=values[column_index["wild_amino_acid"]],
                     position=position,
                     mutant_type=values[column_index["mutant_amino_acid"]],
+                    alphabet=alphabet,
                     metadata=mutation_metadata,
                 )
                 mutation_set = AminoAcidMutationSet(
@@ -1583,6 +1580,7 @@ class MutationDataset:
                         mutation_string,
                         mutation_type=specific_mutation_type,
                         offset=0,
+                        alphabet=alphabet if issubclass(specific_mutation_type, AminoAcidMutation) else None
                     )
                 except Exception as error:
                     raise ValueError(f"Cannot create mutation from row: {error}") from error
@@ -1621,11 +1619,7 @@ class MutationDataset:
         dataset._df = None
 
     @staticmethod
-    def _create_mutation_from_dict(
-        row_dict: Dict[str, Any],
-        metadata_cols: List[str],
-        specific_mutation_type: Optional[Type[BaseMutation]] = None,
-    ) -> BaseMutation:
+    def _create_mutation_from_dict(row_dict: Dict[str, Any], metadata_cols: List[str], specific_mutation_type: Optional[Type[BaseMutation]], *, alphabet: Optional[BaseAlphabet]) -> BaseMutation:
         """
         Create a mutation object from a DataFrame row dict
         Used by the from_dataframe() method
@@ -1651,11 +1645,15 @@ class MutationDataset:
             - Any column starting with 'mutation_' (excluding specific reserved names)
             will be added as metadata to the mutation object
 
-        mutation_metadata_cols : List[str]
+        metadata_cols : List[str]
             Metadata columns to be extracted and added to the mutation object
 
-        specific_mutation_type : Optional[Type[BaseMutation]], default=None
+        specific_mutation_type : Type[BaseMutation] or None
             Only used when the mutation type is neither 'amino_acid' nor any 'codon_*' type.
+
+        alphabet : BaseAlphabet or None
+            Shared alphabet for amino acid substitutions, or None when the dataset
+            has no protein references.
 
         Returns
         -------
@@ -1676,6 +1674,7 @@ class MutationDataset:
                 wild_type=row_dict["wild_amino_acid"],
                 position=position,
                 mutant_type=row_dict["mutant_amino_acid"],
+                alphabet=alphabet,
                 metadata=mutation_metadata,
             )
 
@@ -1698,6 +1697,7 @@ class MutationDataset:
                     mutation_string,
                     mutation_type=specific_mutation_type,
                     offset=0,
+                    alphabet=alphabet if issubclass(specific_mutation_type, AminoAcidMutation) else None
                 )
             except Exception as e:
                 raise ValueError(f"Cannot create mutation from row: {e}")

@@ -1,22 +1,23 @@
 # mutcleaner/utils/cleaner_workers.py
 from __future__ import annotations
 
-import pandas as pd
-
-from tqdm import tqdm
 from typing import TYPE_CHECKING
 
-from .mutation_converter import invert_mutation_set
-from ..core.mutation import BaseMutation, MutationSet
+import pandas as pd
+from tqdm import tqdm
+
 from ..core.alphabet import BaseAlphabet
+from ..core.mutation import BaseMutation, MutationSet
+from ..core.sequence import ProteinSequence
 from ..core.types import SequenceType
+from .mutation_converter import invert_mutation_set
 
 if TYPE_CHECKING:
-    from pandas import Index
     from typing import Any, Dict, List, Literal, Optional, Tuple, Type, Union
 
-    from ..core.alphabet import ProteinAlphabet, DNAAlphabet, RNAAlphabet
-    from ..core.sequence import ProteinSequence, DNASequence, RNASequence
+    from pandas import Index
+
+    from ..core.sequence import DNASequence, RNASequence
 
 __all__ = [
     "valid_single_mutation",
@@ -38,22 +39,16 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
     Parameters
     ----------
     args : Tuple
-        (mut_info, format_mutations, mutation_sep, offset, mutation_type, alphabet, shared_cache)
+        (mut_info, format_mutations, mutation_sep, offset, mutation_type, alphabet,
+        include_ambiguous, include_sec_pyl, include_stop, reject_redundant, shared_cache).
+        Share a cache only across calls with the same parsing and formatting options.
 
     Returns
     -------
     Tuple[Optional[str], Optional[str]]
         (formatted_mutation, error_message) - one will be None
     """
-    (
-        mut_info,
-        format_mutations,
-        mutation_sep,
-        offset,
-        mutation_type,
-        alphabet,
-        shared_cache,
-    ) = args
+    mut_info, format_mutations, mutation_sep, offset, mutation_type, alphabet, include_ambiguous, include_sec_pyl, include_stop, reject_redundant, shared_cache = args
 
     if pd.isna(mut_info):
         return None, "Missing mutation information"
@@ -63,34 +58,11 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
         if shared_cache is not None and mut_info in shared_cache:
             return shared_cache[mut_info]
 
-        if format_mutations:
-            # Parse and format mutation
-            mutation_set = MutationSet.from_string(
-                mut_info,
-                sep=mutation_sep,
-                offset=offset,
-                mutation_type=mutation_type,
-                alphabet=alphabet,
-            )
-            formatted_mut = str(mutation_set)
-
-            if shared_cache is not None:
-                shared_cache[mut_info] = (formatted_mut, None)
-            return formatted_mut, None
-        else:
-            # Only validate, don't format
-            # Try to create MutationSet to validate - if it succeeds, mutation is valid
-            MutationSet.from_string(
-                mut_info,
-                sep=mutation_sep,
-                offset=offset,
-                mutation_type=mutation_type,
-                alphabet=alphabet,
-            )
-            # If no exception was raised, the mutation is valid
-            if shared_cache is not None:
-                shared_cache[mut_info] = (mut_info, None)
-            return mut_info, None
+        mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, offset=offset, mutation_type=mutation_type, alphabet=alphabet, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop, reject_redundant=reject_redundant)
+        result = (str(mutation_set) if format_mutations else mut_info, None)
+        if shared_cache is not None:
+            shared_cache[mut_info] = result
+        return result
 
     except (ValueError, TypeError) as e:
         # MutationSet.from_string raises ValueError for invalid mutations
@@ -107,19 +79,7 @@ def valid_single_mutation(args: Tuple) -> Tuple[Optional[str], Optional[str]]:
         return None, error_msg
 
 
-def apply_single_mutation(
-    row_data: Tuple,
-    dataset_columns: Index,
-    sequence_column: str,
-    name_column: str,
-    mutation_column: str,
-    position_columns: Optional[Dict[str, str]],
-    mutation_sep: str,
-    offset: int,
-    mutation_type: Optional[Type[BaseMutation]],
-    alphabet: Optional[BaseAlphabet],
-    sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
-) -> Tuple[Optional[str], Optional[str]]:
+def apply_single_mutation(row_data: Tuple, dataset_columns: Index, sequence_column: str, name_column: str, mutation_column: str, position_columns: Optional[Dict[str, str]], mutation_sep: str, offset: int, mutation_type: Optional[Type[BaseMutation]], alphabet: Optional[BaseAlphabet], sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]], *, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True) -> Tuple[Optional[str], Optional[str]]:
     """
     Apply mutations to a single sequence.
 
@@ -141,8 +101,20 @@ def apply_single_mutation(
         Separator for splitting multiple mutations
     offset : int
         Input position of the first residue or codon.
+    mutation_type : type of BaseMutation, optional
+        Mutation class to use when parsing the annotation.
+    alphabet : BaseAlphabet, optional
+        Alphabet for parsing mutations. For proteins, it also validates the sequence.
     sequence_class : Type[Union[ProteinSequence, DNASequence, RNASequence]]
         Sequence class to use for mutation application
+    include_ambiguous : bool, default=False
+        Include B, Z, J, and X in the default protein alphabet.
+    include_sec_pyl : bool, default=False
+        Include U and O in the default protein alphabet.
+    include_stop : bool, default=False
+        Include the stop symbol in the default protein alphabet.
+    reject_redundant : bool, default=True
+        Reject an annotation containing an unchanged amino acid.
 
     Returns
     -------
@@ -169,14 +141,12 @@ def apply_single_mutation(
             if start_pos is not None and end_pos is not None:
                 sequence_str = sequence_str[int(start_pos) : int(end_pos)]
 
-        sequence = sequence_class(sequence_str, name=name)
-        mutation_set = MutationSet.from_string(
-            mut_info,
-            sep=mutation_sep,
-            offset=offset,
-            mutation_type=mutation_type,
-            alphabet=alphabet,
-        )
+        if sequence_class is ProteinSequence:
+            sequence = ProteinSequence(sequence_str, alphabet=alphabet, name=name, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
+            alphabet = sequence.alphabet
+        else:
+            sequence = sequence_class(sequence_str, name=name)
+        mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, offset=offset, mutation_type=mutation_type, alphabet=alphabet, reject_redundant=reject_redundant)
         mutated_sequence = sequence.apply_mutation(mutation_set)
 
         return str(mutated_sequence), None
@@ -185,23 +155,64 @@ def apply_single_mutation(
         return None, f"{type(e).__name__}: {str(e)}"
 
 
-def infer_wt_sequence_grouped(
-    group_data: Tuple[Any, pd.DataFrame],
-    name_column: str,
-    mutation_column: str,
-    sequence_column: str,
-    label_columns: List[str],
-    wt_label: float,
-    mutation_sep: str,
-    offset: int,
-    handle_multiple_wt: Literal["error", "separate", "first"],
-    sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
-    alphabet_class: Type[Union[ProteinAlphabet, DNAAlphabet, RNAAlphabet]],
-) -> Tuple[List[Dict[str, Any]], str]:
-    """
-    Process a single protein group and return list of rows (including WT).
+def infer_wt_sequence_grouped(group_data: Tuple[Any, pd.DataFrame], name_column: str, mutation_column: str, sequence_column: str, label_columns: List[str], wt_label: float, mutation_sep: str, offset: int, handle_multiple_wt: Literal["error", "separate", "first"], sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]], *, alphabet: Optional[BaseAlphabet], include_ambiguous: bool, include_sec_pyl: bool, include_stop: bool, reject_redundant: bool) -> Tuple[List[Dict[str, Any]], str]:
+    """Infer wild-type sequences by reversing the substitutions in one group.
 
-    This is a module-level function that processes protein groups independently.
+    Each row supplies a mutated sequence and its mutation annotation. If all
+    rows yield the same wild type, append one ``WT`` row to the original rows.
+    Each appended row copies the group's first row and replaces its mutation
+    annotation, sequence, and specified labels.
+
+    Parameters
+    ----------
+    group_data : tuple
+        Group key and a pandas DataFrame containing that group's variant rows.
+    name_column : str
+        Column containing the group identifier.
+    mutation_column : str
+        Column containing the substitutions from wild type to mutant.
+    sequence_column : str
+        Column containing the mutated sequence for each annotation.
+    label_columns : list of str
+        Label columns to set in appended wild-type rows, if present.
+    wt_label : float
+        Value assigned to those label columns.
+    mutation_sep : str
+        Delimiter between substitutions in a multi-site annotation.
+    offset : int
+        Annotated position of the first reference residue or codon. Subtract
+        this value from each annotated position to obtain its zero-based index.
+    handle_multiple_wt : {'error', 'separate', 'first'}
+        Policy when the group yields several distinct wild types. 'error'
+        returns one error row. 'separate' appends all candidates as ``WT``,
+        ``WT_variant1``, etc., and marks the group as failed. 'first' appends
+        one candidate as ``WT`` and marks the group as successful. Candidate
+        order is unspecified because distinct sequences are stored in a set.
+    sequence_class : type
+        Sequence class for the group (ProteinSequence, DNASequence, or RNASequence).
+    alphabet : BaseAlphabet or None
+        Alphabet used for the sequence and its annotation. An explicit alphabet
+        takes precedence over the three protein options below.
+    include_ambiguous : bool
+        Accept B, Z, J, and X when building the protein alphabet.
+    include_sec_pyl : bool
+        Accept selenocysteine (U) and pyrrolysine (O) when building the protein alphabet.
+    include_stop : bool
+        Accept the stop symbol (``*``) when building the protein alphabet.
+    reject_redundant : bool
+        Reject the group if an annotation contains an amino acid substitution
+        that leaves the residue unchanged.
+
+    Returns
+    -------
+    rows : list of dict
+        Original rows followed by any appended wild-type rows. If sequence
+        validation, mutation parsing, or reverse application fails for any row,
+        or the 'error' policy detects multiple wild types, return only the
+        group's first row with ``error_message``. For an empty group, the
+        error row contains the group identifier and ``error_message``.
+    status : {'success', 'failed'}
+        Outcome for the entire group.
     """
     protein_name = group_data[0]
     group = group_data[1]
@@ -218,16 +229,12 @@ def infer_wt_sequence_grouped(
         # Then, infer WT sequences
         for _, row in group.iterrows():
             mut_info = row[mutation_column]
-            mut_seq = row[sequence_column]
-
-            # Parse mutation and create sequence
-            mutation_set = MutationSet.from_string(
-                mut_info,
-                sep=mutation_sep,
-                offset=offset,
-                alphabet=alphabet_class(),
-            )
-            sequence = sequence_class(str(mut_seq).strip(), name=str(protein_name))
+            mut_seq = str(row[sequence_column]).strip()
+            if sequence_class is ProteinSequence:
+                sequence = ProteinSequence(mut_seq, alphabet=alphabet, name=str(protein_name), include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
+            else:
+                sequence = sequence_class(mut_seq, alphabet=alphabet, name=str(protein_name))
+            mutation_set = MutationSet.from_string(mut_info, sep=mutation_sep, offset=offset, alphabet=sequence.alphabet, reject_redundant=reject_redundant)
 
             # Infer wild-type sequence by applying inverted mutations
             inverted_mutation_set = invert_mutation_set(mutation_set)
@@ -313,14 +320,7 @@ def infer_wt_sequence_grouped(
         return [error_row], "failed"
 
 
-def infer_single_mutationset(
-    row_data: Tuple,
-    dataset_columns: Index,
-    wt_sequence_column: str,
-    mut_sequence_column: str,
-    mutation_sep: str,
-    sequence_class: Type[SequenceType],
-) -> Tuple[Optional[str], Optional[str]]:
+def infer_single_mutationset(row_data: Tuple, dataset_columns: Index, wt_sequence_column: str, mut_sequence_column: str, mutation_sep: str, sequence_class: Type[SequenceType], *, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> Tuple[Optional[str], Optional[str]]:
     """
     Process a single row to infer mutations between WT and mutated sequences.
 
@@ -340,6 +340,14 @@ def infer_single_mutationset(
         Separator for joining multiple mutations
     sequence_class : Type[SequenceType]
         Sequence class to use for mutation inference
+    alphabet : BaseAlphabet, optional
+        Alphabet shared by the wild-type and mutated sequences.
+    include_ambiguous : bool, default=False
+        Allow ambiguous symbols in the default protein alphabet.
+    include_sec_pyl : bool, default=False
+        Allow U and O in the default protein alphabet.
+    include_stop : bool, default=False
+        Allow the stop symbol in the default protein alphabet.
 
     Returns
     -------
@@ -350,8 +358,12 @@ def infer_single_mutationset(
         row_dict = dict(zip(dataset_columns, row_data))
 
         # Extract sequences
-        wt_seq = sequence_class(row_dict.get(wt_sequence_column, ""))
-        mut_seq = sequence_class(row_dict.get(mut_sequence_column, ""))
+        wt_sequence = row_dict.get(wt_sequence_column, "")
+        if sequence_class is ProteinSequence:
+            wt_seq = ProteinSequence(wt_sequence, alphabet=alphabet, include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
+        else:
+            wt_seq = sequence_class(wt_sequence, alphabet=alphabet)
+        mut_seq = sequence_class(row_dict.get(mut_sequence_column, ""), alphabet=wt_seq.alphabet)
 
         # Check sequence lengths are equal
         if len(wt_seq) != len(mut_seq):
