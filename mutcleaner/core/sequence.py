@@ -650,11 +650,7 @@ def load_sequences_from_fasta(
             return RNAAlphabet()
         elif sequence_class == ProteinSequence:
             return ProteinAlphabet(include_stop=True)
-        else:
-            # TODO: For custom sequence classes, try to instantiate with None
-            # and let the class handle default alphabet
-            # but for easy, raise an error
-            raise TypeError(f"sequence_class {sequence_class} does not have a default alphabet, " f"please provide it with the alphabet parameter.")
+        return None
 
     sequences: Dict[str, BaseSequence] = {}
     current_id = None
@@ -731,7 +727,7 @@ def _save_sequence(
     description: str,
     seq_lines: List[str],
     sequence_class: Type[BaseSequence],
-    alphabet: BaseAlphabet,
+    alphabet: Optional[BaseAlphabet],
     allow_duplicates: bool,
     line_number: int,
 ) -> None:
