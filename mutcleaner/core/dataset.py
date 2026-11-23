@@ -762,9 +762,6 @@ class MutationDataset:
             Base directory to create reference folders in
         """
         base_path = Path(base_dir)
-        base_path.mkdir(parents=True, exist_ok=True)
-
-        tqdm.write(f"Saving dataset by reference to: {base_path}")
 
         # Group mutation sets and statistics by reference ID.
         ref_data = {}
@@ -780,7 +777,7 @@ class MutationDataset:
                 ref_data[ref_id] = {
                     "mutation_sets": [],
                     "total_mutations": 0,
-                    "covered_positions": set(),
+                    "submitted_positions": set(),
                     "mutation_types": set(),
                     "unique_labels": set(),
                 }
@@ -789,7 +786,7 @@ class MutationDataset:
 
             data["mutation_sets"].append((i, mutation_set))
             data["total_mutations"] += len(mutation_set)
-            data["covered_positions"].update(mutation_set.get_positions())
+            data["submitted_positions"].update(mutation_set.get_positions())
             data["mutation_types"].update(type(mutation) for mutation in mutation_set.mutations)
 
             label = self.mutation_set_labels.get(i)
@@ -798,6 +795,38 @@ class MutationDataset:
                 data["unique_labels"].add("unlabeled")
             else:
                 data["unique_labels"].add(str(label))
+
+        export_owners = {}
+
+        for ref_id in ref_data:
+            export_folder = self._sanitize_filename(str(ref_id))
+            export_dir = base_path / export_folder
+
+            if export_folder in export_owners:
+                raise ValueError(f"Multiple reference IDs map to the same export directory: {[export_owners[export_folder], ref_id]!r} -> {export_folder!r}. Rename the reference IDs or export them separately.")
+
+            if export_dir.is_dir():
+                metadata_path = export_dir / "metadata.json"
+                existing_reference_id = None
+
+                if metadata_path.exists():
+                    with open(metadata_path, "r", encoding="utf-8") as metadata_file:
+                        existing_reference_id = json.load(metadata_file).get("reference_id")
+
+                if existing_reference_id is not None and str(existing_reference_id) != str(ref_id):
+                    raise ValueError(f"Export directory {str(export_dir)!r} already holds reference {existing_reference_id!r}; refusing to overwrite it with reference {ref_id!r}. Remove the directory or use a different base directory.")
+
+                if existing_reference_id is None and any(export_dir.iterdir()):
+                    raise ValueError(f"Export directory {str(export_dir)!r} already exists without a reference_id in its metadata.json; refusing to overwrite it with reference {ref_id!r}. Remove the directory or use a different base directory.")
+
+            elif export_dir.exists():
+                raise ValueError(f"Export path {str(export_dir)!r} already exists and is not a directory; refusing to export reference {ref_id!r}.")
+
+            export_owners[export_folder] = ref_id
+
+        base_path.mkdir(parents=True, exist_ok=True)
+
+        tqdm.write(f"Saving dataset by reference to: {base_path}")
 
         # Process each reference independently.
         for ref_id, data in tqdm(
@@ -840,20 +869,20 @@ class MutationDataset:
 
             # Validate that all positions are within the corresponding
             # residue or codon coordinate space.
-            all_positions = data["covered_positions"]
+            submitted_positions = data["submitted_positions"]
 
-            invalid_positions = sorted(position for position in all_positions if position < 0 or position >= position_space_length)
+            invalid_positions = sorted(position for position in submitted_positions if position < 0 or position >= position_space_length)
 
             if invalid_positions:
                 raise ValueError(f"Reference {ref_id!r} contains out-of-range " f"{position_unit} positions: " f"{invalid_positions[:10]}")
 
-            covered_positions = len(all_positions)
-            uncovered_positions = position_space_length - covered_positions
+            submitted_covered_positions = len(submitted_positions)
 
-            coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
+            submitted_coverage_percentage = submitted_covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             successful_rows = []
             failed_rows = []
+            successful_positions = set()
 
             # Apply each mutation set to the reference sequence.
             for set_index, mutation_set in data["mutation_sets"]:
@@ -865,6 +894,8 @@ class MutationDataset:
 
                 try:
                     mutated_sequence = ref_sequence.apply_mutation(mutation_set)
+
+                    successful_positions.update(mutation_set.get_positions())
 
                     successful_rows.append(
                         {
@@ -886,6 +917,11 @@ class MutationDataset:
                     )
 
                     tqdm.write(f"Warning: Could not apply mutation " f"{mutation_name!r} for reference {ref_id!r}: " f"{error_message}")
+
+            covered_positions = len(successful_positions)
+            uncovered_positions = position_space_length - covered_positions
+
+            coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             # Save only successfully generated sequences to data.csv.
             data_columns = [
@@ -944,9 +980,14 @@ class MutationDataset:
                 "sequence_length": len(ref_sequence),
                 "position_unit": position_unit,
                 "num_mutation_sets": len(data["mutation_sets"]),
+                "num_successful_mutation_sets": len(successful_rows),
+                "num_failed_mutation_sets": len(failed_rows),
                 "total_mutations": data["total_mutations"],
                 "covered_positions": covered_positions,
+                "uncovered_positions": uncovered_positions,
                 "coverage_percentage": coverage_percentage,
+                "submitted_covered_positions": submitted_covered_positions,
+                "submitted_coverage_percentage": submitted_coverage_percentage,
                 "num_unique_labels": len(data["unique_labels"]),
                 "has_unlabeled": ("unlabeled" in data["unique_labels"]),
                 "dataset_name": self.name,
