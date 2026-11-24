@@ -55,7 +55,8 @@ def get_conversion_function(target_type: Union[str, Type, np.dtype], optimize_me
     target_type : Union[str, Type, np.dtype]
         Target data type
     optimize_memory : bool
-        Whether to use memory-optimized types
+        Whether to use memory-optimized types. When enabled, ``"float"`` is
+        stored as float32; explicit ``"float64"`` and ``np.float64`` are kept.
 
     Returns
     -------
@@ -74,7 +75,10 @@ def get_conversion_function(target_type: Union[str, Type, np.dtype], optimize_me
         target_type_lower = target_type.lower()
 
         # Numeric types
-        if target_type_lower in ["float", "float64"]:
+        if target_type_lower == "float64":
+            return "float64", lambda series, errors: pd.to_numeric(series, errors=errors).astype(np.float64)
+
+        if target_type_lower == "float":
             dtype = np.float32 if optimize_memory else np.float64
             type_name = "float32" if optimize_memory else "float64"
             return type_name, lambda series, errors: pd.to_numeric(series, errors=errors).astype(dtype)
@@ -192,7 +196,8 @@ def convert_data_types(
     handle_errors : str, default='coerce'
         Error handling strategy: 'raise', 'coerce', or 'ignore'
     optimize_memory : bool, default=True
-        Whether to automatically optimize memory usage
+        Whether to automatically optimize memory usage. When enabled, ``"float"``
+        is stored as float32; explicit ``"float64"`` and ``np.float64`` are kept.
 
     Returns
     -------
