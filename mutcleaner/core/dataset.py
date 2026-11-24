@@ -802,8 +802,9 @@ class MutationDataset:
             export_folder = self._sanitize_filename(str(ref_id))
             export_dir = base_path / export_folder
 
-            if export_folder in export_owners:
-                raise ValueError(f"Multiple reference IDs map to the same export directory: {[export_owners[export_folder], ref_id]!r} -> {export_folder!r}. Rename the reference IDs or export them separately.")
+            export_key = export_folder.casefold()
+            if export_key in export_owners:
+                raise ValueError(f"Multiple reference IDs map to the same export directory: {[export_owners[export_key], ref_id]!r} -> {export_folder!r}. Rename the reference IDs or export them separately.")
 
             if export_dir.is_dir():
                 metadata_path = export_dir / "metadata.json"
@@ -822,7 +823,7 @@ class MutationDataset:
             elif export_dir.exists():
                 raise ValueError(f"Export path {str(export_dir)!r} already exists and is not a directory; refusing to export reference {ref_id!r}.")
 
-            export_owners[export_folder] = ref_id
+            export_owners[export_key] = ref_id
 
         base_path.mkdir(parents=True, exist_ok=True)
 
