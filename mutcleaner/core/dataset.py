@@ -754,7 +754,7 @@ class MutationDataset:
 
         - {base_dir}/{reference_id}/data.csv: mutation data with columns [mutation_name, mutated_sequence, label]
         - {base_dir}/{reference_id}/wt.fasta: wild-type reference sequence
-        - {base_dir}/{reference_id}/metadata.json: statistics and metadata for this reference
+        - {base_dir}/{reference_id}/metadata.json: reference information and statistics for rows written to data.csv
 
         Parameters
         ----------
@@ -763,7 +763,7 @@ class MutationDataset:
         """
         base_path = Path(base_dir)
 
-        # Group mutation sets and statistics by reference ID.
+        # Group mutation sets by reference ID for validation and export.
         ref_data = {}
 
         for i, mutation_set in tqdm(
@@ -776,25 +776,15 @@ class MutationDataset:
             if ref_id not in ref_data:
                 ref_data[ref_id] = {
                     "mutation_sets": [],
-                    "total_mutations": 0,
                     "submitted_positions": set(),
                     "mutation_types": set(),
-                    "unique_labels": set(),
                 }
 
             data = ref_data[ref_id]
 
             data["mutation_sets"].append((i, mutation_set))
-            data["total_mutations"] += len(mutation_set)
             data["submitted_positions"].update(mutation_set.get_positions())
             data["mutation_types"].update(type(mutation) for mutation in mutation_set.mutations)
-
-            label = self.mutation_set_labels.get(i)
-
-            if label is None or pd.isna(label):
-                data["unique_labels"].add("unlabeled")
-            else:
-                data["unique_labels"].add(str(label))
 
         export_owners = {}
 
@@ -878,6 +868,7 @@ class MutationDataset:
             successful_rows = []
             failed_rows = []
             successful_positions = set()
+            total_mutations = 0
 
             # Apply each mutation set to the reference sequence.
             for set_index, mutation_set in data["mutation_sets"]:
@@ -889,8 +880,6 @@ class MutationDataset:
 
                 try:
                     mutated_sequence = ref_sequence.apply_mutation(mutation_set)
-
-                    successful_positions.update(mutation_set.get_positions())
 
                     successful_rows.append(
                         {
@@ -912,6 +901,9 @@ class MutationDataset:
                     )
 
                     tqdm.write(f"Warning: Could not apply mutation " f"{mutation_name!r} for reference {ref_id!r}: " f"{error_message}")
+                else:
+                    successful_positions.update(mutation_set.get_positions())
+                    total_mutations += len(mutation_set)
 
             covered_positions = len(successful_positions)
             coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
@@ -923,13 +915,9 @@ class MutationDataset:
                 "label",
             ]
 
-            pd.DataFrame(
-                successful_rows,
-                columns=data_columns,
-            ).to_csv(
-                ref_dir / "data.csv",
-                index=False,
-            )
+            exported_data = pd.DataFrame(successful_rows, columns=data_columns)
+            exported_data.to_csv(ref_dir / "data.csv", index=False)
+            exported_labels = exported_data["label"].astype("string").fillna("")
 
             # Save failed records separately instead of placing error text
             # inside the mutated_sequence column.
@@ -972,12 +960,12 @@ class MutationDataset:
                 "sequence_type": type(ref_sequence).__name__,
                 "sequence_length": len(ref_sequence),
                 "position_unit": position_unit,
-                "num_mutation_sets": len(data["mutation_sets"]),
-                "total_mutations": data["total_mutations"],
+                "num_mutation_sets": len(exported_data),
+                "total_mutations": total_mutations,
                 "covered_positions": covered_positions,
                 "coverage_percentage": coverage_percentage,
-                "num_unique_labels": len(data["unique_labels"]),
-                "has_unlabeled": ("unlabeled" in data["unique_labels"]),
+                "num_unique_labels": exported_labels.nunique(),
+                "has_unlabeled": bool(exported_labels.eq("").any()),
                 "dataset_name": self.name,
             }
 

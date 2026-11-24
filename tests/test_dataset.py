@@ -643,19 +643,26 @@ class TestSaveLoad:
         assert loaded_dataset.get_mutation_set_label(0) == 2.5
         assert loaded_dataset.metadata["test_key"] == "test_value"
 
-    def test_save_by_reference_metadata_with_failed_mutation(self, tmp_path):
-        """Count both submitted sets but only positions from successful mutations."""
+    @pytest.mark.parametrize(("first_wt", "label", "expected_rows"), [("A", 2.5, 1), ("A", None, 1), ("G", 2.5, 0)])
+    def test_save_by_reference_metadata_with_failed_mutation(self, tmp_path, first_wt, label, expected_rows):
+        """Count mutation sets, positions and labels from the exported rows."""
         dataset = MutationDataset()
         dataset.add_reference_sequence("ref1", ProteinSequence("ACDEFGHIKL"))
-        for mutation in [AminoAcidMutation("A", 0, "V"), AminoAcidMutation("G", 1, "V")]:
-            dataset.add_mutation_set(AminoAcidMutationSet([mutation]), "ref1")
+        dataset.add_mutation_set(AminoAcidMutationSet([AminoAcidMutation(first_wt, 0, "V")]), "ref1", label=label)
+        dataset.add_mutation_set(AminoAcidMutationSet([AminoAcidMutation("G", 1, "V")]), "ref1", label=None)
 
         dataset.save_by_reference(tmp_path)
-        metadata = json.loads((tmp_path / "ref1" / "metadata.json").read_text(encoding="utf-8"))
+        ref_dir = tmp_path / "ref1"
+        exported = pd.read_csv(ref_dir / "data.csv")
+        metadata = json.loads((ref_dir / "metadata.json").read_text(encoding="utf-8"))
 
-        assert metadata["num_mutation_sets"] == 2
-        assert metadata["covered_positions"] == 1
-        assert metadata["coverage_percentage"] == 10
+        assert len(exported) == expected_rows
+        assert metadata["num_mutation_sets"] == len(exported)
+        assert metadata["total_mutations"] == expected_rows
+        assert metadata["covered_positions"] == expected_rows
+        assert metadata["coverage_percentage"] == expected_rows * 10
+        assert metadata["num_unique_labels"] == exported["label"].nunique(dropna=False)
+        assert metadata["has_unlabeled"] == exported["label"].isna().any()
         assert {"num_successful_mutation_sets", "num_failed_mutation_sets", "uncovered_positions", "submitted_covered_positions", "submitted_coverage_percentage"}.isdisjoint(metadata)
 
     def test_save_load_by_reference(self):
