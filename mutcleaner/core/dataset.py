@@ -870,16 +870,10 @@ class MutationDataset:
 
             # Validate that all positions are within the corresponding
             # residue or codon coordinate space.
-            submitted_positions = data["submitted_positions"]
-
-            invalid_positions = sorted(position for position in submitted_positions if position < 0 or position >= position_space_length)
+            invalid_positions = sorted(position for position in data["submitted_positions"] if position < 0 or position >= position_space_length)
 
             if invalid_positions:
                 raise ValueError(f"Reference {ref_id!r} contains out-of-range " f"{position_unit} positions: " f"{invalid_positions[:10]}")
-
-            submitted_covered_positions = len(submitted_positions)
-
-            submitted_coverage_percentage = submitted_covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             successful_rows = []
             failed_rows = []
@@ -920,8 +914,6 @@ class MutationDataset:
                     tqdm.write(f"Warning: Could not apply mutation " f"{mutation_name!r} for reference {ref_id!r}: " f"{error_message}")
 
             covered_positions = len(successful_positions)
-            uncovered_positions = position_space_length - covered_positions
-
             coverage_percentage = covered_positions / position_space_length * 100 if position_space_length > 0 else 0.0
 
             # Save only successfully generated sequences to data.csv.
@@ -981,14 +973,9 @@ class MutationDataset:
                 "sequence_length": len(ref_sequence),
                 "position_unit": position_unit,
                 "num_mutation_sets": len(data["mutation_sets"]),
-                "num_successful_mutation_sets": len(successful_rows),
-                "num_failed_mutation_sets": len(failed_rows),
                 "total_mutations": data["total_mutations"],
                 "covered_positions": covered_positions,
-                "uncovered_positions": uncovered_positions,
                 "coverage_percentage": coverage_percentage,
-                "submitted_covered_positions": submitted_covered_positions,
-                "submitted_coverage_percentage": submitted_coverage_percentage,
                 "num_unique_labels": len(data["unique_labels"]),
                 "has_unlabeled": ("unlabeled" in data["unique_labels"]),
                 "dataset_name": self.name,
