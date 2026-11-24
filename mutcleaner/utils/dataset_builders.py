@@ -77,8 +77,10 @@ def convert_format_1(
     reference_sequences = {}
     for _, row in wt_rows.iterrows():
         name = row[name_column]
-        sequence = row[mutated_sequence_column]
-        reference_sequences[name] = sequence_class(sequence, alphabet=alphabet)
+        sequence = sequence_class(row[mutated_sequence_column], alphabet=alphabet)
+        if name in reference_sequences and str(reference_sequences[name]) != str(sequence):
+            raise ValueError(f"Multiple different sequences found for reference '{name}': {reference_sequences[name]} vs {sequence}")
+        reference_sequences[name] = sequence
 
     # Filter out wild-type entries if requested
     if not include_wild_type:
