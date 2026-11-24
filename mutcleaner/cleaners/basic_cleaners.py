@@ -1615,13 +1615,13 @@ def aggregate_labels_by_name(
     select_position = getattr(resolver, "select_position", None)
     keep_cols = list(dict.fromkeys(name_cols + [c for c in dataset.columns if c not in set(label_cols)]))
 
+    g = dataset.groupby(name_cols, dropna=False, observed=True)
     if remove_origin_columns and select_position is not None:
-        group_positions = sorted(dataset.groupby(name_cols, dropna=False, sort=False).indices.values(), key=lambda positions: positions[0])
+        group_positions = sorted(g.indices.values(), key=lambda positions: positions[0])
         selected_positions = [positions[select_position(dataset.iloc[positions])] for positions in group_positions]
         return dataset.iloc[selected_positions].reset_index(drop=True)[keep_cols + label_cols]
 
     # Compute per-group resolved labels
-    g = dataset.groupby(name_cols, dropna=False)
     agg = g.apply(lambda grp: resolver(grp, label_cols), include_groups=False)
     if isinstance(agg, pd.Series):
         # single-label case or resolver returns Series -> ensure DataFrame
