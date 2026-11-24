@@ -1092,8 +1092,7 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
     sequence_column : str, default='sequence'
         Column name containing wild-type sequences
     mutated_sequence_column : str, default='mut_seq'
-        Output column for rebuilt sequences. Nonblank sequences already in this
-        column are checked before they are overwritten.
+        Column for rebuilt sequences. Mismatches go to the failed output.
     name_column : str, default='name'
         Column name containing protein identifiers
     mutation_column : str, default='mut_info'
