@@ -1195,6 +1195,15 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
     has_provided_sequences = mutated_sequence_column in dataset.columns and mutated_sequence_column != sequence_column
     if has_provided_sequences:
         provided = dataset[mutated_sequence_column].astype("string").str.strip().str.upper()
+        if position_columns:
+            start_column = position_columns.get("start", "start_pos")
+            end_column = position_columns.get("end", "end_pos")
+            if start_column in dataset and end_column in dataset:
+                provided_lengths = provided.str.len()
+                reference_lengths = dataset[sequence_column].astype("string").str.len()
+                full_length = success_mask & provided_lengths.eq(reference_lengths) & provided_lengths.ne(rebuilt.str.len())
+                full_length &= dataset[start_column].notna() & dataset[end_column].notna()
+                provided.loc[full_length] = [sequence[int(start) : int(end)] for sequence, start, end in zip(provided.loc[full_length], dataset.loc[full_length, start_column], dataset.loc[full_length, end_column])]
         mismatched = success_mask & provided.notna() & provided.ne("") & provided.ne(rebuilt)
         result_dataset.loc[mismatched, "error_message"] = "Provided mutated sequence does not match the rebuilt sequence: provided " + provided[mismatched] + ", rebuilt " + rebuilt[mismatched]
         success_mask &= ~mismatched
