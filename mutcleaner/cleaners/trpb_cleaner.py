@@ -210,6 +210,7 @@ def create_trpb_cleaner(
                 label_columns=final_config.label_columns,
                 mutation_column=final_config.column_mapping.get("mutation_name", "mutation_name"),
                 wt_identifier="WT",
+                in_place=True,
                 drop_wt_row=True,
             )
             .delayed_then(
