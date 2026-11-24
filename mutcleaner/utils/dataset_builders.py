@@ -121,7 +121,6 @@ def convert_format_1(
             )
             output_rows.append(output_row)
 
-    _check_mutation_offset(output_rows, reference_sequences, offset)
     output_df = pd.DataFrame(output_rows)
     return output_df, reference_sequences
 
@@ -182,35 +181,8 @@ def convert_format_2(
             )
             output_rows.append(output_row)
 
-    _check_mutation_offset(output_rows, reference_sequences, offset)
     output_df = pd.DataFrame(output_rows)
     return output_df, reference_sequences
-
-
-def _check_mutation_offset(output_rows: List[Dict[str, Any]], reference_sequences: Dict[str, BaseSequence], offset: int) -> None:
-    """Flag a one-position shift when it yields a perfect reference match."""
-    candidate_offsets = (offset - 1, offset, offset + 1)
-    reference_text = {name: str(sequence) for name, sequence in reference_sequences.items()}
-    matches_by_reference = {name: dict.fromkeys(candidate_offsets, 0) for name in reference_sequences}
-    totals_by_reference = dict.fromkeys(reference_sequences, 0)
-
-    for row in output_rows:
-        name = row["reference_id"]
-        if name not in reference_text:
-            continue
-        sequence = reference_text[name]
-        wild_type = row["wild_codon"] if "wild_codon" in row else row["wild_amino_acid"]
-        width = len(wild_type)
-        totals_by_reference[name] += 1
-        for candidate in candidate_offsets:
-            start = (row["position"] + offset - candidate) * width
-            matches_by_reference[name][candidate] += start >= 0 and sequence[start : start + width] == wild_type
-
-    for name, matches in matches_by_reference.items():
-        total = totals_by_reference[name]
-        if matches[offset] < total and total in matches.values():
-            evidence = ", ".join(f"offset {candidate}: {matched}/{total}" for candidate, matched in matches.items())
-            raise ValueError(f"Possible mutation numbering mismatch for reference {name!r}. Wild-type matches by offset: {evidence}. Verify the input numbering before converting. If the annotations were already formatted, check the offset used to format them.")
 
 
 def _create_output_row_from_mutation(

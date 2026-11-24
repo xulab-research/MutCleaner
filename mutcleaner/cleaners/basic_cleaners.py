@@ -1886,7 +1886,7 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
         # Clearly Format 2: has sequence column, no WT rows
         tqdm.write(f"Detected Format 2: Found sequence column '{sequence_column}', no WT rows")
         sequence_column = cast(str, sequence_column)
-        return convert_format_2(
+        converted, reference_sequences = convert_format_2(
             df,
             name_column,
             mutation_column,
@@ -1902,7 +1902,7 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
     elif has_wt_rows and not has_sequence_column:
         # Clearly Format 1: has WT rows, no sequence column
         tqdm.write(f"Detected Format 1: Found WT rows, no sequence column")
-        return convert_format_1(
+        converted, reference_sequences = convert_format_1(
             df,
             name_column,
             mutation_column,
@@ -1921,7 +1921,7 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
         # Prefer Format 2 if sequence column was explicitly specified
         if sequence_column is not None:
             tqdm.write(f"Warning: Found both sequence column '{sequence_column}' and WT rows. " f"Using Format 2 as sequence_column was specified.")
-            return convert_format_2(
+            converted, reference_sequences = convert_format_2(
                 df,
                 name_column,
                 mutation_column,
@@ -1936,7 +1936,7 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
             )
         else:
             tqdm.write("Warning: Found WT rows but sequence column exists. Using Format 1.")
-            return convert_format_1(
+            converted, reference_sequences = convert_format_1(
                 df,
                 name_column,
                 mutation_column,
@@ -1960,6 +1960,29 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
         error_msg += "  Format 1: Include 'WT' rows with wild-type sequences\n"
         error_msg += "  Format 2: Include a sequence column with wild-type sequences"
         raise ValueError(error_msg)
+
+    if converted.empty:
+        return converted, reference_sequences
+
+    candidate_offsets = (offset - 1, offset, offset + 1)
+    wild_column = "wild_amino_acid" if sequence_type.lower() == "protein" else "wild_codon"
+    width = 1 if wild_column == "wild_amino_acid" else 3
+    for name, group in converted.groupby("reference_id", sort=False, observed=True):
+        if name not in reference_sequences:
+            continue
+        sequence = str(reference_sequences[name])
+        positions = group["position"].to_numpy()
+        wild_types = group[wild_column].to_numpy()
+        matches = {}
+        for candidate in candidate_offsets:
+            starts = (positions + offset - candidate) * width
+            matches[candidate] = sum(start >= 0 and sequence[start : start + width] == wild_type for start, wild_type in zip(starts, wild_types))
+        total = len(group)
+        if matches[offset] < total and total in matches.values():
+            evidence = ", ".join(f"offset {candidate}: {matched}/{total}" for candidate, matched in matches.items())
+            raise ValueError(f"Possible mutation numbering mismatch for reference {name!r}. Wild-type matches by offset: {evidence}. Verify the input numbering before converting. If the annotations were already formatted, check the offset used to format them.")
+
+    return converted, reference_sequences
 
 
 @pipeline_step
