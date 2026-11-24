@@ -1077,7 +1077,7 @@ def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info",
 
 
 @multiout_step(main="success", failed="failed")
-def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "sequence", name_column: str = "name", mutation_column: str = "mut_info", position_columns: Optional[Dict[str, str]] = None, mutation_sep: str = ",", sequence_type: str = "protein", mutation_type: Optional[Type[BaseMutation]] = None, alphabet: Optional[BaseAlphabet] = None, num_workers: int = 4, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "sequence", name_column: str = "name", mutation_column: str = "mut_info", position_columns: Optional[Dict[str, str]] = None, mutation_sep: str = ",", sequence_type: str = "protein", mutation_type: Optional[Type[BaseMutation]] = None, alphabet: Optional[BaseAlphabet] = None, num_workers: int = 4, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True, mutated_sequence_column: str = "mut_seq") -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Apply mutations to sequences to generate mutated sequences.
 
@@ -1091,6 +1091,9 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
         Input dataset containing mutation information and sequence data
     sequence_column : str, default='sequence'
         Column name containing wild-type sequences
+    mutated_sequence_column : str, default='mut_seq'
+        Output column for rebuilt sequences. Nonblank sequences already in this
+        column are checked before they are overwritten.
     name_column : str, default='name'
         Column name containing protein identifiers
     mutation_column : str, default='mut_info'
@@ -1186,12 +1189,23 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
     mutated_seqs, error_messages = map(list, zip(*results))
 
     result_dataset = dataset.copy()
-    result_dataset["mut_seq"] = mutated_seqs
     result_dataset["error_message"] = error_messages
+    rebuilt = pd.Series(mutated_seqs, index=dataset.index)
+    success_mask = rebuilt.notna()
 
-    success_mask = pd.notnull(result_dataset["mut_seq"])
+    has_provided_sequences = mutated_sequence_column in dataset.columns and mutated_sequence_column != sequence_column
+    if has_provided_sequences:
+        provided = dataset[mutated_sequence_column].astype("string").str.strip().str.upper()
+        mismatched = success_mask & provided.notna() & provided.ne("") & provided.ne(rebuilt)
+        result_dataset.loc[mismatched, "error_message"] = "Provided mutated sequence does not match the rebuilt sequence: provided " + provided[mismatched] + ", rebuilt " + rebuilt[mismatched]
+        success_mask &= ~mismatched
+        rebuilt = rebuilt.where(success_mask, dataset[mutated_sequence_column])
+
+    result_dataset[mutated_sequence_column] = rebuilt
     successful_dataset = result_dataset[success_mask].drop(columns=["error_message"])
-    failed_dataset = result_dataset[~success_mask].drop(columns=["mut_seq"])
+    failed_dataset = result_dataset[~success_mask]
+    if not has_provided_sequences:
+        failed_dataset = failed_dataset.drop(columns=[mutated_sequence_column])
 
     tqdm.write(f"Mutation application: {len(successful_dataset)} successful, {len(failed_dataset)} failed")
     return successful_dataset, failed_dataset
@@ -1981,6 +1995,17 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
         if matches[offset] < total and total in matches.values():
             evidence = ", ".join(f"offset {candidate}: {matched}/{total}" for candidate, matched in matches.items())
             raise ValueError(f"Possible mutation numbering mismatch for reference {name!r}. Wild-type matches by offset: {evidence}. Verify the input numbering before converting. If the annotations were already formatted, check the offset used to format them.")
+
+    if mutated_sequence_column and mutated_sequence_column != sequence_column:
+        provided = df[mutated_sequence_column].astype("string").str.strip().str.upper()
+        has_provided_sequence = provided.notna() & provided.ne("") & df[mutation_column].ne("WT")
+        for row_index, name, annotation, provided_sequence in zip(df.index[has_provided_sequence], df.loc[has_provided_sequence, name_column], df.loc[has_provided_sequence, mutation_column], provided[has_provided_sequence]):
+            if name not in reference_sequences:
+                continue
+            mutations = MutationSet.from_string(annotation, offset=offset, mutation_type=MutationClass, alphabet=alphabet)
+            rebuilt_sequence = str(reference_sequences[name].apply_mutation(mutations))
+            if provided_sequence != rebuilt_sequence:
+                raise ValueError(f"Mutated sequence does not match the reference and annotation in row {row_index!r} for reference {name!r}: provided {provided_sequence!r}, expected {rebuilt_sequence!r}")
 
     return converted, reference_sequences
 
