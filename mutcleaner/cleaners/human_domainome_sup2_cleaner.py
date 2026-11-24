@@ -2,27 +2,28 @@
 from __future__ import annotations
 
 import logging
-import pandas as pd
-from typing import TYPE_CHECKING
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from .base_config import BaseCleanerConfig
-from .basic_cleaners import (
-    read_dataset,
-    extract_and_rename_columns,
-    filter_and_clean_data,
-    convert_data_types,
-    convert_to_mutation_dataset_format,
-    validate_mutations,
-    infer_wildtype_sequences,
-)
-from .human_domainome_custom_cleaners import generate_mutation_strings
+import pandas as pd
+
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
+from .base_config import BaseCleanerConfig
+from .basic_cleaners import (
+    convert_data_types,
+    convert_to_mutation_dataset_format,
+    extract_and_rename_columns,
+    filter_and_clean_data,
+    infer_wildtype_sequences,
+    read_dataset,
+    validate_mutations
+)
+from .human_domainome_custom_cleaners import generate_mutation_strings
 
 if TYPE_CHECKING:
-    from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Union
+    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 __all__ = [
     "HumanDomainomeSup2CleanerConfig",
@@ -107,7 +108,6 @@ class HumanDomainomeSup2CleanerConfig(BaseCleanerConfig):
 
     # Wildtype inference parameters
     infer_wt_workers: int = 16
-    handle_multiple_wt: Literal["error", "first", "separate"] = "error"
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["label_humanDomainome"])
@@ -263,7 +263,6 @@ def create_human_domainome_sup2_cleaner(
                 mutation_column="mut_info",
                 sequence_column=final_config.column_mapping.get("aa_seq", "aa_seq"),
                 label_columns=final_config.label_columns,
-                handle_multiple_wt=final_config.handle_multiple_wt,
                 offset=0,
                 num_workers=final_config.infer_wt_workers,
             )

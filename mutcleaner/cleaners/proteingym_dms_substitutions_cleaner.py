@@ -1,28 +1,26 @@
 # mutcleaner/cleaners/proteingym_dms_substitutions_cleaner.py
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-import logging
+from typing import TYPE_CHECKING
 
-from .base_config import BaseCleanerConfig
-from .basic_cleaners import (
-    extract_and_rename_columns,
-    filter_and_clean_data,
-    convert_data_types,
-    validate_mutations,
-    infer_wildtype_sequences,
-    convert_to_mutation_dataset_format,
-)
-from .proteingym_dms_substitutions_custom_cleaners import (
-    read_proteingym_dms_substitutions_data,
-)
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
+from .base_config import BaseCleanerConfig
+from .basic_cleaners import (
+    convert_data_types,
+    convert_to_mutation_dataset_format,
+    extract_and_rename_columns,
+    filter_and_clean_data,
+    infer_wildtype_sequences,
+    validate_mutations
+)
+from .proteingym_dms_substitutions_custom_cleaners import read_proteingym_dms_substitutions_data
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Literal, Optional, Tuple, Union
+    from typing import Any, Dict, List, Optional, Tuple, Union
 
 __all__ = [
     "ProteinGymCleanerConfig",
@@ -63,8 +61,6 @@ class ProteinGymCleanerConfig(BaseCleanerConfig):
         Number of workers for mutation validation
     infer_wt_workers : int
         Number of workers for wildtype sequence inference
-    handle_multiple_wt : Literal["error", "first", "separate"]
-        Strategy for handling multiple wildtype sequences
     label_columns : List[str]
         List of score columns to process
     primary_label_column : str
@@ -92,7 +88,6 @@ class ProteinGymCleanerConfig(BaseCleanerConfig):
 
     # Wildtype inference parameters
     infer_wt_workers: int = 16
-    handle_multiple_wt: Literal["error", "first", "separate"] = "error"
 
     # Score columns configuration
     label_columns: List[str] = field(default_factory=lambda: ["DMS_score"])
@@ -111,11 +106,6 @@ class ProteinGymCleanerConfig(BaseCleanerConfig):
         """
         # Call parent validation
         super().validate()
-
-        # Validate handle_multiple_wt parameter
-        valid_strategies = ["error", "first", "separate"]
-        if self.handle_multiple_wt not in valid_strategies:
-            raise ValueError(f"handle_multiple_wt must be one of {valid_strategies}, got {self.handle_multiple_wt}")
 
         # Validate score columns
         if not self.label_columns:
@@ -176,11 +166,8 @@ def create_proteingym_dms_substitutions_cleaner(
 
     Custom configuration:
 
-    >>> config = {
-    ...     "validation_workers": 8,
-    ...     "handle_multiple_wt": "first"
-    ... }
-    >>> pipeline = create_protein_gym_cleaner("data/", config=config)
+    >>> config = {"validation_workers": 8}
+    >>> pipeline = create_proteingym_dms_substitutions_cleaner("data/", config=config)
 
     Load configuration from file:
 
@@ -250,7 +237,6 @@ def create_proteingym_dms_substitutions_cleaner(
                 label_columns=final_config.label_columns,
                 mutation_sep=",",
                 offset=0,
-                handle_multiple_wt=final_config.handle_multiple_wt,
                 num_workers=final_config.infer_wt_workers,
             )
             .delayed_then(

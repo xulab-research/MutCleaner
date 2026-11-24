@@ -318,6 +318,23 @@ class TestValidation:
             assert references["mut_seq"].to_dict() == {"mixed": "MA", "control": "MG"}
             assert restored.side["failed"].empty
 
+    def test_infer_wildtype_conflicting_references(self):
+        """Report the first conflicting measurement and the number of distinct references."""
+        variants = pd.DataFrame({
+            "name": ["mixed", "mixed", "mixed", "control"],
+            "mut_info": ["A1V", "G1S", "A1T", "C1V"],
+            "mut_seq": ["MV", "MS", "MT", "MV"],
+            "label_score": [1.0, 2.0, 3.0, 4.0]
+        })
+        restored = infer_wildtype_sequences(variants, offset=0, num_workers=1)
+        assert restored.main.to_dict("records") == [
+            {"name": "control", "mut_info": "C1V", "mut_seq": "MV", "label_score": 4.0},
+            {"name": "control", "mut_info": "WT", "mut_seq": "MC", "label_score": 0.0}
+        ]
+        assert restored.side["failed"].to_dict("records") == [
+            {"name": "mixed", "mut_info": "A1V", "mut_seq": "MV", "label_score": 1.0, "error_message": "Multiple wildtype sequences inferred for mixed: 2"}
+        ]
+
     def test_validate_against_references_valid(self):
         """Test validation of valid mutations."""
         dataset = MutationDataset()

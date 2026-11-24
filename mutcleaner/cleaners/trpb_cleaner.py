@@ -1,32 +1,32 @@
 # mutcleaner/cleaners/TrpB_cleaner.py
 from __future__ import annotations
 
-import pandas as pd
-from typing import TYPE_CHECKING
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-import logging
+from typing import TYPE_CHECKING
 
-from .base_config import BaseCleanerConfig
-from .basic_cleaners import (
-    read_dataset,
-    add_columns,
-    extract_and_rename_columns,
-    filter_and_clean_data,
-    validate_mutations,
-    convert_data_types,
-    subtract_labels_by_wt,
-    apply_mutations_to_sequences,
-    convert_to_mutation_dataset_format,
-    average_labels_by_name,
-)
-from .trpb_custom_cleaner import standardize_trpb_mutation_dataset
+import pandas as pd
 
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
+from .base_config import BaseCleanerConfig
+from .basic_cleaners import (
+    add_columns,
+    apply_mutations_to_sequences,
+    average_labels_by_name,
+    convert_data_types,
+    convert_to_mutation_dataset_format,
+    extract_and_rename_columns,
+    filter_and_clean_data,
+    read_dataset,
+    subtract_labels_by_wt,
+    validate_mutations
+)
+from .trpb_custom_cleaner import standardize_trpb_mutation_dataset
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, List, Literal, Optional, Tuple, Union, Callable
+    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 __all__ = [
     "TrpBCleanerConfig",
@@ -66,8 +66,6 @@ class TrpBCleanerConfig(BaseCleanerConfig):
         Number of workers for mutation validation
     infer_wt_workers : int
         Number of workers for wildtype sequence inference
-    handle_multiple_wt : Literal["error", "first", "separate"]
-        Strategy for handling multiple wildtype sequences
     label_columns : List[str]
         List of score columns to process
     primary_label_column : str

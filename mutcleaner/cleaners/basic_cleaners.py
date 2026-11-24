@@ -1299,13 +1299,13 @@ def infer_mutations_from_sequences(dataset: pd.DataFrame, wt_sequence_column: st
 
 
 @multiout_step(main="success", failed="failed")
-def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: str = "mut_seq", label_columns: Optional[List[str]] = None, wt_label: float = 0.0, mutation_sep: str = ",", sequence_type: Literal["protein", "dna", "rna"] = "protein", handle_multiple_wt: Literal["error", "separate", "first"] = "error", num_workers: int = 4, *, offset: int, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: str = "mut_seq", label_columns: Optional[List[str]] = None, wt_label: float = 0.0, mutation_sep: str = ",", sequence_type: Literal["protein", "dna", "rna"] = "protein", num_workers: int = 4, *, offset: int, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Infer wild-type sequences from mutated sequences and add WT rows.
 
-    This function takes mutated sequences and their corresponding mutations to
-    infer the original wild-type sequences. For each protein, it adds WT row(s)
-    to the dataset with the inferred wild-type sequence.
+    Reverse each measurement's mutations to infer its wild type. If all
+    measurements for a protein agree, append one WT row. If they yield different
+    wild types, skip the entire group and report its first row with an error.
 
     Parameters
     ----------
@@ -1325,8 +1325,6 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
         Separator used to split multiple mutations in a single string
     sequence_type : str, default='protein'
         Type of sequence ('protein', 'dna', 'rna')
-    handle_multiple_wt : Literal["error", "separate", "first"], default='error'
-        How to handle multiple wild-type sequences: 'separate', 'first', or 'error'
     num_workers : int, default=4
         Number of parallel workers for processing, set to -1 for all available CPUs
     offset : int
@@ -1377,7 +1375,6 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
     else:
         raise ValueError(f"Unsupported sequence type: {sequence_type.lower()}. Must be 'protein', 'dna', or 'rna'")
 
-    reserved_names = set(dataset[name_column].dropna().astype(str))
     _process_protein_group = partial(
         infer_wt_sequence_grouped,
         name_column=name_column,
@@ -1387,8 +1384,6 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
         wt_label=wt_label,
         mutation_sep=mutation_sep,
         offset=offset,
-        handle_multiple_wt=handle_multiple_wt,
-        reserved_names=reserved_names,
         sequence_class=SequenceClass,
         alphabet=alphabet,
         include_ambiguous=include_ambiguous,
@@ -1417,15 +1412,17 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
                     name_column: str(protein_name),
                     "error_message": f"Sequential processing error: {type(group_e).__name__}: {str(group_e)}",
                 }
-                results.append(([], [error_row]))
+                results.append(([error_row], "failed"))
 
     # Collect all rows
     successful_rows = []
     failed_rows = []
 
-    for successful_group, failed_group in results:
-        successful_rows.extend(successful_group)
-        failed_rows.extend(failed_group)
+    for rows, status in results:
+        if status == "success":
+            successful_rows.extend(rows)
+        else:
+            failed_rows.extend(rows)
 
     # Convert to DataFrame format
     successful_df = pd.DataFrame(successful_rows) if successful_rows else pd.DataFrame()
