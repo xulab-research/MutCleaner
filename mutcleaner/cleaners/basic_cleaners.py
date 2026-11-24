@@ -767,9 +767,7 @@ def convert_data_types(
     handle_errors : str, default='coerce'
         Error handling strategy: 'raise', 'coerce', or 'ignore'
     optimize_memory : bool, default=True
-        Whether to automatically optimize memory usage by choosing smaller dtypes.
-        When enabled, 'float' becomes float32; explicit 'float64' and np.float64
-        keep their precision.
+        Use smaller dtypes where applicable, including float32 for 'float'.
     use_batch_processing : bool, default=False
         Whether to use batch processing for large datasets
     chunk_size : int, default=10000

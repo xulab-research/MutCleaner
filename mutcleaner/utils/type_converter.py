@@ -55,8 +55,7 @@ def get_conversion_function(target_type: Union[str, Type, np.dtype], optimize_me
     target_type : Union[str, Type, np.dtype]
         Target data type
     optimize_memory : bool
-        Whether to use memory-optimized types. When enabled, ``"float"`` is
-        stored as float32; explicit ``"float64"`` and ``np.float64`` are kept.
+        Whether to use memory-optimized types
 
     Returns
     -------
@@ -196,8 +195,7 @@ def convert_data_types(
     handle_errors : str, default='coerce'
         Error handling strategy: 'raise', 'coerce', or 'ignore'
     optimize_memory : bool, default=True
-        Whether to automatically optimize memory usage. When enabled, ``"float"``
-        is stored as float32; explicit ``"float64"`` and ``np.float64`` are kept.
+        Whether to automatically optimize memory usage
 
     Returns
     -------
