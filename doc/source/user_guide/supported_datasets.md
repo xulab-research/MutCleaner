@@ -293,35 +293,39 @@ saving the cleaned ΔΔG dataset, and exporting the cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_ddg_dtm_source_file
-from mutcleaner.cleaners import (
-    create_ddg_dtm_cleaner, 
-    clean_ddg_dtm_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    raw_data_dir = Path("raw_dataset/ddG_Dataset")
-    download_ddg_dtm_source_file(raw_data_dir, dataset_type="ddg", overwrite=True)
+    downloaded_files = mutcleaner.download_ddg_dtm_source_file("raw_dataset/ddG_Dataset", dataset_type="ddg", overwrite=True, sub_dataset=None)
 
     # File settings
-    for dataset_filepath in sorted(raw_data_dir.glob("*.csv")):
-        data_file = dataset_filepath.stem
+    for dataset_filepath in sorted(downloaded_files.values()):
+        data_file = Path(dataset_filepath).stem
         artifact_path = Path(f"logs/ddG_Dataset/{data_file}/artifacts.pkl")
         artifact_csv_dir = Path(f"logs/ddG_Dataset/{data_file}")
 
         artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
         # Clean data
-        ddgdtm_cleaning_pipeline = create_ddg_dtm_cleaner(dataset_filepath)
-        ddgdtm_cleaning_pipeline, ddgdtm_dataset = clean_ddg_dtm_dataset(
-            ddgdtm_cleaning_pipeline
-        )
+        ddgdtm_cleaning_pipeline = mutcleaner.cleaners.create_ddg_dtm_cleaner(dataset_filepath, config=None)
+        ddgdtm_cleaning_pipeline, ddgdtm_dataset = mutcleaner.cleaners.clean_ddg_dtm_dataset(ddgdtm_cleaning_pipeline)
 
         # Save data
-        ddgdtm_dataset.save(f"cleaned_dataset/cleaned_ddG_Dataset/{data_file}")
-        ddgdtm_cleaning_pipeline.save_artifacts(artifact_path)
+        ddgdtm_dataset.metadata.update({
+            "source_doi": "10.1038/s43588-024-00716-2",
+            "source_url": "https://www.nature.com/articles/s43588-024-00716-2",
+            "measured_property": "Stability",
+            "measurement_type": "ΔΔG",
+            "label_unit": "kcal/mol",
+            "label_direction": "higher_is_more",
+            "assay": "Protein unfolding measurements (multiple methods)",
+            "mutcleaner_version": mutcleaner.__version__
+        })
+        ddgdtm_dataset.save(f"cleaned_dataset/cleaned_ddG_Dataset/{data_file}", save_type="mutcleaner")
+        ddgdtm_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
         # open the pickle file
         with open(artifact_path, "rb") as file:
@@ -351,35 +355,39 @@ saving the cleaned ΔTm dataset, and exporting the cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_ddg_dtm_source_file
-from mutcleaner.cleaners import (
-    create_ddg_dtm_cleaner, 
-    clean_ddg_dtm_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    raw_data_dir = Path("raw_dataset/dTm_Dataset")
-    download_ddg_dtm_source_file(raw_data_dir, dataset_type="dtm", overwrite=True)
+    downloaded_files = mutcleaner.download_ddg_dtm_source_file("raw_dataset/dTm_Dataset", dataset_type="dtm", overwrite=True, sub_dataset=None)
 
     # File settings
-    for dataset_filepath in sorted(raw_data_dir.glob("*.csv")):
-        data_file = dataset_filepath.stem
+    for dataset_filepath in sorted(downloaded_files.values()):
+        data_file = Path(dataset_filepath).stem
         artifact_path = Path(f"logs/dTm_Dataset/{data_file}/artifacts.pkl")
         artifact_csv_dir = Path(f"logs/dTm_Dataset/{data_file}")
 
         artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
         # Clean data
-        ddgdtm_cleaning_pipeline = create_ddg_dtm_cleaner(dataset_filepath)
-        ddgdtm_cleaning_pipeline, ddgdtm_dataset = clean_ddg_dtm_dataset(
-            ddgdtm_cleaning_pipeline
-        )
+        ddgdtm_cleaning_pipeline = mutcleaner.cleaners.create_ddg_dtm_cleaner(dataset_filepath, config=None)
+        ddgdtm_cleaning_pipeline, ddgdtm_dataset = mutcleaner.cleaners.clean_ddg_dtm_dataset(ddgdtm_cleaning_pipeline)
 
         # Save data
-        ddgdtm_dataset.save(f"cleaned_dataset/cleaned_dTm_Dataset/{data_file}")
-        ddgdtm_cleaning_pipeline.save_artifacts(artifact_path)
+        ddgdtm_dataset.metadata.update({
+            "source_doi": "10.1038/s43588-024-00716-2",
+            "source_url": "https://www.nature.com/articles/s43588-024-00716-2",
+            "measured_property": "Stability",
+            "measurement_type": "ΔTm",
+            "label_unit": "°C",
+            "label_direction": "higher_is_more",
+            "assay": "Thermal denaturation measurements (multiple methods)",
+            "mutcleaner_version": mutcleaner.__version__
+        })
+        ddgdtm_dataset.save(f"cleaned_dataset/cleaned_dTm_Dataset/{data_file}", save_type="mutcleaner")
+        ddgdtm_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
         # open the pickle file
         with open(artifact_path, "rb") as file:
