@@ -1856,6 +1856,7 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
         raise ValueError(f"Missing required columns: {missing_basic}")
 
     # Convert `mutation_column`` to uppercase for consistency
+    df = df.copy()
     df[mutation_column] = df[mutation_column].str.upper()
 
     # Select appropriate sequence class based on sequence_type
