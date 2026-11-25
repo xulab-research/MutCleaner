@@ -697,16 +697,13 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_ctxm_source_file
-from mutcleaner.cleaners import (
-    create_ctxm_cleaner,
-    clean_ctxm_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_ctxm_source_file("raw_dataset/CTXM_Epistasis_Dataset", overwrite=True, sub_dataset="CTXM_Ampicillin_Epistasis_Dataset")
+    mutcleaner.download_ctxm_source_file("raw_dataset/CTXM_Epistasis_Dataset", overwrite=True, sub_dataset="CTXM_Ampicillin_Epistasis_Dataset")
 
     # File settings
     dataset_filepath = Path("raw_dataset/CTXM_Epistasis_Dataset/Doubles_A3_processed.txt")
@@ -716,10 +713,20 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    ctxm_cleaning_pipeline = create_ctxm_cleaner(dataset_filepath)
-    ctxm_cleaning_pipeline, ctxm_dataset = clean_ctxm_dataset(ctxm_cleaning_pipeline)
+    ctxm_cleaning_pipeline = mutcleaner.cleaners.create_ctxm_cleaner(dataset_filepath)
+    ctxm_cleaning_pipeline, ctxm_dataset = mutcleaner.cleaners.clean_ctxm_dataset(ctxm_cleaning_pipeline)
 
     # Save data
+    ctxm_dataset.metadata.update({
+        "source_doi": "10.1073/pnas.2313513121",
+        "source_url": "https://www.pnas.org/doi/10.1073/pnas.2313513121",
+        "measured_property": "Organismal Fitness",
+        "measurement_type": "Relative fitness (log10 enrichment relative to wild type)",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Ampicillin selection and deep sequencing",
+        "mutcleaner_version": mutcleaner.__version__
+    })
     ctxm_dataset.save("cleaned_dataset/cleaned_CTXM_Epistasis_Dataset")
     ctxm_cleaning_pipeline.save_artifacts(artifact_path)
 
@@ -746,20 +753,16 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_ctxm_source_file
-from mutcleaner.cleaners import (
-    CTXMCleanerConfig,
-    create_ctxm_cleaner,
-    clean_ctxm_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_ctxm_source_file("raw_dataset/CTXM_Epistasis_Dataset", overwrite=True, sub_dataset="CTXM_Cefotaxime_Epistasis_Dataset")
+    mutcleaner.download_ctxm_source_file("raw_dataset/CTXM_Epistasis_Dataset", overwrite=True, sub_dataset="CTXM_Cefotaxime_Epistasis_Dataset")
 
     # Set cleaning configs
-    ctxm_cleaning_config = CTXMCleanerConfig()
+    ctxm_cleaning_config = mutcleaner.cleaners.CTXMCleanerConfig()
     ctxm_cleaning_config.wt_name = "CTXM_cefotaxime"
 
     # File settings
@@ -770,10 +773,20 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    ctxm_cleaning_pipeline = create_ctxm_cleaner(dataset_filepath, ctxm_cleaning_config)
-    ctxm_cleaning_pipeline, ctxm_dataset = clean_ctxm_dataset(ctxm_cleaning_pipeline)
+    ctxm_cleaning_pipeline = mutcleaner.cleaners.create_ctxm_cleaner(dataset_filepath, ctxm_cleaning_config)
+    ctxm_cleaning_pipeline, ctxm_dataset = mutcleaner.cleaners.clean_ctxm_dataset(ctxm_cleaning_pipeline)
 
     # Save data
+    ctxm_dataset.metadata.update({
+        "source_doi": "10.1073/pnas.2313513121",
+        "source_url": "https://www.pnas.org/doi/10.1073/pnas.2313513121",
+        "measured_property": "Organismal Fitness",
+        "measurement_type": "Relative fitness (log10 enrichment relative to wild type)",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Cefotaxime selection and deep sequencing",
+        "mutcleaner_version": mutcleaner.__version__
+    })
     ctxm_dataset.save("cleaned_dataset/cleaned_CTXM_Epistasis_Dataset")
     ctxm_cleaning_pipeline.save_artifacts(artifact_path)
 
@@ -790,7 +803,6 @@ if __name__ == "__main__":
 
     multiprocessing.freeze_support()
     main()
-
 ```
 
 ### Advanced Settings
