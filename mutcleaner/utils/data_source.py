@@ -245,8 +245,8 @@ DATASETS = {
         "file_name": ["Chitosanase_dTm_Dataset.csv"],
     },
     "MGnify ddG Dataset": {
-        "paper_title": "MGnify_ddG_dataset",
-        "official_doi": None,
+        "paper_title": "Accurate protein stability prediction for small domains using mega-scale experiments",
+        "official_doi": "https://doi.org/10.64898/2026.05.19.726285",
         "huggingface_repos": [
             "datasets/xulab-research/MutCleaner/resolve/main/MGnify_ddG_Dataset/MGnify_ddG_Dataset.csv?download=true",
         ],
