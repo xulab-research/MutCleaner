@@ -651,39 +651,52 @@ See {py:class}`mutcleaner.cleaners.AntitoxinParD3CleanerConfig` for details.
 
 ### Basic Usage
 
+Of the 160,000 amino acid combinations without a stop codon, the authors
+experimentally quantified 159,129 and imputed fitness scores for the
+remaining 871 using k-nearest neighbors.
+The cleaned label is the variant's normalized growth fitness minus that of
+the experimental parent (Tm9D8*, abbreviated VFVS). Positive values indicate
+higher growth fitness than the parent.
+
 The following example shows the complete workflow for downloading, cleaning,
 saving the cleaned TrpB Epistasis dataset, and exporting the
 cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_trpb_source_file
-from mutcleaner.cleaners import (
-    create_trpb_cleaner,
-    clean_trpb_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_trpb_source_file("raw_dataset/TrpB_Epistasis_Dataset", overwrite=True)
- 
-    # File settings
     dataset_filepath = Path("raw_dataset/TrpB_Epistasis_Dataset/TrpB_Epistasis_Dataset.csv")
+    if not dataset_filepath.is_file():
+        mutcleaner.download_trpb_source_file(str(dataset_filepath.parent), overwrite=False)
+
+    # File settings
     artifact_path = Path("logs/TrpB_Epistasis_Dataset/artifacts.pkl")
     artifact_csv_dir = Path("logs/TrpB_Epistasis_Dataset")
 
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    trpb_cleaning_pipeline = create_trpb_cleaner(dataset_filepath)
-    trpb_cleaning_pipeline, trpb_dataset = clean_trpb_dataset(
-        trpb_cleaning_pipeline
-    )
+    trpb_cleaning_pipeline = mutcleaner.cleaners.create_trpb_cleaner(dataset_filepath, config=None)
+    trpb_cleaning_pipeline, trpb_dataset = mutcleaner.cleaners.clean_trpb_dataset(trpb_cleaning_pipeline)
 
     # Save data
-    trpb_dataset.save("cleaned_dataset/cleaned_TrpB_Epistasis_Dataset")
-    trpb_cleaning_pipeline.save_artifacts(artifact_path)
+    trpb_dataset.metadata.update({
+        "source_doi": "10.1073/pnas.2400439121",
+        "source_url": "https://www.pnas.org/doi/10.1073/pnas.2400439121",
+        "measured_property": "Organismal Fitness",
+        "measurement_type": "Normalized growth fitness difference (variant minus parent)",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Pooled-culture enrichment assay",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    trpb_dataset.save("cleaned_dataset/cleaned_TrpB_Epistasis_Dataset", save_type="mutcleaner")
+    trpb_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file and read the object
     with open(artifact_path, "rb") as file:
