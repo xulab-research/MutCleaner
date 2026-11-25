@@ -635,16 +635,13 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_protein_human_myoglobin_source_file
-from mutcleaner.cleaners import (
-    create_protein_human_myoglobin_cleaner,
-    clean_protein_human_myoglobin_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_protein_human_myoglobin_source_file("raw_dataset/Protein_Human_Myoglobin_Epistasis_Dataset", overwrite=True)
+    mutcleaner.download_protein_human_myoglobin_source_file("raw_dataset/Protein_Human_Myoglobin_Epistasis_Dataset", overwrite=True)
     # File settings
     dataset_filepath = Path("raw_dataset/Protein_Human_Myoglobin_Epistasis_Dataset/Protein_Human_Myoglobin_Epistasis_Dataset.csv")
     artifact_path = Path("logs/Protein_Human_Myoglobin_Epistasis_Dataset/artifacts.pkl")
@@ -653,14 +650,22 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    protein_human_myoglobin_cleaning_pipeline = create_protein_human_myoglobin_cleaner(dataset_filepath)
-    protein_human_myoglobin_cleaning_pipeline, protein_human_myoglobin_dataset_dataset = clean_protein_human_myoglobin_dataset(
-        protein_human_myoglobin_cleaning_pipeline
-    )
+    pipeline = mutcleaner.cleaners.create_protein_human_myoglobin_cleaner(dataset_filepath, config=None)
+    pipeline, dataset = mutcleaner.cleaners.clean_protein_human_myoglobin_dataset(pipeline)
 
     # Save data
-    protein_human_myoglobin_dataset_dataset.save("cleaned_dataset/cleaned_Protein_Human_Myoglobin_Epistasis_Dataset")
-    protein_human_myoglobin_cleaning_pipeline.save_artifacts(artifact_path)
+    dataset.metadata.update({
+        "source_doi": "10.1002/pro.70112",
+        "source_url": "https://onlinelibrary.wiley.com/doi/full/10.1002/pro.70112",
+        "measured_property": "Expression",
+        "measurement_type": "Expression fitness score",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Yeast surface display, fluorescence-activated cell sorting (FACS) and deep sequencing",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    dataset.save("cleaned_dataset/cleaned_Protein_Human_Myoglobin_Epistasis_Dataset", save_type="mutcleaner")
+    pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file and read the object
     with open(artifact_path, "rb") as file:
@@ -675,7 +680,6 @@ if __name__ == "__main__":
 
     multiprocessing.freeze_support()
     main()
-
 ```
 
 ### Advanced Settings
@@ -1204,16 +1208,13 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_codon_human_myoglobin_source_file
-from mutcleaner.cleaners import (
-    create_codon_human_myoglobin_cleaner,
-    clean_codon_human_myoglobin_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_codon_human_myoglobin_source_file("raw_dataset/Codon_Human_Myoglobin_Epistasis_Dataset", overwrite=True)
+    mutcleaner.download_codon_human_myoglobin_source_file("raw_dataset/Codon_Human_Myoglobin_Epistasis_Dataset", overwrite=True)
     # File settings
     dataset_filepath = Path("raw_dataset/Codon_Human_Myoglobin_Epistasis_Dataset/Codon_Human_Myoglobin_Epistasis_Dataset.csv")
     artifact_path = Path("logs/Codon_Human_Myoglobin_Epistasis_Dataset/artifacts.pkl")
@@ -1222,14 +1223,22 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    codon_human_myoglobin_cleaning_pipeline = create_codon_human_myoglobin_cleaner(dataset_filepath)
-    codon_human_myoglobin_cleaning_pipeline, codon_human_myoglobin_dataset_dataset = clean_codon_human_myoglobin_dataset(
-        codon_human_myoglobin_cleaning_pipeline
-    )
+    pipeline = mutcleaner.cleaners.create_codon_human_myoglobin_cleaner(dataset_filepath, config=None)
+    pipeline, dataset = mutcleaner.cleaners.clean_codon_human_myoglobin_dataset(pipeline)
 
     # Save data
-    codon_human_myoglobin_dataset_dataset.save("cleaned_dataset/cleaned_Codon_Human_Myoglobin_Epistasis_Dataset")
-    codon_human_myoglobin_cleaning_pipeline.save_artifacts(artifact_path)
+    dataset.metadata.update({
+        "source_doi": "10.1002/pro.70112",
+        "source_url": "https://onlinelibrary.wiley.com/doi/full/10.1002/pro.70112",
+        "measured_property": "Expression",
+        "measurement_type": "Expression fitness score",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Yeast surface display, fluorescence-activated cell sorting (FACS) and deep sequencing",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    dataset.save("cleaned_dataset/cleaned_Codon_Human_Myoglobin_Epistasis_Dataset", save_type="mutcleaner")
+    pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file and read the object
     with open(artifact_path, "rb") as file:
@@ -1244,7 +1253,6 @@ if __name__ == "__main__":
 
     multiprocessing.freeze_support()
     main()
-
 ```
 
 ### Advanced Settings
