@@ -163,8 +163,8 @@ DATASETS = {
         "file_name": ["TrpB_Epistasis_Dataset.csv"],
     },
     "Antitoxin ParD3 Epistasis Dataset": {
-        "paper_title": "Antitoxin_ParD3_datasets",
-        "official_doi": "https://doi.org/10.1038/s41467-024-45621-4",
+        "paper_title": "Co-evolution of interacting proteins through non-contacting and non-specific mutations",
+        "official_doi": "https://doi.org/10.1038/s41559-022-01688-0",
         "huggingface_repos": ["datasets/xulab-research/MutCleaner/resolve/main/Antitoxin_ParD3_Epistasis_Dataset/Antitoxin_ParD3_Epistasis_Dataset.csv?download=true"],
         "file_name": ["Antitoxin_ParD3_Epistasis_Dataset.csv"],
     },
