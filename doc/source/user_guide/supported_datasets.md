@@ -9,32 +9,37 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_human_domainome_source_file
-from mutcleaner.cleaners import (
-    create_human_domainome_sup2_cleaner,
-    clean_human_domainome_sup2_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_human_domainome_source_file("raw_dataset/Human_Domainome_Dataset", overwrite=True)
+    mutcleaner.download_human_domainome_source_file("raw_dataset/Human_Domainome_Dataset", overwrite=True, sub_dataset="Human Domainome Sup2 Dataset")
     # File settings
     dataset_filepath = Path("raw_dataset/Human_Domainome_Dataset/SupplementaryTable2.txt")
-    artifact_path = Path("logs/Human_Domainome_Dataset/artifacts.pkl")
-    artifact_csv_dir = Path("logs/Human_Domainome_Dataset")
+    artifact_path = Path("logs/Human_Domainome_Dataset/Human_Domainome_Sup2_Dataset/artifacts.pkl")
+    artifact_csv_dir = Path("logs/Human_Domainome_Dataset/Human_Domainome_Sup2_Dataset")
 
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    hd_cleaning_pipeline = create_human_domainome_sup2_cleaner(dataset_filepath)
-    hd_cleaning_pipeline, hd_dataset = clean_human_domainome_sup2_dataset(
-        hd_cleaning_pipeline
-    )
+    hd_cleaning_pipeline = mutcleaner.cleaners.create_human_domainome_sup2_cleaner(dataset_filepath, config=None)
+    hd_cleaning_pipeline, hd_dataset = mutcleaner.cleaners.clean_human_domainome_sup2_dataset(hd_cleaning_pipeline)
 
     # Save data
-    hd_dataset.save("cleaned_dataset/cleaned_Human_Domainome_Dataset")
-    hd_cleaning_pipeline.save_artifacts(artifact_path)
+    hd_dataset.metadata.update({
+        "source_doi": "10.1038/s41586-024-08370-4",
+        "source_url": "https://www.nature.com/articles/s41586-024-08370-4",
+        "measured_property": "Expression",
+        "measurement_type": "Normalized aPCA fitness",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Abundance protein fragment complementation assay (aPCA)",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    hd_dataset.save("cleaned_dataset/cleaned_Human_Domainome_Dataset/Human_Domainome_Sup2_Dataset", save_type="mutcleaner")
+    hd_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file and read the object
     with open(artifact_path, "rb") as file:
@@ -61,30 +66,35 @@ saving the cleaned Human Domainome sup4 dataset, and exporting the cleaning arti
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_human_domainome_source_file
-from mutcleaner.cleaners import (
-    create_human_domainome_sup4_cleaner,
-    clean_human_domainome_sup4_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # File settings
-    download_human_domainome_source_file("raw_dataset/Human_Domainome_Dataset", overwrite=True, sub_dataset="Human Domainome Sup4 Dataset")
+    mutcleaner.download_human_domainome_source_file("raw_dataset/Human_Domainome_Dataset", overwrite=True, sub_dataset="Human Domainome Sup4 Dataset")
     artifact_path = Path("logs/Human_Domainome_Dataset/Human_Domainome_Sup4_Dataset/artifacts.pkl")
     artifact_csv_dir = Path("logs/Human_Domainome_Dataset/Human_Domainome_Sup4_Dataset")
 
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    hd_cleaning_pipeline = create_human_domainome_sup4_cleaner(dataset_or_path="raw_dataset/Human_Domainome_Dataset/SupplementaryTable4.txt", sequence_source="raw_dataset/Human_Domainome_Dataset/wild_type.fasta")
-    hd_cleaning_pipeline, hd_dataset = clean_human_domainome_sup4_dataset(
-        hd_cleaning_pipeline
-    )
+    hd_cleaning_pipeline = mutcleaner.cleaners.create_human_domainome_sup4_cleaner(dataset_or_path="raw_dataset/Human_Domainome_Dataset/SupplementaryTable4.txt", sequence_source="raw_dataset/Human_Domainome_Dataset/wild_type.fasta", config=None)
+    hd_cleaning_pipeline, hd_dataset = mutcleaner.cleaners.clean_human_domainome_sup4_dataset(hd_cleaning_pipeline)
 
     # Save data
-    hd_dataset.save("cleaned_dataset/cleaned_Human_Domainome_Dataset/Human_Domainome_Sup4_Dataset")
-    hd_cleaning_pipeline.save_artifacts(artifact_path)
+    hd_dataset.metadata.update({
+        "source_doi": "10.1038/s41586-024-08370-4",
+        "source_url": "https://www.nature.com/articles/s41586-024-08370-4",
+        "measured_property": "Stability",
+        "measurement_type": "Sign-reversed scaled homologue-averaged folding ΔΔG",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Abundance protein fragment complementation assay (aPCA) with MoCHI thermodynamic modelling",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    hd_dataset.save("cleaned_dataset/cleaned_Human_Domainome_Dataset/Human_Domainome_Sup4_Dataset", save_type="mutcleaner")
+    hd_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file and read the object
     with open(artifact_path, "rb") as file:
@@ -412,22 +422,24 @@ See {py:class}`mutcleaner.cleaners.DdgDtmCleanerConfig` for details.
 
 ### ArchStabMS1E10 Epistasis Sup4 Dataset
 
+Supplementary Table 4 reports DiMSum fitness scores for intracellular protein
+abundance (AbundancePCA) and ligand binding (BindingPCA). Higher scores
+indicate greater abundance or binding in the corresponding assay.
+[Faure et al., Supplementary Table 4](https://www.nature.com/articles/s41586-024-07966-0#Sec33)
+
 The following example shows the complete workflow for downloading, cleaning,
 saving the cleaned ArchStabMS1E10 Epistasis Sup4 dataset, and exporting the
 cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_archstabms1e10_source_file
-from mutcleaner.cleaners import (
-    create_archstabms_1e10_sup4_cleaner,
-    clean_archstabms_1e10_sup4_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare dataset
-    download_archstabms1e10_source_file("raw_dataset/ArchStabMS1E10_Epistasis_Dataset", overwrite=True, sub_dataset="ArchStabMS1E10_Epistasis_Sup4_Dataset")
+    mutcleaner.download_archstabms1e10_source_file("raw_dataset/ArchStabMS1E10_Epistasis_Dataset", overwrite=True, sub_dataset="ArchStabMS1E10_Epistasis_Sup4_Dataset")
 
     # File settings
     dataset_filepath = Path("raw_dataset/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset.csv")
@@ -437,14 +449,31 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    archstabms1e10_sup4_cleaning_pipeline = create_archstabms_1e10_sup4_cleaner(dataset_filepath)
-    archstabms1e10_sup4_cleaning_pipeline, archstabms1e10_sup4_dataset = clean_archstabms_1e10_sup4_dataset(
-        archstabms1e10_sup4_cleaning_pipeline
-    )
+    archstabms1e10_sup4_cleaning_pipeline = mutcleaner.cleaners.create_archstabms_1e10_sup4_cleaner(dataset_filepath, config=None)
+    archstabms1e10_sup4_cleaning_pipeline, archstabms1e10_sup4_dataset = mutcleaner.cleaners.clean_archstabms_1e10_sup4_dataset(archstabms1e10_sup4_cleaning_pipeline)
 
     # Save data
-    archstabms1e10_sup4_dataset.save("cleaned_dataset/cleaned_ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset")
-    archstabms1e10_sup4_cleaning_pipeline.save_artifacts(artifact_path)
+    assay_metadata = {
+        "Abundance": ("Expression", "Abundance fitness", "AbundancePCA"),
+        "Binding": ("Binding", "Binding fitness", "BindingPCA")
+    }
+    for reference_id in archstabms1e10_sup4_dataset.list_reference_sequences():
+        phenotype = reference_id.rsplit("_", 1)[1]
+        measured_property, measurement_type, assay = assay_metadata[phenotype]
+        reference_dataset = archstabms1e10_sup4_dataset.filter_by_reference(reference_id)
+        reference_dataset.name = archstabms1e10_sup4_dataset.name
+        reference_dataset.metadata.update({
+            "source_doi": "10.1038/s41586-024-07966-0",
+            "source_url": "https://www.nature.com/articles/s41586-024-07966-0",
+            "measured_property": measured_property,
+            "measurement_type": measurement_type,
+            "label_unit": "dimensionless",
+            "label_direction": "higher_is_more",
+            "assay": assay,
+            "mutcleaner_version": mutcleaner.__version__
+        })
+        reference_dataset.save("cleaned_dataset/cleaned_ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup4_Dataset", save_type="mutcleaner")
+    archstabms1e10_sup4_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file
     with open(artifact_path, "rb") as file:
@@ -466,22 +495,27 @@ if __name__ == "__main__":
 See {py:class}`mutcleaner.cleaners.ArchStabMS1E10CleanerSup4Config` for details.
 
 ### ArchStabMS1E10 Epistasis Sup5 Dataset
+
+Supplementary Table 5 contains MoCHI estimates of folding and binding free
+energy changes. For double mutants, MutCleaner adds the coupling term to the
+two single-mutant effects to obtain the total ΔΔG relative to wild type.
+Lower ΔΔG indicates greater stability or stronger binding. Library 3 uses
+AbundancePCA and BindingPCA jointly to infer both traits.
+[Faure et al., Fig. 4](https://www.nature.com/articles/s41586-024-07966-0#Fig4)
+
 The following example shows the complete workflow for downloading, cleaning,
 saving the cleaned ArchStabMS1E10 Epistasis Sup5 dataset, and exporting the
 cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_archstabms1e10_source_file
-from mutcleaner.cleaners import (
-    create_archstabms_1e10_sup5_cleaner,
-    clean_archstabms_1e10_sup5_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare dataset
-    download_archstabms1e10_source_file("raw_dataset/ArchStabMS1E10_Epistasis_Dataset", overwrite=True, sub_dataset="ArchStabMS1E10_Epistasis_Sup5_Dataset")
+    mutcleaner.download_archstabms1e10_source_file("raw_dataset/ArchStabMS1E10_Epistasis_Dataset", overwrite=True, sub_dataset="ArchStabMS1E10_Epistasis_Sup5_Dataset")
 
     # File settings
     dataset_filepath = Path("raw_dataset/ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset.csv")
@@ -491,14 +525,31 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    archstabms1e10_sup5_cleaning_pipeline = create_archstabms_1e10_sup5_cleaner(dataset_filepath)
-    archstabms1e10_sup5_cleaning_pipeline, archstabms1e10_sup5_dataset = clean_archstabms_1e10_sup5_dataset(
-        archstabms1e10_sup5_cleaning_pipeline
-    )
+    archstabms1e10_sup5_cleaning_pipeline = mutcleaner.cleaners.create_archstabms_1e10_sup5_cleaner(dataset_filepath, config=None)
+    archstabms1e10_sup5_cleaning_pipeline, archstabms1e10_sup5_dataset = mutcleaner.cleaners.clean_archstabms_1e10_sup5_dataset(archstabms1e10_sup5_cleaning_pipeline)
 
     # Save data
-    archstabms1e10_sup5_dataset.save("cleaned_dataset/cleaned_ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset/")
-    archstabms1e10_sup5_cleaning_pipeline.save_artifacts(artifact_path)
+    trait_metadata = {
+        "Folding": ("Stability", "Folding free energy change (ΔΔG_f)"),
+        "Binding": ("Binding", "Binding free energy change (ΔΔG_b)")
+    }
+    for reference_id in archstabms1e10_sup5_dataset.list_reference_sequences():
+        library, trait = reference_id.split("_")
+        measured_property, measurement_type = trait_metadata[trait]
+        reference_dataset = archstabms1e10_sup5_dataset.filter_by_reference(reference_id)
+        reference_dataset.name = archstabms1e10_sup5_dataset.name
+        reference_dataset.metadata.update({
+            "source_doi": "10.1038/s41586-024-07966-0",
+            "source_url": "https://www.nature.com/articles/s41586-024-07966-0",
+            "measured_property": measured_property,
+            "measurement_type": measurement_type,
+            "label_unit": "kcal/mol",
+            "label_direction": "lower_is_more",
+            "assay": "AbundancePCA and BindingPCA" if library == "3" else "AbundancePCA",
+            "mutcleaner_version": mutcleaner.__version__
+        })
+        reference_dataset.save("cleaned_dataset/cleaned_ArchStabMS1E10_Epistasis_Dataset/ArchStabMS1E10_Epistasis_Sup5_Dataset", save_type="mutcleaner")
+    archstabms1e10_sup5_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file
     with open(artifact_path, "rb") as file:
@@ -521,6 +572,21 @@ See {py:class}`mutcleaner.cleaners.ArchStabMS1E10CleanerSup5Config` for details.
 
 ## Antitoxin ParD3 Epistasis Dataset
 
+Lite et al. constructed the three-site ParD3 library. Ding et al. (2022)
+measured how well its variants neutralized wild-type ParE3 in a pooled
+competitive growth assay. [Library paper](https://doi.org/10.7554/eLife.60924) · [Measurement paper, Fig. 6](https://www.nature.com/articles/s41559-022-01688-0#Fig6)
+
+Because the assay measures cell growth, we use `Organismal Fitness` for
+`measured_property`, following the ProteinGym benchmark website.
+[ProteinGym benchmarks](https://proteingym.org/benchmarks)
+
+The input `label` comes from the `E3` column of the three-site table
+distributed with CoVES. MutCleaner subtracts the wild-type ParD3 score from
+each variant's normalized fitness. The difference is dimensionless.
+A value of zero matches wild-type fitness,
+and higher values indicate stronger toxin neutralization in this assay.
+[CoVES data table](https://github.com/ddingding/CoVES/blob/main/data/DMS_data/df_mut_all_norm.csv)
+
 ### Basic Usage
 
 The following example shows the complete workflow for downloading, cleaning,
@@ -529,17 +595,14 @@ cleaning artifacts:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_antitoxin_pard3_source_file
-from mutcleaner.cleaners import (
-    create_antitoxin_pard3_cleaner,
-    clean_antitoxin_pard3_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare dataset
-    download_antitoxin_pard3_source_file("raw_dataset/Antitoxin_ParD3_Epistasis_Dataset", overwite=True)
-    
+    mutcleaner.download_antitoxin_pard3_source_file("raw_dataset/Antitoxin_ParD3_Epistasis_Dataset", overwrite=True)
+
     # File settings
     dataset_file_path = Path("raw_dataset/Antitoxin_ParD3_Epistasis_Dataset/Antitoxin_ParD3_Epistasis_Dataset.csv")
     artifact_path = Path("logs/Antitoxin_ParD3_Epistasis_Dataset/artifacts.pkl")
@@ -548,14 +611,22 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    antitoxin_pard3_cleaning_pipeline = create_antitoxin_pard3_cleaner(dataset_file_path)
-    antitoxin_pard3_cleaning_pipeline, antitoxin_pard3_dataset = (
-        clean_antitoxin_pard3_dataset(antitoxin_pard3_cleaning_pipeline)
-    )
+    antitoxin_pard3_cleaning_pipeline = mutcleaner.cleaners.create_antitoxin_pard3_cleaner(dataset_file_path, config=None)
+    antitoxin_pard3_cleaning_pipeline, antitoxin_pard3_dataset = mutcleaner.cleaners.clean_antitoxin_pard3_dataset(antitoxin_pard3_cleaning_pipeline)
 
     # Save data
-    antitoxin_pard3_dataset.save("cleaned_dataset/cleaned_Antitoxin_ParD3_Epistasis_Dataset")
-    antitoxin_pard3_cleaning_pipeline.save_artifacts(artifact_path)
+    antitoxin_pard3_dataset.metadata.update({
+        "source_doi": "10.1038/s41559-022-01688-0",
+        "source_url": "https://www.nature.com/articles/s41559-022-01688-0",
+        "measured_property": "Organismal Fitness",
+        "measurement_type": "Normalized fitness difference (variant minus wild type)",
+        "label_unit": "dimensionless",
+        "label_direction": "higher_is_more",
+        "assay": "Pooled competitive growth assay",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    antitoxin_pard3_dataset.save("cleaned_dataset/cleaned_Antitoxin_ParD3_Epistasis_Dataset", save_type="mutcleaner")
+    antitoxin_pard3_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     # open the pickle file
     with open(artifact_path, "rb") as file:
