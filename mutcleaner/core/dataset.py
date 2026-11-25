@@ -754,7 +754,10 @@ class MutationDataset:
 
         - {base_dir}/{reference_id}/data.csv: mutation data with columns [mutation_name, mutated_sequence, label]
         - {base_dir}/{reference_id}/wt.fasta: wild-type reference sequence
-        - {base_dir}/{reference_id}/metadata.json: reference information and statistics for rows written to data.csv
+        - {base_dir}/{reference_id}/metadata.json: dataset metadata, reference information, and statistics for rows written to data.csv
+
+        Reference information and export statistics take precedence over dataset
+        metadata with the same keys.
 
         Parameters
         ----------
@@ -955,6 +958,7 @@ class MutationDataset:
             # sequence_length is the actual number of sequence characters:
             # amino acids for proteins and nucleotides for DNA/RNA.
             metadata = {
+                **self.metadata,
                 "reference_id": ref_id,
                 "sequence_name": ref_sequence.name,
                 "sequence_type": type(ref_sequence).__name__,
@@ -970,7 +974,7 @@ class MutationDataset:
             }
 
             with open(ref_dir / "metadata.json", "w", encoding="utf-8") as metadata_file:
-                json.dump(metadata, metadata_file, indent=2, default=str)
+                json.dump(metadata, metadata_file, indent=2, ensure_ascii=False, default=str)
 
     def save(
         self,
@@ -1150,7 +1154,7 @@ class MutationDataset:
 
             if metadata_path.exists():
                 try:
-                    with open(metadata_path, "r") as f:
+                    with open(metadata_path, "r", encoding="utf-8") as f:
                         metadata = json.load(f)
                     original_ref_id = metadata.get("reference_id", ref_dir.name)
                     stored_type = metadata.get("sequence_type")
