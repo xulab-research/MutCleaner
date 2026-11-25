@@ -194,7 +194,7 @@ def main():
     cdna_dataset.metadata.update({
         "source_doi": "10.1038/s41586-023-06328-6",
         "source_url": "https://www.nature.com/articles/s41586-023-06328-6",
-        "measured_property": "stability",
+        "measured_property": "Stability",
         "measurement_type": "ΔΔG",
         "label_unit": "kcal/mol",
         "label_direction": "higher_is_more",
@@ -256,7 +256,7 @@ def main():
     cdna_dataset.metadata.update({
         "source_doi": "10.1038/s41586-023-06328-6",
         "source_url": "https://www.nature.com/articles/s41586-023-06328-6",
-        "measured_property": "stability",
+        "measured_property": "Stability",
         "measurement_type": "ΔG",
         "label_unit": "kcal/mol",
         "label_direction": "higher_is_more",
@@ -1084,16 +1084,13 @@ You can download the source file directly by running (see {py:func}`mutcleaner.u
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_codon_cdna_proteolysis_source_file
-from mutcleaner.cleaners import (
-    create_codon_cdna_proteolysis_cleaner,
-    clean_codon_cdna_proteolysis_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # download the Codon cDNA Proteolysis dataset
-    download_codon_cdna_proteolysis_source_file("raw_dataset/Codon_cDNA_Proteolysis_Dataset", overwrite=True)
+    mutcleaner.download_codon_cdna_proteolysis_source_file("raw_dataset/Codon_cDNA_Proteolysis_Dataset", overwrite=True)
 
     # File settings
     dataset_filepath = Path("raw_dataset/Codon_cDNA_Proteolysis_Dataset/Codon_cDNA_Proteolysis_Dataset.csv")
@@ -1103,12 +1100,21 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    codon_cdna_cleaning_pipeline = create_codon_cdna_proteolysis_cleaner(dataset_filepath, sequence_source="raw_dataset/Codon_cDNA_Proteolysis_Dataset/wt.fasta")
-    codon_cdna_cleaning_pipeline, codon_cdna_dataset = clean_codon_cdna_proteolysis_dataset(
-        codon_cdna_cleaning_pipeline
-    )
+    codon_cdna_cleaning_pipeline = mutcleaner.cleaners.create_codon_cdna_proteolysis_cleaner(dataset_filepath, sequence_source="raw_dataset/Codon_cDNA_Proteolysis_Dataset/wt.fasta")
+    codon_cdna_cleaning_pipeline, codon_cdna_dataset = mutcleaner.cleaners.clean_codon_cdna_proteolysis_dataset(codon_cdna_cleaning_pipeline)
 
     # Save data
+    # The provider of the preprocessed data identifies fitness as the original ddG_ML column.
+    codon_cdna_dataset.metadata.update({
+        "source_doi": "10.1038/s41586-023-06328-6",
+        "source_url": "https://www.nature.com/articles/s41586-023-06328-6",
+        "measured_property": "Stability",
+        "measurement_type": "ΔΔG",
+        "label_unit": "kcal/mol",
+        "label_direction": "higher_is_more",
+        "assay": "cDNA display proteolysis",
+        "mutcleaner_version": mutcleaner.__version__
+    })
     codon_cdna_dataset.save("cleaned_dataset/cleaned_Codon_cDNA_Proteolysis_Dataset")
     codon_cdna_cleaning_pipeline.save_artifacts(artifact_path)
 
