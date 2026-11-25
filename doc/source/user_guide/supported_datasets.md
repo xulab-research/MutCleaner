@@ -171,16 +171,13 @@ cleaning artifacts, using ΔΔG as the label:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_protein_cdna_proteolysis_source_file
-from mutcleaner.cleaners import (
-    create_cdna_proteolysis_cleaner,
-    clean_cdna_proteolysis_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare dataset
-    download_protein_cdna_proteolysis_source_file("raw_dataset/Protein_cDNA_Proteolysis_Dataset", overwrite=True)
+    mutcleaner.download_protein_cdna_proteolysis_source_file("raw_dataset/Protein_cDNA_Proteolysis_Dataset", overwrite=True)
 
     # File settings
     dataset_filepath = Path("raw_dataset/Protein_cDNA_Proteolysis_Dataset/Tsuboyama2023_Dataset2_Dataset3_20230416.csv")
@@ -190,12 +187,20 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    cdna_cleaning_pipeline = create_cdna_proteolysis_cleaner(dataset_filepath)
-    cdna_cleaning_pipeline, cdna_dataset = clean_cdna_proteolysis_dataset(
-        cdna_cleaning_pipeline
-    )
+    cdna_cleaning_pipeline = mutcleaner.cleaners.create_cdna_proteolysis_cleaner(dataset_filepath)
+    cdna_cleaning_pipeline, cdna_dataset = mutcleaner.cleaners.clean_cdna_proteolysis_dataset(cdna_cleaning_pipeline)
 
     # Save data
+    cdna_dataset.metadata.update({
+        "source_doi": "10.1038/s41586-023-06328-6",
+        "source_url": "https://www.nature.com/articles/s41586-023-06328-6",
+        "measured_property": "stability",
+        "measurement_type": "ΔΔG",
+        "label_unit": "kcal/mol",
+        "label_direction": "higher_is_more",
+        "assay": "cDNA display proteolysis",
+        "mutcleaner_version": mutcleaner.__version__
+    })
     cdna_dataset.save("cleaned_dataset/cleaned_Protein_cDNA_Proteolysis_ddG_Dataset")
     cdna_cleaning_pipeline.save_artifacts(artifact_path)
 
@@ -222,16 +227,13 @@ cleaning artifacts, using ΔG as the label:
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner.cleaners import (
-    CDNAProteolysisCleanerConfig,
-    create_cdna_proteolysis_cleaner,
-    clean_cdna_proteolysis_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Set cleaning configs
-    cdna_cleaning_config = CDNAProteolysisCleanerConfig()
+    cdna_cleaning_config = mutcleaner.cleaners.CDNAProteolysisCleanerConfig()
     cdna_cleaning_config.column_mapping = {
         "WT_name": "name",
         "aa_seq": "mut_seq",
@@ -247,12 +249,20 @@ def main():
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    cdna_cleaning_pipeline = create_cdna_proteolysis_cleaner(dataset_filepath, cdna_cleaning_config)
-    cdna_cleaning_pipeline, cdna_dataset = clean_cdna_proteolysis_dataset(
-        cdna_cleaning_pipeline
-    )
+    cdna_cleaning_pipeline = mutcleaner.cleaners.create_cdna_proteolysis_cleaner(dataset_filepath, cdna_cleaning_config)
+    cdna_cleaning_pipeline, cdna_dataset = mutcleaner.cleaners.clean_cdna_proteolysis_dataset(cdna_cleaning_pipeline)
 
     # Save data
+    cdna_dataset.metadata.update({
+        "source_doi": "10.1038/s41586-023-06328-6",
+        "source_url": "https://www.nature.com/articles/s41586-023-06328-6",
+        "measured_property": "stability",
+        "measurement_type": "ΔG",
+        "label_unit": "kcal/mol",
+        "label_direction": "higher_is_more",
+        "assay": "cDNA display proteolysis",
+        "mutcleaner_version": mutcleaner.__version__
+    })
     cdna_dataset.save("cleaned_dataset/cleaned_Protein_cDNA_Proteolysis_dG_Dataset")
     cdna_cleaning_pipeline.save_artifacts(artifact_path)
 
