@@ -114,7 +114,7 @@ See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/
     </tr>
     <tr>
       <td>Antitoxin ParD3 Epistasis Dataset</td>
-      <td><a href="https://doi.org/10.1038/s41467-024-45621-4">Protein design using structure-based residue preferences</a></td>
+      <td><a href="https://doi.org/10.1038/s41559-022-01688-0">Co-evolution of interacting proteins through non-contacting and non-specific mutations</a><br><a href="https://github.com/ddingding/CoVES/blob/main/data/DMS_data/df_mut_all_norm.csv">Processed three-site data (CoVES)</a></td>
       <td><a href="https://huggingface.co/datasets/xulab-research/MutCleaner/blob/main/Antitoxin_ParD3_Epistasis_Dataset/Antitoxin_ParD3_Epistasis_Dataset.csv">Antitoxin_ParD3_Epistasis_Dataset.csv</a></td>
     </tr>
     <tr>
