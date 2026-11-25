@@ -1138,32 +1138,47 @@ See {py:class}`mutcleaner.cleaners.ChitosanasedTmCleanerConfig` for details.
 
 ### Basic Usage
 
-You can download the source file directly by running (see {py:func}`mutcleaner.utils.download_mgnify_ddg_source_file` for details):
+The source dataset pairs sequences by cluster and reports the change in
+unfolding free energy (ΔΔG) in kcal/mol. The `ddG` column is the member's
+unfolding free energy minus the reference sequence's (`mut_dG - wt_dG`).
+A positive label means the member is more stable than the reference.
+The underlying free energies were measured using cDNA display proteolysis.
+
+The following example downloads and cleans the dataset, adds the measurement
+metadata, and saves the results and cleaning artifacts.
+
 ```python
 import pickle
 from pathlib import Path
-from mutcleaner import download_mgnify_ddg_source_file
-from mutcleaner.cleaners import (
-    create_mgnify_ddg_cleaner,
-    clean_mgnify_ddg_dataset,
-)
+
+import mutcleaner
 
 
 def main():
     # Prepare data
-    download_mgnify_ddg_source_file("raw_dataset/MGnify_ddG_Dataset", overwrite=True)
+    mutcleaner.download_mgnify_ddg_source_file("raw_dataset/MGnify_ddG_Dataset", overwrite=True)
 
     artifact_path = Path("logs/MGnify_ddG_Dataset/artifacts.pkl")
     artifact_csv_dir = Path("logs/MGnify_ddG_Dataset")
     artifact_csv_dir.mkdir(parents=True, exist_ok=True)
 
     # Clean data
-    mgnify_cleaning_pipeline = create_mgnify_ddg_cleaner(Path("raw_dataset/MGnify_ddG_Dataset/MGnify_ddG_Dataset.csv"))
-    mgnify_cleaning_pipeline, mgnify_dataset = clean_mgnify_ddg_dataset(mgnify_cleaning_pipeline)
-    
+    mgnify_cleaning_pipeline = mutcleaner.cleaners.create_mgnify_ddg_cleaner(Path("raw_dataset/MGnify_ddG_Dataset/MGnify_ddG_Dataset.csv"), config=None)
+    mgnify_cleaning_pipeline, mgnify_dataset = mutcleaner.cleaners.clean_mgnify_ddg_dataset(mgnify_cleaning_pipeline)
+
     # Save data
-    mgnify_dataset.save("cleaned_dataset/cleaned_MGnify_ddG_Dataset")
-    mgnify_cleaning_pipeline.save_artifacts(artifact_path)
+    mgnify_dataset.metadata.update({
+        "source_doi": "10.64898/2026.05.19.726285",
+        "source_url": "https://www.biorxiv.org/content/10.64898/2026.05.19.726285v1",
+        "measured_property": "Stability",
+        "measurement_type": "ΔΔG",
+        "label_unit": "kcal/mol",
+        "label_direction": "higher_is_more",
+        "assay": "cDNA display proteolysis",
+        "mutcleaner_version": mutcleaner.__version__
+    })
+    mgnify_dataset.save("cleaned_dataset/cleaned_MGnify_ddG_Dataset", save_type="mutcleaner")
+    mgnify_cleaning_pipeline.save_artifacts(artifact_path, format="pickle")
 
     with open(artifact_path, "rb") as file:
         artifacts = pickle.load(file)
@@ -1177,7 +1192,6 @@ if __name__ == "__main__":
 
     multiprocessing.freeze_support()
     main()
-
 ```
 
 ### Advanced Settings
