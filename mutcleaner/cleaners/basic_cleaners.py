@@ -805,7 +805,7 @@ def convert_data_types(
 
 
 @multiout_step(main="success", failed="failed")
-def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info", format_mutations: bool = True, mutation_sep: str = ",", mutation_type=None, alphabet=None, exclude_patterns=None, cache_results: bool = True, num_workers: int = 4, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info", format_mutations: bool = True, mutation_sep: str = ",", mutation_type=None, alphabet=None, exclude_patterns=None, cache_results: bool = True, num_workers: int = 4, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Validate and format mutation information.
 
@@ -829,7 +829,8 @@ def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info",
         If omitted, infer the type from the first substitution in each annotation.
     alphabet : BaseAlphabet, optional
         Alphabet to use for mutation validation. A supplied alphabet takes precedence
-        over ``include_ambiguous``, ``include_sec_pyl``, and ``include_stop``.
+        over ``include_ambiguous`` and ``include_sec_pyl``.
+        The default protein alphabet excludes the stop symbol (``*``).
     exclude : Union[str, List[str], callable, None], default=None
         Patterns to exclude from validation. Can be:
         - A regex pattern string (e.g., r'^WT$|^wildtype$')
@@ -847,8 +848,6 @@ def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info",
         Include the ambiguous residue symbols B, Z, J, and X in the default protein alphabet.
     include_sec_pyl : bool, default=False
         Include selenocysteine (U) and pyrrolysine (O) in the default protein alphabet.
-    include_stop : bool, default=False
-        Accept the stop symbol (``*``) on either side of an amino acid substitution.
     reject_redundant : bool, default=True
         Reject an annotation if any amino acid substitution leaves the residue unchanged (e.g., A12A).
 
@@ -1001,7 +1000,7 @@ def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info",
     # Prepare arguments for parallel processing
     mutation_values = validation_dataset[mutation_column].tolist()
     args_list = [
-        (mut_info, format_mutations, mutation_sep, offset, mutation_type, alphabet, include_ambiguous, include_sec_pyl, include_stop, reject_redundant, None)
+        (mut_info, format_mutations, mutation_sep, offset, mutation_type, alphabet, include_ambiguous, include_sec_pyl, reject_redundant, None)
         for mut_info in values_to_process
     ]
 
@@ -1077,7 +1076,7 @@ def validate_mutations(dataset: pd.DataFrame, mutation_column: str = "mut_info",
 
 
 @multiout_step(main="success", failed="failed")
-def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "sequence", name_column: str = "name", mutation_column: str = "mut_info", position_columns: Optional[Dict[str, str]] = None, mutation_sep: str = ",", sequence_type: str = "protein", mutation_type: Optional[Type[BaseMutation]] = None, alphabet: Optional[BaseAlphabet] = None, num_workers: int = 4, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True, mutated_sequence_column: str = "mut_seq") -> Tuple[pd.DataFrame, pd.DataFrame]:
+def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "sequence", name_column: str = "name", mutation_column: str = "mut_info", position_columns: Optional[Dict[str, str]] = None, mutation_sep: str = ",", sequence_type: str = "protein", mutation_type: Optional[Type[BaseMutation]] = None, alphabet: Optional[BaseAlphabet] = None, num_workers: int = 4, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, reject_redundant: bool = True, mutated_sequence_column: str = "mut_seq") -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Apply mutations to sequences to generate mutated sequences.
 
@@ -1109,7 +1108,8 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
     alphabet : BaseAlphabet, optional
         Alphabet for parsing mutations. For proteins, a supplied alphabet also
         validates the reference and mutated sequences and takes precedence over
-        ``include_ambiguous``, ``include_sec_pyl``, and ``include_stop``.
+        ``include_ambiguous`` and ``include_sec_pyl``.
+        The default protein alphabet excludes the stop symbol (``*``).
     num_workers : int, default=4
         Number of parallel workers for processing, set to -1 for all available CPUs
     offset : int
@@ -1118,8 +1118,6 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
         Accept B, Z, J, and X in protein sequences and amino acid substitutions.
     include_sec_pyl : bool, default=False
         Accept selenocysteine (U) and pyrrolysine (O) in protein sequences and substitutions.
-    include_stop : bool, default=False
-        Accept the stop symbol (``*``) in protein sequences and on either side of a substitution.
     reject_redundant : bool, default=True
         Reject an annotation if any amino acid substitution leaves the residue unchanged.
 
@@ -1176,7 +1174,6 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
         alphabet=alphabet,
         include_ambiguous=include_ambiguous,
         include_sec_pyl=include_sec_pyl,
-        include_stop=include_stop,
         reject_redundant=reject_redundant
     )
 
@@ -1220,7 +1217,7 @@ def apply_mutations_to_sequences(dataset: pd.DataFrame, sequence_column: str = "
 
 
 @multiout_step(main="success", failed="failed")
-def infer_mutations_from_sequences(dataset: pd.DataFrame, wt_sequence_column: str = "wt_seq", mut_sequence_column: str = "mut_seq", mutation_sep: str = ",", sequence_type: str = "protein", num_workers: int = 4, *, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def infer_mutations_from_sequences(dataset: pd.DataFrame, wt_sequence_column: str = "wt_seq", mut_sequence_column: str = "mut_seq", mutation_sep: str = ",", sequence_type: str = "protein", num_workers: int = 4, *, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Infer mutations by comparing wild-type sequences with mutated sequences.
 
@@ -1244,12 +1241,11 @@ def infer_mutations_from_sequences(dataset: pd.DataFrame, wt_sequence_column: st
         Number of parallel workers for processing, set to -1 for all available CPUs
     alphabet : BaseAlphabet, optional
         Alphabet used for both sequences. An explicit alphabet takes precedence over the protein options below.
+        The default protein alphabet excludes the stop symbol (``*``).
     include_ambiguous : bool, default=False
         Accept B, Z, J, and X in protein sequences.
     include_sec_pyl : bool, default=False
         Accept selenocysteine (U) and pyrrolysine (O) in protein sequences.
-    include_stop : bool, default=False
-        Accept the stop symbol (``*``) in protein sequences.
 
     Returns
     -------
@@ -1297,8 +1293,7 @@ def infer_mutations_from_sequences(dataset: pd.DataFrame, wt_sequence_column: st
         sequence_class=SequenceClass,
         alphabet=alphabet,
         include_ambiguous=include_ambiguous,
-        include_sec_pyl=include_sec_pyl,
-        include_stop=include_stop
+        include_sec_pyl=include_sec_pyl
     )
 
     # Parallel processing
@@ -1321,7 +1316,7 @@ def infer_mutations_from_sequences(dataset: pd.DataFrame, wt_sequence_column: st
 
 
 @multiout_step(main="success", failed="failed")
-def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: str = "mut_seq", label_columns: Optional[List[str]] = None, wt_label: float = 0.0, mutation_sep: str = ",", sequence_type: Literal["protein", "dna", "rna"] = "protein", num_workers: int = 4, *, offset: int, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: str = "mut_seq", label_columns: Optional[List[str]] = None, wt_label: float = 0.0, mutation_sep: str = ",", sequence_type: Literal["protein", "dna", "rna"] = "protein", num_workers: int = 4, *, offset: int, alphabet: Optional[BaseAlphabet] = None, include_ambiguous: bool = False, include_sec_pyl: bool = False, reject_redundant: bool = True) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Infer wild-type sequences from mutated sequences and add WT rows.
 
@@ -1354,12 +1349,11 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
     alphabet : BaseAlphabet, optional
         Alphabet used for the mutated sequence, mutation annotation, and inferred wild type.
         An explicit alphabet takes precedence over the protein alphabet options.
+        The default protein alphabet excludes the stop symbol (``*``).
     include_ambiguous : bool, default=False
         Accept B, Z, J, and X in protein sequences and substitutions.
     include_sec_pyl : bool, default=False
         Accept selenocysteine (U) and pyrrolysine (O) in protein sequences and substitutions.
-    include_stop : bool, default=False
-        Accept the stop symbol (``*``) in protein sequences and on either side of a substitution.
     reject_redundant : bool, default=True
         Reject the group if an annotation contains an amino acid substitution that leaves the residue unchanged.
 
@@ -1410,7 +1404,6 @@ def infer_wildtype_sequences(dataset: pd.DataFrame, name_column: str = "name", m
         alphabet=alphabet,
         include_ambiguous=include_ambiguous,
         include_sec_pyl=include_sec_pyl,
-        include_stop=include_stop,
         reject_redundant=reject_redundant
     )
 
@@ -1752,9 +1745,11 @@ def average_labels_by_name(
 
 
 @pipeline_step
-def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: Optional[str] = None, mutated_sequence_column: str = "mut_seq", sequence_type: Literal["protein", "dna", "rna"] = "protein", label_column: str = "score", include_wild_type: bool = False, mutation_set_prefix: str = "set", additional_metadata: Optional[Dict[str, Any]] = None, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False, include_stop: bool = False) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
+def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: Optional[str] = None, mutated_sequence_column: str = "mut_seq", sequence_type: Literal["protein", "dna", "rna"] = "protein", label_column: str = "score", include_wild_type: bool = False, mutation_set_prefix: str = "set", additional_metadata: Optional[Dict[str, Any]] = None, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """
     Convert a mutation DataFrame to the format required by MutationDataset.from_dataframe().
+
+    Protein reference sequences and amino acid substitutions must exclude the stop symbol (``*``).
 
     This function supports two input formats:
     1. Format with WT rows: Contains explicit 'WT' entries with wild-type sequences
@@ -1815,8 +1810,6 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
         Allow B, Z, J, and X in protein reference sequences and mutation annotations.
     include_sec_pyl : bool, default=False
         Allow selenocysteine (U) and pyrrolysine (O) in protein reference sequences and mutation annotations.
-    include_stop : bool, default=False
-        Allow the stop symbol (``*``) in protein reference sequences and on either side of an amino acid substitution.
 
     Returns
     -------
@@ -1885,7 +1878,7 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
     if sequence_type.lower() == "protein":
         SequenceClass = ProteinSequence
         MutationClass = AminoAcidMutation
-        alphabet = ProteinAlphabet(include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=include_stop)
+        alphabet = ProteinAlphabet(include_ambiguous=include_ambiguous, include_sec_pyl=include_sec_pyl, include_stop=False)
 
     elif sequence_type.lower() == "dna":
         SequenceClass = DNASequence
