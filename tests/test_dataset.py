@@ -219,6 +219,7 @@ class TestValidation:
             "B0Z,J1X": include_ambiguous,
             "X0O": include_ambiguous and include_sec_pyl,
             "AUG0GUG": True,
+            "ATG0TAA": True,
             "AXG0GUG": False
         }
         raw = pd.DataFrame({"mut_info": list(cases)})
@@ -239,30 +240,35 @@ class TestValidation:
         assert result.main["mut_info"].tolist() == accepted
         assert result.side["failed"]["mut_info"].tolist() == [mutation for mutation in raw["mut_info"] if mutation not in accepted]
 
-    @pytest.mark.parametrize("include_stop", [False, True])
+    @pytest.mark.parametrize("alphabet", [None, ProteinAlphabet(include_stop=True)])
     @pytest.mark.parametrize("reject_redundant", [True, False])
-    def test_validate_mutations_stop_and_redundancy(self, include_stop, reject_redundant):
-        """Apply the stop alphabet to either residue and reject no-ops independently."""
+    def test_validate_mutations_stop_and_redundancy(self, alphabet, reject_redundant):
+        """Only an explicit alphabet permits stops during protein validation."""
         cases = {
+            "WT": True,
+            "Ter7Trp": True,
             "A0V": True,
             "A0A": not reject_redundant,
-            "W12*": include_stop,
-            "*12W": include_stop,
-            "A0A,W12*": include_stop and not reject_redundant
+            "W12*": alphabet is not None,
+            "*12W": alphabet is not None,
+            "Trp12Ter": alphabet is not None,
+            "A0A,W12*": alphabet is not None and not reject_redundant
         }
-        raw = pd.DataFrame({"mut_info": list(cases)})
-        result = validate_mutations(raw, offset=0, include_stop=include_stop, reject_redundant=reject_redundant, num_workers=1)
+        raw = pd.DataFrame({"mut_info": list(cases), "score": range(len(cases))})
+        result = validate_mutations(raw, offset=0, alphabet=alphabet, format_mutations=False, exclude_patterns=["WT", "Ter7Trp"], reject_redundant=reject_redundant, num_workers=1)
 
         assert result.main["mut_info"].tolist() == [mutation for mutation, valid in cases.items() if valid]
-        assert result.side["failed"]["mut_info"].tolist() == [mutation for mutation, valid in cases.items() if not valid]
+        failed = result.side["failed"]
+        expected = raw[~raw["mut_info"].map(cases)]
+        pd.testing.assert_frame_equal(failed[raw.columns].reset_index(drop=True), expected.reset_index(drop=True))
 
     @pytest.mark.parametrize("options, expected", [
         ({}, {}),
         ({"include_sec_pyl": True}, {"A2U": "MU", "C2S": "OS"}),
         ({"include_ambiguous": True}, {"B2X": "MX"}),
-        ({"include_stop": True}, {"W2*": "M*", "*2W": "MW"}),
+        ({"alphabet": ProteinAlphabet(include_stop=True)}, {"W2*": "M*", "*2W": "MW"}),
         ({"reject_redundant": False}, {"A2A": "MA"}),
-        ({"alphabet": ProteinAlphabet(include_stop=False, include_ambiguous=True, include_sec_pyl=False), "include_sec_pyl": True, "include_stop": True}, {"B2X": "MX"})
+        ({"alphabet": ProteinAlphabet(include_stop=False, include_ambiguous=True, include_sec_pyl=False), "include_sec_pyl": True}, {"B2X": "MX"})
     ])
     def test_apply_mutations_protein_options(self, options, expected):
         """Use the configured alphabet for reference residues and substitutions."""
@@ -280,8 +286,8 @@ class TestValidation:
         ({}, []),
         ({"include_sec_pyl": True}, ["A1U", "O1U"]),
         ({"include_ambiguous": True}, ["B0Z,J1X"]),
-        ({"include_stop": True}, ["W1*", "*1W"]),
-        ({"alphabet": ProteinAlphabet(include_stop=False, include_ambiguous=True, include_sec_pyl=False), "include_sec_pyl": True, "include_stop": True}, ["B0Z,J1X"])
+        ({"alphabet": ProteinAlphabet(include_stop=True)}, ["W1*", "*1W"]),
+        ({"alphabet": ProteinAlphabet(include_stop=False, include_ambiguous=True, include_sec_pyl=False), "include_sec_pyl": True}, ["B0Z,J1X"])
     ])
     def test_inference_protein_symbols(self, options, accepted):
         """Infer zero-based substitutions and recover the corresponding reference sequences."""
@@ -302,6 +308,12 @@ class TestValidation:
         references = restored.main.loc[restored.main["mut_info"] == "WT"].set_index("name")
         assert references["mut_seq"].to_dict() == expected.set_index("name")["wt_seq"].to_dict()
         assert [row["name"] for row in restored.side["failed"].to_dict("records")] == rejected
+
+    def test_convert_to_mutation_dataset_format_rejects_stop(self):
+        """Report an unfiltered stop substitution at format conversion."""
+        variants = pd.DataFrame({"name": ["example"], "sequence": ["MW"], "mut_info": ["W1*"], "mut_seq": ["M*"], "score": [1.0]})
+        with pytest.raises(ValueError, match="Cannot parse mutation"):
+            convert_to_mutation_dataset_format(variants, sequence_column="sequence", offset=0)
 
     @pytest.mark.parametrize("reject_redundant", [False, True])
     def test_infer_wildtype_redundant_in_group(self, reject_redundant):
