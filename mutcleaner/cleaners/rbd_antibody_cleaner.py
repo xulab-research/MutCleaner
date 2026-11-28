@@ -277,7 +277,6 @@ def create_rbd_antibody_cleaner(
             sequence_column="sequence",
             mutated_sequence_column="mut_seq",
             label_column=final_config.primary_label_column,
-            include_wild_type=False,
             offset=0,
         )
     )
