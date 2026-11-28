@@ -1745,14 +1745,15 @@ def average_labels_by_name(
 
 
 @pipeline_step
-def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: Optional[str] = None, mutated_sequence_column: str = "mut_seq", sequence_type: Literal["protein", "dna", "rna"] = "protein", label_column: str = "score", include_wild_type: bool = False, mutation_set_prefix: str = "set", additional_metadata: Optional[Dict[str, Any]] = None, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
+def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "name", mutation_column: str = "mut_info", sequence_column: Optional[str] = None, mutated_sequence_column: str = "mut_seq", sequence_type: Literal["protein", "dna", "rna"] = "protein", label_column: str = "score", mutation_set_prefix: str = "set", additional_metadata: Optional[Dict[str, Any]] = None, *, offset: int, include_ambiguous: bool = False, include_sec_pyl: bool = False) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """
     Convert a mutation DataFrame to the format required by MutationDataset.from_dataframe().
 
     Protein reference sequences and amino acid substitutions must exclude the stop symbol (``*``).
 
     This function supports two input formats:
-    1. Format with WT rows: Contains explicit 'WT' entries with wild-type sequences
+    1. Format with WT rows: Explicit 'WT' rows supply the reference sequences.
+       Only mutation rows are numbered and included in the output DataFrame.
     2. Format with sequence column: Each row contains the wild-type sequence
 
     Parameters
@@ -1793,10 +1794,6 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
 
     label_column : str, default='score'
         Column name containing scores or other numerical values.
-
-    include_wild_type : bool, default=False
-        Whether to include wild-type (WT) entries in the output. Only applies
-        to Format 1 with explicit WT rows.
 
     mutation_set_prefix : str, default='set'
         Prefix used for generating mutation set IDs.
@@ -1924,7 +1921,6 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
             mutation_column,
             mutated_sequence_column,
             label_column,
-            include_wild_type,
             mutation_set_prefix,
             offset=offset,
             additional_metadata=additional_metadata,
@@ -1958,7 +1954,6 @@ def convert_to_mutation_dataset_format(df: pd.DataFrame, name_column: str = "nam
                 mutation_column,
                 mutated_sequence_column,
                 label_column,
-                include_wild_type,
                 mutation_set_prefix,
                 offset=offset,
                 additional_metadata=additional_metadata,
