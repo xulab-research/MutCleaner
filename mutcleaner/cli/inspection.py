@@ -266,7 +266,7 @@ def inspect_candidates(table: pd.DataFrame, options) -> dict:
     source = source.loc[source["reference_id"].ne("") & source["reference_sequence"].ne("")].drop_duplicates()
     conflict_ids = source.loc[source["reference_id"].duplicated(), "reference_id"].unique()
     unique = source.loc[~source["reference_id"].isin(conflict_ids)].set_index("reference_id")["reference_sequence"]
-    references = ids.map(unique).fillna("")
+    references = ids.map(unique).astype("string").fillna("")
     supplied_reference = options.reference_sequence_column is not None or options.reference_fasta is not None or options.reference_table is not None or options.reference_from_wt
     if options.reference_sequence_column is not None and options.reference_id_column is None and options.reference_id is None:
         references = observed_references

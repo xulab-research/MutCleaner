@@ -80,14 +80,14 @@ def prepare_rows(table: pd.DataFrame, arguments, source: str, reference_column, 
             if not (selected & rows["variant_sequence"].ne("")).any():
                 raise ValueError("--reference-from-wt found no usable reference sequences with the specified WT marker after filtering")
         reference_rows = rows.loc[selected, ["reference_id", sequence_column]].rename(columns={sequence_column: "reference_sequence"})
-        rows["reference_sequence"] = rows["reference_id"].map(reference_map(reference_rows, None)).fillna("")
+        rows["reference_sequence"] = rows["reference_id"].map(reference_map(reference_rows, None)).astype("string").fillna("")
     elif source == "fasta":
         references = mutcleaner.sequence.load_sequences_from_fasta(arguments.reference_fasta, sequence_class, alphabet=alphabet)
         reference_rows = pd.DataFrame([(identifier, str(sequence)) for identifier, sequence in references.items()], columns=["reference_id", "reference_sequence"], dtype="string")
-        rows["reference_sequence"] = rows["reference_id"].map(reference_map(reference_rows, arguments.reference_file_id_pattern)).fillna("")
+        rows["reference_sequence"] = rows["reference_id"].map(reference_map(reference_rows, arguments.reference_file_id_pattern)).astype("string").fillna("")
     elif source == "reference_table":
         reference_rows = tools.read_reference_table(arguments.reference_table, arguments.reference_table_id_column, arguments.reference_table_sequence_column)
-        rows["reference_sequence"] = rows["reference_id"].map(reference_map(reference_rows, arguments.reference_file_id_pattern)).fillna("")
+        rows["reference_sequence"] = rows["reference_id"].map(reference_map(reference_rows, arguments.reference_file_id_pattern)).astype("string").fillna("")
     elif source == "literal":
         rows["reference_sequence"] = str(sequence_class(arguments.reference_sequence.strip().upper(), alphabet=alphabet))
 
@@ -192,8 +192,9 @@ def normalize_annotations(candidates: pd.DataFrame, arguments, mutation_type, al
             if len(missing_positions) > 8:
                 examples += ", ..."
             missing_rules.append(f"{reference_id!r}: {affected_rows} row(s), input positions {examples}")
-        candidates.loc[group.index, "mutation_name"] = group["mutation_name"].map(replacements).fillna(group["mutation_name"])
-        candidates.loc[group.index, "normalization_error"] = group["mutation_name"].map(errors).fillna("")
+        normalized = group["mutation_name"].map(replacements).astype("string")
+        candidates.loc[group.index, "mutation_name"] = normalized.fillna(group["mutation_name"].astype("string"))
+        candidates.loc[group.index, "normalization_error"] = group["mutation_name"].map(errors).astype("string").fillna("")
         candidates.loc[group.index, "annotation_offset"] = 0
 
     if missing_rules:
@@ -262,7 +263,7 @@ def filter_mutations(accepted: pd.DataFrame, arguments, mutation_type, alphabet)
                 amino_acid_mutations = mutations if codon_table is None else (mutation.to_amino_acid_mutation(codon_table) for mutation in mutations)
                 if any(mutation.get_mutation_category() not in arguments.mutation_effect for mutation in amino_acid_mutations):
                     effect_reasons[annotation] = "Substitution effect is outside the requested set"
-        reasons = reasons.mask(reasons.eq(""), accepted["mutation_name"].map(effect_reasons).fillna(""))
+        reasons = reasons.mask(reasons.eq(""), accepted["mutation_name"].map(effect_reasons).astype("string").fillna(""))
     return accepted.loc[reasons.eq("")], accepted.loc[reasons.ne("")].assign(filter_reason=reasons.loc[reasons.ne("")])
 
 
