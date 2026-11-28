@@ -51,26 +51,11 @@ def __dir__() -> List[str]:
     return __all__
 
 
-def convert_format_1(
-    df: pd.DataFrame,
-    name_column: str,
-    mutation_column: str,
-    mutated_sequence_column: str,
-    score_column: str,
-    include_wild_type: bool,
-    mutation_set_prefix: str,
-    offset: int,
-    additional_metadata: Optional[Dict[str, Any]],
-    sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]],
-    mutation_type: Type[BaseMutation],
-    alphabet: BaseAlphabet,
-) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
+def convert_format_1(df: pd.DataFrame, name_column: str, mutation_column: str, mutated_sequence_column: str, score_column: str, mutation_set_prefix: str, offset: int, additional_metadata: Optional[Dict[str, Any]], sequence_class: Type[Union[ProteinSequence, DNASequence, RNASequence]], mutation_type: Type[BaseMutation], alphabet: BaseAlphabet) -> Tuple[pd.DataFrame, Dict[str, BaseSequence]]:
     """Convert Format 1 (with WT rows) to mutation dataset format."""
 
-    input_df = df.copy()
-
     # Extract reference sequences from WT rows
-    wt_rows = input_df[input_df[mutation_column] == "WT"]
+    wt_rows = df.loc[df[mutation_column] == "WT"]
     if wt_rows.empty:
         raise ValueError("No wild-type (WT) entries found in the dataset")
 
@@ -82,21 +67,14 @@ def convert_format_1(
             raise ValueError(f"Multiple different sequences found for reference '{name}': {reference_sequences[name]} vs {sequence}")
         reference_sequences[name] = sequence
 
-    # Filter out wild-type entries if requested
-    if not include_wild_type:
-        input_df = input_df[input_df[mutation_column] != "WT"].copy()
-
-    if input_df.empty:
+    mutation_rows = df.loc[df[mutation_column] != "WT"]
+    if mutation_rows.empty:
         raise ValueError("No mutation data remaining after filtering")
 
     # Process mutations (now supporting multi-mutations)
     output_rows = []
-    total_rows = len(input_df)
-    for idx, (mut_info, name, score) in tqdm(enumerate(zip(input_df[mutation_column], input_df[name_column], input_df[score_column])), total=total_rows):
-        # Skip wild-type if it somehow made it through filtering
-        if mut_info == "WT":
-            continue
-
+    total_rows = len(mutation_rows)
+    for idx, (mut_info, name, score) in tqdm(enumerate(zip(mutation_rows[mutation_column], mutation_rows[name_column], mutation_rows[score_column])), total=total_rows):
         # Parse mutations (single or multiple)
         try:
             mutations = _parse_mutations_string(
