@@ -13,10 +13,9 @@ license-files = ["LICENSE"]
 requires-python = ">=3.13"
 dependencies = [
     "joblib>=1.5.0",
-    "pandas>=2.2.0",
+    "pandas[excel,parquet]>=2.2.0",
     "tqdm>=4.60.0",
-    "requests>=2.30",
-    "openpyxl>=3.1.0"
+    "requests>=2.30"
 ]
 keywords = [
     "mutation",
@@ -38,7 +37,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Typing :: Typed",
 ]
 
 [project.urls]
@@ -64,12 +62,16 @@ dev = [
     "sphinxcontrib-mermaid",
 ]
 
-[tool.setuptools]
-packages = ["mutcleaner"]
+[project.scripts]
+mutcleaner = "mutcleaner.cli.main:main"
+
+[tool.setuptools.packages.find]
+include = ["mutcleaner", "mutcleaner.*"]
+namespaces = false
 
 [tool.setuptools_scm]
 version_scheme = "no-guess-dev"
 local_scheme = "no-local-version"
 
 [tool.setuptools.package-data]
-mutcleaner = ["py.typed"]
+"mutcleaner.cli" = ["guide.md"]

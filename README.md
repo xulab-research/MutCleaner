@@ -21,8 +21,19 @@ MutCleaner is an extensible Python framework that cleans, validates, and standar
 
 ## Installation
 
+### Python package
+
 ```bash
 pip install mutcleaner
+```
+
+### Command-line tool
+
+Install the CLI with [uv](https://docs.astral.sh/uv/concepts/tools/).
+
+```bash
+uv tool install mutcleaner
+mutcleaner guide
 ```
 
 ## Repository structure
@@ -70,6 +81,27 @@ MutCleaner/
 ## Quick Start
 
 See the [Data Cleaners Usage Guide](https://xulab-research.github.io/MutCleaner/user_guide) for more examples.
+
+### Clean a dataset with an agent
+
+You can clean your datasets through natural-language interactions with your agent, without writing any cleaning scripts yourself.
+
+Agent-assisted cleaning requires the MutCleaner CLI on the machine where the commands will run. Follow the [CLI installation instructions for uv](#command-line-tool) before giving your agent a cleaning task.
+
+**Copy the following prompt template, replace the placeholders with your actual paths and reference materials, and send it to your agent.** Include the host information if the data is on a remote machine.
+
+```text
+If the data is on a remote host, use its login shell for MutCleaner commands over SSH.
+For example, use ssh HOST 'bash -lc "mutcleaner guide"' on a Bash host.
+
+Please run mutcleaner guide, read the full guide, and follow it.
+
+Clean the dataset at [input path] and save the result to [output path].
+
+Reference materials, if available: [paths or links to papers, supplementary material, or data notes]
+```
+
+Each result directory includes a generated `cleaner.py`. To rerun the cleaning task, use `python path/to/cleaner.py raw.csv new_output`.
 
 ## Supported Datasets
 
