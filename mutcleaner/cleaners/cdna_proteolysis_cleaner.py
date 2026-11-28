@@ -24,7 +24,6 @@ from .cdna_proteolysis_custom_cleaners import (
 from ..core.dataset import MutationDataset
 from ..core.pipeline import Pipeline, create_pipeline
 from ..core.mutation import AminoAcidMutation
-from ..core.alphabet import ProteinAlphabet
 
 if TYPE_CHECKING:
     from typing import Any, Callable, Dict, List, Optional, Tuple, Union
@@ -194,7 +193,6 @@ def create_cdna_proteolysis_cleaner(
                 mutation_sep=":",
                 offset=1,
                 mutation_type=AminoAcidMutation,
-                alphabet=ProteinAlphabet(include_stop=True),
                 exclude_patterns=["wt"],
                 num_workers=final_config.validate_mut_workers,
             )
